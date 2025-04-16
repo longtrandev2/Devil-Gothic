@@ -10,10 +10,13 @@ public class SummonedKnight extends Entity {
     private float remainingLife;
     private float stateTime = 0;
     private boolean facingRight = true;
+    private boolean showSmoke;
+    private float smokeStateTime = 0f;
 
     public static final String STATE_IDLE = "idle";
     public static final String STATE_WALK = "walk";
     public static final String STATE_ATTACK = "attack";
+    public static final String STATE_SMOKE = "smoke";
 
     private static final int IDLE_FRAME_COLS = 6;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -25,6 +28,8 @@ public class SummonedKnight extends Entity {
     private static final int HURT_FRAME_ROWS = 1;
     private static final int DEATH_FRAME_COLS = 4;
     private static final int DEATH_FRAME_ROWS = 1;
+    private static final int SPAWN_FRAME_COLS = 7;
+    private static final int SPAWN_FRAME_ROWS = 1;
 
     public SummonedKnight(float x, float y, int health, int damage, float speed, float lifetime, int knightType) {
         this.entityX = x;
@@ -32,6 +37,8 @@ public class SummonedKnight extends Entity {
         this.health = health;
         this.damage = damage;
         this.speed = speed;
+        remainingLife = 3f; // Thoi gian ton tai 15s
+        showSmoke = true;
 
         this.animationManager = new AnimationManager();
 
@@ -44,6 +51,7 @@ public class SummonedKnight extends Entity {
         float attackFrameDuration = 0.08f;
         float hurtFrameDuration = 0.1f;
         float deathFrameDuration = 0.1f;
+        float spawnFrameDuration = 0.1f;
 
         animationManager.addAnimation(
             STATE_IDLE,
@@ -80,6 +88,15 @@ public class SummonedKnight extends Entity {
             false
         );
 
+        animationManager.addAnimation(
+            STATE_SMOKE,
+            "Skills/Smoke/SmokeNDust P03 VFX 4.png",
+            SPAWN_FRAME_COLS, SPAWN_FRAME_ROWS, spawnFrameDuration,
+            false
+        );
+
+
+
         animationManager.setState(STATE_IDLE, true);
     }
     @Override
@@ -87,6 +104,26 @@ public class SummonedKnight extends Entity {
         TextureRegion currentFrame = animationManager.getCurrentFrame();
         if (currentFrame != null) {
             batch.draw(currentFrame, entityX, entityY);
+        }
+
+        if(showSmoke)
+        {
+            smokeStateTime += deltaTime;
+            String currentState = animationManager.getCurrentState();
+            animationManager.setState(STATE_SMOKE, false);
+            TextureRegion smokeFrame = animationManager.getCurrentFrame();
+            if(smokeFrame != null)
+            {
+                batch.draw(smokeFrame, entityX, entityY);
+            }
+
+            animationManager.setState(currentState, false);
+
+            if(animationManager.isAnimationFinished())
+            {
+                showSmoke = false;
+                smokeStateTime = 0f;
+            }
         }
     }
 
@@ -124,5 +161,10 @@ public class SummonedKnight extends Entity {
     public void setFacingRight(boolean facingRight) {
         this.facingRight = facingRight;
         animationManager.setFacingRight(facingRight);
+    }
+
+    public boolean isLifeTimeOver()
+    {
+        return remainingLife <= 0;
     }
 }

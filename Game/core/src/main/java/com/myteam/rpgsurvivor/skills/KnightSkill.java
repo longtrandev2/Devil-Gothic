@@ -11,12 +11,13 @@ import java.util.List;
 public class KnightSkill {
     private static final int NUM_SUMMONS = 3;
     private static final float SUMMON_DURATION = 10f;
-    private static final float COOLDOWN_TIME = 15f;
+    private static final float COOLDOWN_TIME = 1f;
 
     private Knight owner;
     private List<SummonedKnight> summonedKnights;
     private float currentCooldown = 0f;
     private boolean isOnCooldown = false;
+
 
     public KnightSkill(Knight owner) {
         this.owner = owner;
@@ -87,6 +88,11 @@ public class KnightSkill {
             SummonedKnight knight = summonedKnights.get(i);
             knight.update(deltaTime);
 
+            if(knight.isLifeTimeOver())
+            {
+                summonedKnights.remove(i);
+            }
+
 
         }
     }
@@ -111,38 +117,6 @@ public class KnightSkill {
 
     // When the player moves, update the positions of the summoned knights to follow
     public void updatePositions() {
-        if (!isActive()) return;
 
-        float[] angles = {-30f, 0f, 30f};
-        float distance = 50f;
-
-        for (int i = 0; i < summonedKnights.size(); i++) {
-            SummonedKnight knight = summonedKnights.get(i);
-
-            // Calculate new position
-            float angleRad = (float) Math.toRadians(angles[i]);
-            float direction = owner.isFacingRight() ? 1 : -1;
-
-            // Adjust angle based on player direction
-            if (!owner.isFacingRight()) {
-                angleRad = (float) Math.PI - angleRad;
-            }
-
-            float targetX = owner.getEntityX() + distance * (float) Math.cos(angleRad) * direction;
-            float targetY = owner.getEntityY() + distance * (float) Math.sin(angleRad);
-
-            // Apply movement toward target position (with slight delay for natural movement)
-            Vector2 currentPos = new Vector2(knight.getEntityX(), knight.getEntityY());
-            Vector2 targetPos = new Vector2(targetX, targetY);
-            Vector2 direction2D = targetPos.sub(currentPos).nor().scl(knight.getSpeed() * 0.5f);
-
-            if (currentPos.dst(targetPos) > 5f) {
-                knight.setEntityPosition(knight.getEntityX() + direction2D.x, knight.getEntityY() + direction2D.y);
-
-            }
-
-            // Match the facing direction of the owner
-            knight.setFacingRight(owner.isFacingRight());
-        }
     }
 }
