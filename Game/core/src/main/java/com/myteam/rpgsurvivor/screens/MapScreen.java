@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
 import com.myteam.rpgsurvivor.model.impl.Hero.Samurai;
 
 
@@ -17,6 +18,7 @@ public class MapScreen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private Samurai samurai;
+    private Knight knight;
 
     public MapScreen() {
         float w = Gdx.graphics.getWidth();
@@ -27,7 +29,8 @@ public class MapScreen {
 
         try {
             batch = new SpriteBatch();
-            samurai = new Samurai(100,100,100,100,100);
+            //samurai = new Samurai(100,100,100,100,200);
+            knight = new Knight(100,100,100,100,200);
         } catch (Exception e) {
             Gdx.app.error("MapScreen", "Error initializing: " + e.getMessage());
             e.printStackTrace();
@@ -61,14 +64,16 @@ public class MapScreen {
 
         batch.begin();
 
-        samurai.render(batch, Gdx.graphics.getDeltaTime());
+//        samurai.render(batch, Gdx.graphics.getDeltaTime());
+        knight.render(batch, Gdx.graphics.getDeltaTime());
 
         batch.end();
     }
 
     public void update() {
         camera.update();
-        samurai.update();
+//        samurai.update();
+        knight.update();
     }
 
     public void dispose() {

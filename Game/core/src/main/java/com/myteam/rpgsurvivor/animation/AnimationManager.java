@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class AnimationManager {
 
-    private HashMap<String, Animation<TextureRegion>> animations;
+    public HashMap<String, Animation<TextureRegion>> animations;
 
     private String currentState;
 
@@ -63,8 +63,14 @@ public class AnimationManager {
             }
         }
 
-        TextureRegion frame = currentAnimation.getKeyFrame(stateTime, true);
+        // Kiểm tra xem animation hiện tại có phải là loại lặp hay không
+        boolean looping = currentAnimation.getPlayMode() == Animation.PlayMode.LOOP ||
+            currentAnimation.getPlayMode() == Animation.PlayMode.LOOP_PINGPONG;
 
+        // Sử dụng tham số looping dựa trên chế độ chơi của animation
+        TextureRegion frame = currentAnimation.getKeyFrame(stateTime, looping);
+
+        // Xử lý lật hướng nhân vật
         if (frame.isFlipX() != !facingRight) {
             frame.flip(true, false);
         }
@@ -93,4 +99,6 @@ public class AnimationManager {
     public boolean hasState(String state) {
         return animations.containsKey(state);
     }
+
+
 }

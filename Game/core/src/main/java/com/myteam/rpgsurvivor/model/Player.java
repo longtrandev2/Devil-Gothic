@@ -36,4 +36,6 @@ public abstract class Player extends Entity{
         this.isInvulnerable = false;
         this.isInteracting = false;
     }
+
+
 }

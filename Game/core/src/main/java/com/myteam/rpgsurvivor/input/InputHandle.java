@@ -14,6 +14,7 @@ public class InputHandle {
     public static final int ACTION_MOVE_LEFT = 2;
     public static final int ACTION_MOVE_RIGHT = 3;
     public static final int ACTION_ATTACK = 4;
+    public static final int ACTION_SKILL = 5;
 
     private boolean[] actions;
 
@@ -28,22 +29,33 @@ public class InputHandle {
     {
         resetActions();
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.W))
+        // Thay đổi từ isKeyJustPressed sang isKeyPressed để kiểm tra khi phím đang được giữ
+        if(Gdx.input.isKeyPressed(Input.Keys.W))
         {
             actions[ACTION_MOVE_UP] = true;
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.S))
+        if(Gdx.input.isKeyPressed(Input.Keys.S))
         {
             actions[ACTION_MOVE_DOWN] = true;
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.A))
+        if(Gdx.input.isKeyPressed(Input.Keys.A))
         {
             actions[ACTION_MOVE_LEFT] = true;
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.D))
+        if(Gdx.input.isKeyPressed(Input.Keys.D))
         {
             actions[ACTION_MOVE_RIGHT] = true;
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.J))
+        {
+            actions[ACTION_ATTACK] = true;
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.K))
+        {
+            actions[ACTION_SKILL] = true;
+        }
+
+        // Nếu đang di chuyển, cập nhật hướng di chuyển
         if (isMoving()) {
             movement.setMovementDirection(
                 actions[ACTION_MOVE_UP],
@@ -51,7 +63,12 @@ public class InputHandle {
                 actions[ACTION_MOVE_LEFT],
                 actions[ACTION_MOVE_RIGHT]
             );
+        } else {
+            // Thêm xử lý khi không có phím di chuyển nào được nhấn - về trạng thái Idle
+            movement.setMovementDirection(false, false, false, false);
         }
+
+
         return isAnyActionActive();
     }
 
@@ -84,6 +101,10 @@ public class InputHandle {
             actions[ACTION_MOVE_LEFT] || actions[ACTION_MOVE_RIGHT];
     }
 
+    public boolean isAttack()
+    {
+        return actions[ACTION_ATTACK];
+    }
     /**
      * Kiểm tra một hành động cụ thể
      * @param actionCode Mã hành động cần kiểm tra
