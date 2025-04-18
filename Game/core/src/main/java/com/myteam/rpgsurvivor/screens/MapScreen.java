@@ -8,8 +8,10 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
 import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
 import com.myteam.rpgsurvivor.model.impl.Hero.Samurai;
+import com.myteam.rpgsurvivor.model.impl.Hero.Wizard;
 
 
 public class MapScreen {
@@ -19,6 +21,8 @@ public class MapScreen {
     private SpriteBatch batch;
     private Samurai samurai;
     private Knight knight;
+    private Wizard wizard;
+    private Archer archer;
 
     public MapScreen() {
         float w = Gdx.graphics.getWidth();
@@ -29,8 +33,10 @@ public class MapScreen {
 
         try {
             batch = new SpriteBatch();
-            //samurai = new Samurai(100,100,100,100,200);
-            knight = new Knight(100,100,100,100,200);
+            samurai = new Samurai(100,100,100,100,200);
+            knight = new Knight(200,200,100,100,200);
+            wizard = new Wizard(400,400,100,100,200);
+            archer = new Archer(300,300,100,100,200);
         } catch (Exception e) {
             Gdx.app.error("MapScreen", "Error initializing: " + e.getMessage());
             e.printStackTrace();
@@ -64,16 +70,19 @@ public class MapScreen {
 
         batch.begin();
 
-//        samurai.render(batch, Gdx.graphics.getDeltaTime());
+        samurai.render(batch, Gdx.graphics.getDeltaTime());
         knight.render(batch, Gdx.graphics.getDeltaTime());
-
+        wizard.render(batch, Gdx.graphics.getDeltaTime());
+        archer.render(batch, Gdx.graphics.getDeltaTime());
         batch.end();
     }
 
     public void update() {
         camera.update();
-//        samurai.update();
+        samurai.update();
         knight.update();
+        wizard.update();
+        archer.update();
     }
 
     public void dispose() {

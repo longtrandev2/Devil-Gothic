@@ -30,6 +30,7 @@ public class Samurai extends Player {
     private boolean showDashAttack = false;
     private float dashAttackStateTime = 0f;
 
+
     private static final int IDLE_FRAME_COLS = 10;
     private static final int IDLE_FRAME_ROWS = 1;
     private static final int WALK_FRAME_COLS = 16;
@@ -109,7 +110,10 @@ public class Samurai extends Player {
         // Render nhân vật chính
         TextureRegion currentFrame = animationManager.getCurrentFrame();
         if (currentFrame != null) {
-            batch.draw(currentFrame, entityX, entityY);
+            batch.draw(
+                currentFrame,
+                entityX, entityY
+            );
         }
 
         if(showSmoke)
@@ -184,8 +188,6 @@ public class Samurai extends Player {
             attackHandler.executeAttack();
         }
 
-        updateAnimationState(deltaTime);
-
         if (!skillHandler.isDashing()) {
             movement.update();
         } else {
@@ -201,6 +203,9 @@ public class Samurai extends Player {
                 smokeY = entityY - 10;
             }
         }
+        updateAnimationState(deltaTime);
+
+
     }
 
     private void updateAnimationState(float deltaTime) {

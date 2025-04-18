@@ -14,6 +14,7 @@ public abstract class Player extends Entity{
     protected boolean isInvulnerable;
     protected boolean isInteracting;
 
+
     public Player(float x, float y, int health, int damage, float speed) {
         this.entityX = x;
         this.entityY = y;
@@ -31,11 +32,14 @@ public abstract class Player extends Entity{
         this.speedPoints = 0;
 
 
-
         this.isInvisible = false;
         this.isInvulnerable = false;
         this.isInteracting = false;
     }
+
+
+
+
 
 
 }

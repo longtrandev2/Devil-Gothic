@@ -36,7 +36,7 @@ public class KnightSkill {
 
     private void summonKnights() {
         // Calculate positions around the player
-        float[] angles = {-30f, 0f, 30f}; // Place knights at different angles
+        float[] angles = {0f, 120f, 240f}; // Place knights at different angles
         float distance = 50f; // Distance from player
 
         for (int i = 0; i < NUM_SUMMONS; i++) {
