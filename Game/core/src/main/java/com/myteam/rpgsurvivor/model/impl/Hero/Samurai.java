@@ -3,17 +3,19 @@ package com.myteam.rpgsurvivor.model.impl.Hero;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
-import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.SamuraiAttack;
+import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.BaseAttack;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.controller.movement.Movement;
 import com.myteam.rpgsurvivor.model.Player;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
+import com.myteam.rpgsurvivor.model.enum_type.StateType;
 import com.myteam.rpgsurvivor.skills.SamuraiSkill;
 
 public class Samurai extends Player {
 
     private InputHandle inputHandler;
     private Movement movement;
-    private SamuraiAttack attackHandler;
+    private BaseAttack attackHandler;
     private SamuraiSkill skillHandler;
     private boolean facingRight = true;
     private boolean isAttacking = false;
@@ -33,8 +35,8 @@ public class Samurai extends Player {
 
     private static final int IDLE_FRAME_COLS = 10;
     private static final int IDLE_FRAME_ROWS = 1;
-    private static final int WALK_FRAME_COLS = 16;
-    private static final int WALK_FRAME_ROWS = 1;
+    private static final int RUN_FRAME_COLS = 16;
+    private static final int RUN_FRAME_ROWS = 1;
     private static final int ATTACK_FRAME_COLS = 7;
     private static final int ATTACK_FRAME_ROWS = 1;
     private static final int SKILL_FRAME_COLS = 5;
@@ -42,18 +44,13 @@ public class Samurai extends Player {
     private static final int SMOKE_FRAME_COLS = 9;
     private static final int SMOKE_FRAME_ROWS = 1;
 
-    public static final String STATE_IDLE = "idle";
-    public static final String STATE_WALK = "walk";
-    public static final String STATE_ATTACK = "attack";
-    public static final String STATE_SKILL = "skills";
-    public static final String STATE_SMOKE = "smoke";
 
-    public Samurai(float x, float y, int health, int damage, float speed) {
-        super(x, y, health, damage, speed);
+    public Samurai(float x, float y) {
+        super(x, y, HeroType.SAMURAI);
         this.animationManager = new AnimationManager();
         this.movement = new Movement(this);
         this.inputHandler = new InputHandle(this, movement);
-        this.attackHandler = new SamuraiAttack(this);
+        this.attackHandler = new BaseAttack(this);
         this.skillHandler = new SamuraiSkill(this);
 
         setupAnimations();
@@ -61,41 +58,41 @@ public class Samurai extends Player {
 
     private void setupAnimations() {
         float idleFrameDuration = 0.15f;
-        float walkFrameDuration = 0.1f;
+        float runFrameDuration = 0.1f;
         float attackFrameDuration = 0.08f;
         float skillFrameDuration = 0.08f;
         float smokeFrameDuration = 0.1f;
 
         animationManager.addAnimation(
-            STATE_IDLE,
+            StateType.STATE_IDLE.stateType,
             "Hero/Samurai/FREE_Samurai 2D Pixel Art v1.2/Sprites/IDLE.png",
             IDLE_FRAME_COLS, IDLE_FRAME_ROWS, idleFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_WALK,
+            StateType.STATE_RUN.stateType,
             "Hero/Samurai/FREE_Samurai 2D Pixel Art v1.2/Sprites/RUN.png",
-            WALK_FRAME_COLS, WALK_FRAME_ROWS, walkFrameDuration,
+            RUN_FRAME_COLS, RUN_FRAME_ROWS, runFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_ATTACK,
+            StateType.STATE_ATTACK.stateType,
             "Hero/Samurai/FREE_Samurai 2D Pixel Art v1.2/Sprites/ATTACK 1.png",
             ATTACK_FRAME_COLS, ATTACK_FRAME_ROWS, attackFrameDuration,
             false
         );
 
         animationManager.addAnimation(
-            STATE_SKILL,
+            StateType.STATE_SKILL.stateType,
             "Skills/Samurai Dash/Slash 1/color4/sprite-sheet.png",
             SKILL_FRAME_COLS, SKILL_FRAME_ROWS, skillFrameDuration,
             false
         );
 
         animationManager.addAnimation(
-            STATE_SMOKE,
+            StateType.STATE_SKILL_EFFECT.stateType,
             "Skills/Smoke/SmokeNDust P03 VFX 1.png",
             SMOKE_FRAME_COLS, SMOKE_FRAME_ROWS, smokeFrameDuration,
             false
@@ -114,13 +111,15 @@ public class Samurai extends Player {
                 currentFrame,
                 entityX, entityY
             );
+            System.out.println(entityX + " " + entityY);
         }
+
 
         if(showSmoke)
         {
             smokeStateTime += deltaTime;
             String currentState = animationManager.getCurrentState();
-            animationManager.setState(STATE_SMOKE, false);
+            animationManager.setState(StateType.STATE_SKILL_EFFECT.stateType, false);
 
             TextureRegion smokeFrame = animationManager.getCurrentFrame();
             if (smokeFrame != null) {
@@ -139,7 +138,7 @@ public class Samurai extends Player {
         if (showDashAttack) {
             dashAttackStateTime += deltaTime;
             String currentState = animationManager.getCurrentState();
-            animationManager.setState(STATE_ATTACK, false);
+            animationManager.setState(StateType.STATE_ATTACK.stateType, false);
             TextureRegion attackFrame = animationManager.getCurrentFrame();
 
             if (attackFrame != null) {
@@ -210,38 +209,38 @@ public class Samurai extends Player {
 
     private void updateAnimationState(float deltaTime) {
         if (skillHandler.isDashing() || isUsingSkill) {
-            if (!animationManager.getCurrentState().equals(STATE_SKILL)) {
-                animationManager.setState(STATE_SKILL, true);
+            if (!animationManager.getCurrentState().equals(StateType.STATE_SKILL.stateType)) {
+                animationManager.setState(StateType.STATE_SKILL.stateType, true);
             }
 
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
                 if (movement.isMoving() && !skillHandler.isDashing()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else if (!skillHandler.isDashing()) {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
         }
         else if (isAttacking) {
-            if (!animationManager.getCurrentState().equals(STATE_ATTACK)) {
-                animationManager.setState(STATE_ATTACK, true);
+            if (!animationManager.getCurrentState().equals(StateType.STATE_ATTACK.stateType)) {
+                animationManager.setState(StateType.STATE_ATTACK.stateType, true);
             }
 
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
         }
         else if (movement.isMoving() && !skillHandler.isDashing()) {
-            animationManager.setState(STATE_WALK, true);
+            animationManager.setState(StateType.STATE_RUN.stateType, true);
         }
         else if (!skillHandler.isDashing()) {
-            animationManager.setState(STATE_IDLE, true);
+            animationManager.setState(StateType.STATE_IDLE.stateType, true);
         }
 
         this.setFacingRight(facingRight);

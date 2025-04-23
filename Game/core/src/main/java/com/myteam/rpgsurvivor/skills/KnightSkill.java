@@ -8,6 +8,8 @@ import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.myteam.rpgsurvivor.model.enum_type.HeroType.SUMMON_KNIGHT;
+
 public class KnightSkill {
     private static final int NUM_SUMMONS = 3;
     private static final float SUMMON_DURATION = 10f;
@@ -59,11 +61,7 @@ public class KnightSkill {
             SummonedKnight summonedKnight = new SummonedKnight(
                 spawnX,
                 spawnY,
-                10, // Half of owner's health
-                owner.getDamage() / 2,  // Half of owner's damage
-                owner.getSpeed() * 1.2f, // Slightly faster
-                SUMMON_DURATION,
-                i // Pass index to identify which animation to use
+                SUMMON_DURATION
             );
 
             // Set the same direction as the player

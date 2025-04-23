@@ -6,6 +6,8 @@ import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.Movement;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
+import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 public class Archer extends Player {
     private InputHandle inputHandle;
@@ -23,8 +25,8 @@ public class Archer extends Player {
     private static final int IDLE_FRAME_COLS = 12;
     private static final int IDLE_FRAME_ROWS = 1;
 
-    private static final int WALK_FRAME_COLS = 10;
-    private static final int WALK_FRAME_ROWS = 1;
+    private static final int RUN_FRAME_COLS = 10;
+    private static final int RUN_FRAME_ROWS = 1;
 
     private static final int HURT_FRAME_COLS = 4;
     private static final int HURT_FRAME_ROWS = 1;
@@ -38,15 +40,10 @@ public class Archer extends Player {
     private static final int SKILL_EFFECT_FRAME_COLS = 17;
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
 
-    public static final String STATE_IDLE = "idle";
-    public static final String STATE_WALK = "walk";
-    public static final String STATE_ATTACK = "attack";
-    public static final String STATE_SKILL = "skills";
-    public static final String STATE_SKILL_EFFECT = "skillEffects";
 
-    public Archer(float x, float y, int health, int damage, float speed)
+    public Archer(float x, float y)
     {
-        super(x,y,health,damage,speed);
+        super(x,y,HeroType.ARCHER);
         this.animationManager = new AnimationManager();
         this.skillEffectManager = new AnimationManager();
         this.movement = new Movement(this);
@@ -58,41 +55,41 @@ public class Archer extends Player {
     public void setupAnimation()
     {
         float idleFrameDuration = 0.15f;
-        float walkFrameDuration = 0.1f;
+        float runFrameDuration = 0.1f;
         float attackFrameDuration = 0.08f;
         float skillFrameDuration = 0.08f;
         float skillEffectDuration = 0.1f;
 
         animationManager.addAnimation(
-            STATE_IDLE,
+            StateType.STATE_IDLE.stateType,
             "Hero/Achers/spriteSheet/idle_1.png",
             IDLE_FRAME_COLS, IDLE_FRAME_ROWS,idleFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_WALK,
+            StateType.STATE_RUN.stateType,
             "Hero/Achers/spriteSheet/run_1.png",
-            WALK_FRAME_COLS, WALK_FRAME_ROWS,walkFrameDuration,
+            RUN_FRAME_COLS, RUN_FRAME_ROWS,runFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_ATTACK,
+            StateType.STATE_ATTACK.stateType,
             "Hero/Achers/spriteSheet/atk.png",
             ATTACK_FRAME_COLS, ATTACK_FRAME_ROWS,attackFrameDuration,
             false
         );
 
         animationManager.addAnimation(
-            STATE_SKILL,
+            StateType.STATE_SKILL.stateType,
             "Hero/Achers/spriteSheet/atkSkill.png",
             SKILL_FRAME_COLS, SKILL_FRAME_ROWS,skillFrameDuration,
             false
         );
 
         skillEffectManager.addAnimation(
-            STATE_SKILL_EFFECT,
+            StateType.STATE_SKILL_EFFECT.stateType,
             "Hero/Achers/spriteSheet/arrow_shower_effect_1.png",
             SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectDuration,
             true
@@ -141,14 +138,14 @@ public class Archer extends Player {
             if(!isUsingSkill)
             {
                 isUsingSkill = true;
-                animationManager.setState(STATE_SKILL, true);
+                animationManager.setState(StateType.STATE_SKILL.stateType, true);
 
                 showSkill = true;
                 skillStateTime = 0f;
                 skillX = entityX + (facingRight ? 100 : -100);
                 skillY = entityY;
 
-                skillEffectManager.setState(STATE_SKILL_EFFECT, true);
+                skillEffectManager.setState( StateType.STATE_SKILL_EFFECT.stateType, true);
             }
         }
         movement.update();
@@ -156,7 +153,7 @@ public class Archer extends Player {
         if (!isAttacking && !isUsingSkill) {
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
                 isAttacking = true;
-                animationManager.setState(STATE_ATTACK, true);
+                animationManager.setState(StateType.STATE_ATTACK.stateType, true);
             }
         }
 
@@ -171,9 +168,9 @@ public class Archer extends Player {
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
             return;
@@ -183,9 +180,9 @@ public class Archer extends Player {
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
             return;
@@ -193,9 +190,9 @@ public class Archer extends Player {
 
 
         if (movement.isMoving()) {
-            animationManager.setState(STATE_WALK, true);
+            animationManager.setState(StateType.STATE_RUN.stateType, true);
         } else {
-            animationManager.setState(STATE_IDLE, true);
+            animationManager.setState(StateType.STATE_IDLE.stateType, true);
         }
 
         this.setFacingRight(facingRight);

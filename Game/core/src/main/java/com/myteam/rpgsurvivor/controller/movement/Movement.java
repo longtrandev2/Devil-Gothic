@@ -23,6 +23,7 @@ public class Movement {
 
     public Movement(Entity entity) {
         this.entity = entity;
+        System.out.println(entity);
         this.direction = new Vector2(0, 0);
         this.isMoving = false;
 
@@ -90,7 +91,7 @@ public class Movement {
     public void update() {
         if (isMoving) {
             float deltaTime = Gdx.graphics.getDeltaTime();
-            float speed = entity.getSpeed();
+            float speed = entity.getMoveSpeed();
 
             float newX = entity.getEntityX() + direction.x * speed * deltaTime;
             float newY = entity.getEntityY() + direction.y * speed * deltaTime;

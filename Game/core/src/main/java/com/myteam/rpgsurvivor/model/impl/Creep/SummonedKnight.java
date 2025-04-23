@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.model.Entity;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 public class SummonedKnight extends Entity {
     private AnimationManager animationManager;
@@ -30,12 +31,10 @@ public class SummonedKnight extends Entity {
     private static final int DEATH_FRAME_ROWS = 1;
 
 
-    public SummonedKnight(float x, float y, int health, int damage, float speed, float lifetime, int knightType) {
+    public SummonedKnight(float x, float y, float lifetime) {
         this.entityX = x;
         this.entityY = y;
-        this.health = health;
-        this.damage = damage;
-        this.speed = speed;
+        this.stat = HeroType.SUMMON_KNIGHT.stat;
         remainingLife = 3f; // Thoi gian ton tai 15s
         showSmoke = true;
 

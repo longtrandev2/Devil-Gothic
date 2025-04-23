@@ -26,7 +26,7 @@ public class SamuraiSkill {
         this.samurai = samurai;
         this.damage = 50;
         this.range = 100;
-
+        System.out.println(samurai);
         // Initialize dash properties
         isDashing = false;
         dashDistance = 150.0f;
