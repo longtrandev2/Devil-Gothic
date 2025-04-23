@@ -1,5 +1,7 @@
 package com.myteam.rpgsurvivor.model;
 
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
+
 public abstract class Player extends Entity{
 
     protected int level;
@@ -15,13 +17,11 @@ public abstract class Player extends Entity{
     protected boolean isInteracting;
 
 
-    public Player(float x, float y, int health, int damage, float speed) {
+    public Player(float x, float y, HeroType heroType) {
         this.entityX = x;
         this.entityY = y;
-        this.health = health;
-        this.damage = damage;
-        this.speed = speed;
 
+        this.stat = heroType.stat;
 
         this.level = 1;
         this.experience = 0;
@@ -36,10 +36,6 @@ public abstract class Player extends Entity{
         this.isInvulnerable = false;
         this.isInteracting = false;
     }
-
-
-
-
 
 
 }

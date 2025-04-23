@@ -6,6 +6,8 @@ import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.Movement;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
+import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 public class Wizard extends Player {
     private InputHandle inputHandle;
@@ -25,8 +27,8 @@ public class Wizard extends Player {
     private static final int IDLE_FRAME_COLS = 6;
     private static final int IDLE_FRAME_ROWS = 1;
 
-    private static final int WALK_FRAME_COLS = 8;
-    private static final int WALK_FRAME_ROWS = 1;
+    private static final int RUN_FRAME_COLS = 8;
+    private static final int RUN_FRAME_ROWS = 1;
 
     private static final int HURT_FRAME_COLS = 4;
     private static final int HURT_FRAME_ROWS = 1;
@@ -40,14 +42,9 @@ public class Wizard extends Player {
     private static final int SKILL_EFFECT_FRAME_COLS = 7;
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
 
-    public static final String STATE_IDLE = "idle";
-    public static final String STATE_WALK = "walk";
-    public static final String STATE_ATTACK = "attack";
-    public static final String STATE_SKILL = "skills";
-    public static final String STATE_SKILL_EFFECT = "skillEffects";
 
-    public Wizard(float x, float y, int health, int damage, float speed) {
-        super(x, y, health, damage, speed);
+    public Wizard(float x, float y) {
+        super(x, y, HeroType.WIZARD);
         this.animationManager = new AnimationManager();
         this.skillEffectManager = new AnimationManager();
         this.movement = new Movement(this);
@@ -64,35 +61,35 @@ public class Wizard extends Player {
         float skillEffectFrameDuration = 0.1f;
 
         animationManager.addAnimation(
-            STATE_IDLE,
+            StateType.STATE_IDLE.stateType,
             "Hero/Wizard/Wizard Pack/SpriteSheet/Idle-Resize.png",
             IDLE_FRAME_COLS, IDLE_FRAME_ROWS, idleFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_WALK,
+            StateType.STATE_RUN.stateType,
             "Hero/Wizard/Wizard Pack/SpriteSheet/Run-Resize.png",
-            WALK_FRAME_COLS, WALK_FRAME_ROWS, walkFrameDuration,
+            RUN_FRAME_COLS, RUN_FRAME_ROWS, walkFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_ATTACK,
+            StateType.STATE_ATTACK.stateType,
             "Hero/Wizard/Wizard Pack/SpriteSheet/Attack1-Resize.png",
             ATTACK_FRAME_COLS, ATTACK_FRAME_ROWS, attackFrameDuration,
             false
         );
 
         animationManager.addAnimation(
-            STATE_SKILL,
+            StateType.STATE_SKILL.stateType,
             "Hero/Wizard/Wizard Pack/SpriteSheet/AttackSkill-Resize.png",
             SKILL_FRAME_COLS, SKILL_FRAME_ROWS, skillFrameDuration,
             false
         );
 
         skillEffectManager.addAnimation(
-            STATE_SKILL_EFFECT,
+            StateType.STATE_SKILL_EFFECT.stateType,
             "Skills/WizardSkill/Wizard Skill.png",
             SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectFrameDuration,
             true
@@ -138,7 +135,7 @@ public class Wizard extends Player {
         if (inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking) {
             if (!isUsingSkill) {
                 isUsingSkill = true;
-                animationManager.setState(STATE_SKILL, true);
+                animationManager.setState(StateType.STATE_SKILL.stateType, true);
 
                 showSkill = true;
                 skillStateTime = 0f;
@@ -146,7 +143,7 @@ public class Wizard extends Player {
                 skillX = entityX + (facingRight ? 100 : -100);
                 skillY = entityY;
 
-                skillEffectManager.setState(STATE_SKILL_EFFECT, true);
+                skillEffectManager.setState(StateType.STATE_SKILL_EFFECT.stateType, true);
             }
         }
 
@@ -155,7 +152,7 @@ public class Wizard extends Player {
         if (!isAttacking && !isUsingSkill) {
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
                 isAttacking = true;
-                animationManager.setState(STATE_ATTACK, true);
+                animationManager.setState(StateType.STATE_ATTACK.stateType, true);
             }
         }
 
@@ -171,9 +168,9 @@ public class Wizard extends Player {
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
             return;
@@ -183,18 +180,18 @@ public class Wizard extends Player {
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
             return;
         }
 
         if (movement.isMoving()) {
-            animationManager.setState(STATE_WALK, true);
+            animationManager.setState(StateType.STATE_RUN.stateType, true);
         } else {
-            animationManager.setState(STATE_IDLE, true);
+            animationManager.setState(StateType.STATE_IDLE.stateType, true);
         }
 
         this.setFacingRight(facingRight);

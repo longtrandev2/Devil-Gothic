@@ -3,6 +3,7 @@ package com.myteam.rpgsurvivor.animation;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 import java.util.HashMap;
 
@@ -19,7 +20,7 @@ public class AnimationManager {
     public AnimationManager()
     {
         this.animations = new HashMap<>();
-        this.currentState = "idle";
+        this.currentState = StateType.STATE_IDLE.stateType;
         this.stateTime = 0f;
         this.facingRight = true;
     }
@@ -55,6 +56,7 @@ public class AnimationManager {
 
     public TextureRegion getCurrentFrame() {
         Animation<TextureRegion> currentAnimation = animations.get(currentState);
+//        System.out.println(currentState);
         if (currentAnimation == null) {
             if (!animations.isEmpty()) {
                 currentAnimation = animations.values().iterator().next();

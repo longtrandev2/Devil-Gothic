@@ -5,6 +5,8 @@ import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.Movement;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
+import com.myteam.rpgsurvivor.model.enum_type.StateType;
 import com.myteam.rpgsurvivor.skills.KnightSkill;
 
 public class Knight extends Player{
@@ -18,8 +20,8 @@ public class Knight extends Player{
     private static final int IDLE_FRAME_COLS = 7;
     private static final int IDLE_FRAME_ROWS = 1;
 
-    private static final int WALK_FRAME_COLS = 8;
-    private static final int WALK_FRAME_ROWS = 1;
+    private static final int RUN_FRAME_COLS = 8;
+    private static final int RUN_FRAME_ROWS = 1;
 
     private static final int HURT_FRAME_COLS = 4;
     private static final int HURT_FRAME_ROWS = 1;
@@ -30,14 +32,10 @@ public class Knight extends Player{
     private static final int ATTACK_FRAME_COLS = 6;
     private static final int ATTACK_FRAME_ROWS = 1;
 
-    public static final String STATE_IDLE = "idle";
-    public static final String STATE_WALK = "walk";
-    public static final String STATE_ATTACK = "attack";
-    public static final String STATE_SKILL = "skills";
 
-    public Knight(float x, float y, int health, int damage, float speed)
+    public Knight(float x, float y)
     {
-        super(x,y,health,damage,speed);
+        super(x,y, HeroType.KNIGHT);
         this.animationManager = new AnimationManager();
         this.movement = new Movement(this);
         this.inputHandle = new InputHandle(this, movement);
@@ -49,34 +47,34 @@ public class Knight extends Player{
     private void setupAnimation()
     {
         float idleFrameDuration = 0.15f;
-        float walkFrameDuration = 0.1f;
+        float runFrameDuration = 0.1f;
         float attackFrameDuration = 0.08f;
         float skillFrameDuration = 0.08f;
 
 
         animationManager.addAnimation(
-            STATE_IDLE,
+            StateType.STATE_IDLE.stateType,
             "Hero/Knight/Knight 2D Pixel Art/Sprites/with_outline/IDLE.png",
             IDLE_FRAME_COLS, IDLE_FRAME_ROWS,idleFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_WALK,
+            StateType.STATE_RUN.stateType,
             "Hero/Knight/Knight 2D Pixel Art/Sprites/with_outline/RUN.png",
-            WALK_FRAME_COLS, WALK_FRAME_ROWS,walkFrameDuration,
+            RUN_FRAME_COLS, RUN_FRAME_ROWS,runFrameDuration,
             true
         );
 
         animationManager.addAnimation(
-            STATE_ATTACK,
+            StateType.STATE_SKILL.stateType,
             "Hero/Knight/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png",
             ATTACK_FRAME_COLS, ATTACK_FRAME_ROWS,attackFrameDuration,
             false
         );
 
         animationManager.addAnimation(
-            STATE_SKILL,
+            StateType.STATE_SKILL.stateType,
             "Hero/Knight/Knight 2D Pixel Art/Sprites/with_outline/DEFEND.png",
             SKILL_FRAME_COLS, SKILL_FRAME_ROWS,skillFrameDuration,
             false
@@ -114,14 +112,14 @@ public class Knight extends Player{
 
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
                 isAttacking = true;
-                animationManager.setState(STATE_ATTACK, true);
+                animationManager.setState(StateType.STATE_SKILL.stateType, true);
             }
 
             if (inputHandle.isActionActive(InputHandle.ACTION_SKILL)) {
                 if(knightSkill.activateSkill())
                 {
                     isUsingSkill = true;
-                    animationManager.setState(STATE_SKILL, true);
+                    animationManager.setState(StateType.STATE_SKILL.stateType, true);
                 }
             }
 
@@ -143,9 +141,9 @@ public class Knight extends Player{
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
             return;
@@ -155,9 +153,9 @@ public class Knight extends Player{
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
                 if (movement.isMoving()) {
-                    animationManager.setState(STATE_WALK, true);
+                    animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
-                    animationManager.setState(STATE_IDLE, true);
+                    animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
             return;
@@ -165,9 +163,9 @@ public class Knight extends Player{
 
 
         if (movement.isMoving()) {
-            animationManager.setState(STATE_WALK, true);
+            animationManager.setState(StateType.STATE_RUN.stateType, true);
         } else {
-            animationManager.setState(STATE_IDLE, true);
+            animationManager.setState(StateType.STATE_IDLE.stateType, true);
         }
 
         this.setFacingRight(facingRight);

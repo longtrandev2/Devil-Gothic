@@ -1,27 +1,27 @@
 package com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack;
 
 import com.myteam.rpgsurvivor.controller.combat.attack.impl.Attack;
-import com.myteam.rpgsurvivor.model.impl.Hero.Samurai;
+import com.myteam.rpgsurvivor.model.Player;
 
-public class SamuraiAttack implements Attack {
-    private Samurai samurai;
+public class BaseAttack implements Attack {
+    private Player chosenHero;
     private int damage;
     private float range;
-    private int cooldown;
+    private int speedAttack;
     private long lastAttackTime;
 
-    public SamuraiAttack(Samurai samurai) {
-        this.samurai = samurai;
-        this.damage = samurai.getDamage();
-        this.range = 1.5f; // Default attack range for samurai
-        this.cooldown = 800; // Default cooldown (800ms)
+    public BaseAttack(Player chosenHero) {
+        this.chosenHero = chosenHero;
+        this.damage = chosenHero.getDamage();
+        this.range = chosenHero.getRangeAttack(); // Default attack range for samurai
+        this.speedAttack = 800; // Default speedAttack (800ms)
         this.lastAttackTime = 0;
     }
 
     @Override
     public boolean executeAttack() {
         if (!canAttack()) {
-            return false; // Can't attack if cooldown is not finished
+            return false; // Can't attack if speedAttack is not finished
         }
 
         // Trigger samurai's attack animation only once attack is possible
@@ -46,13 +46,13 @@ public class SamuraiAttack implements Attack {
 
     @Override
     public int getCooldown() {
-        return cooldown;
+        return speedAttack;
     }
 
     @Override
     public boolean canAttack() {
         // Return true if enough time has passed since the last attack
-        return System.currentTimeMillis() - lastAttackTime >= cooldown;
+        return System.currentTimeMillis() - lastAttackTime >= speedAttack;
     }
 
     @Override
