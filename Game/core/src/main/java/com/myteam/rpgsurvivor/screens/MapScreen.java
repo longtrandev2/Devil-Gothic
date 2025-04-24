@@ -71,11 +71,11 @@ public class MapScreen {
         }
 
 
-        batch.begin();
-
-        chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-
-        batch.end();
+        if (!isPaused()) {
+            batch.begin();
+            chosenHero.render(batch, Gdx.graphics.getDeltaTime());
+            batch.end();
+        }
         layoutPlayScreen.render();
 
 
@@ -85,8 +85,10 @@ public class MapScreen {
 
     public void update() {
         camera.update();
-        chosenHero.update();
-        System.out.println("Hero position: " + chosenHero.getEntityX() + ", " + chosenHero.getEntityY());
+        if (!isPaused()) {
+            chosenHero.update();
+        }
+        //System.out.println("Hero position: " + chosenHero.getEntityX() + ", " + chosenHero.getEntityY());
 
     }
 
@@ -101,5 +103,9 @@ public class MapScreen {
 
     public OrthographicCamera getCamera() {
         return camera;
+    }
+
+    public boolean isPaused() {
+        return layoutPlayScreen != null && layoutPlayScreen.isPaused();
     }
 }

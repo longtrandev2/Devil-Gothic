@@ -19,6 +19,7 @@ public class LayoutPlayScreen {
     private Viewport viewport;
     private SpriteBatch batch;
     private Player chosenHero;
+    private PauseScreen pauseScreen;
 
     //Pause Button
     private Texture pauseUnactiveTexture;
@@ -57,6 +58,7 @@ public class LayoutPlayScreen {
         this.chosenHero = chosenHero;
         maxHealth = chosenHero.getMaxHealth();
         currentHealth = chosenHero.getCurrentHealth();
+        pauseScreen = new PauseScreen(camera);
 
         try {
             pauseUnactiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameUnactive.png"));
@@ -128,6 +130,7 @@ public class LayoutPlayScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Hien thi menu
+                togglePause();
                 System.out.println("Pause button clicked");
             }
         });
@@ -140,44 +143,51 @@ public class LayoutPlayScreen {
         stage.act(Gdx.graphics.getDeltaTime());
         batch.begin();
 
-        float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
+        if(!isPaused)
+        {
+            float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
 
-        float avatarPadding = 5;
-        float avatarSize = avatarFrameSize - (avatarPadding * 2);
+            float avatarPadding = 5;
+            float avatarSize = avatarFrameSize - (avatarPadding * 2);
 
-        batch.draw(frameAvatar,
-            padding,
-            topY,
-            avatarFrameSize,
-            avatarFrameSize);
+            batch.draw(frameAvatar,
+                padding,
+                topY,
+                avatarFrameSize,
+                avatarFrameSize);
 
-        batch.draw(heroAvatar,
-            padding + avatarPadding,
-            topY + avatarPadding,
-            avatarSize,
-            avatarSize);
+            batch.draw(heroAvatar,
+                padding + avatarPadding,
+                topY + avatarPadding,
+                avatarSize,
+                avatarSize);
 
-        float bloodBarX = padding + avatarFrameSize + padding;
-        float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
+            float bloodBarX = padding + avatarFrameSize + padding;
+            float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
 
-        batch.draw(frameBlood,
-            bloodBarX,
-            bloodBarY,
-            bloodBarWidth,
-            bloodBarHeight);
+            batch.draw(frameBlood,
+                bloodBarX,
+                bloodBarY,
+                bloodBarWidth,
+                bloodBarHeight);
 
-        float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX);
-        float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
+            float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX);
+            float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
 
-        // Draw current blood frame based on health percentage
-        batch.draw(bloodFrames[currentBloodFrame],
-            bloodBarX + bloodBarInnerPaddingX - 12,
-            bloodBarY + bloodBarInnerPaddingY - 1,
-            innerBloodWidth,
-            innerBloodHeight);
+            // Draw current blood frame based on health percentage
+            batch.draw(bloodFrames[currentBloodFrame],
+                bloodBarX + bloodBarInnerPaddingX - 12,
+                bloodBarY + bloodBarInnerPaddingY - 1,
+                innerBloodWidth,
+                innerBloodHeight);
+        }
 
         batch.end();
         stage.draw();
+
+        if (isPaused) {
+            pauseScreen.render();
+        }
     }
 
     public void resize(int width, int height) {
@@ -193,5 +203,23 @@ public class LayoutPlayScreen {
         frameAvatar.dispose();
         frameBlood.dispose();
         bloodTexture.dispose();
+    }
+
+    public PauseScreen getPauseScreen()
+    {
+        return  pauseScreen;
+    }
+
+    public void togglePause() {
+        isPaused = !isPaused;
+        if (isPaused) {
+            pauseScreen.show();
+        } else {
+            pauseScreen.hide();
+        }
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 }
