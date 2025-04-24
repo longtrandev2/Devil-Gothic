@@ -59,6 +59,31 @@ public class LayoutPlayScreen {
         maxHealth = chosenHero.getMaxHealth();
         currentHealth = chosenHero.getCurrentHealth();
         pauseScreen = new PauseScreen(camera);
+        pauseScreen.setListener(new PauseScreenListener() {
+            @Override
+            public void onHomeButtonClicked() {
+                System.out.println("Home button clicked");
+                togglePause();
+                isPaused = false;
+                Gdx.input.setInputProcessor(stage);
+            }
+
+            @Override
+            public void onResumeButtonClicked() {
+                System.out.println("Resume button clicked");
+                togglePause();
+                isPaused = false;
+                Gdx.input.setInputProcessor(stage);
+            }
+
+            @Override
+            public void onRestartButtonClicked() {
+                System.out.println("Restart button clicked");
+                togglePause();
+                isPaused = false;
+                Gdx.input.setInputProcessor(stage);
+            }
+        });
 
         try {
             pauseUnactiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameUnactive.png"));
