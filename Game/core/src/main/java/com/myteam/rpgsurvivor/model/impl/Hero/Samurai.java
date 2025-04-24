@@ -111,7 +111,6 @@ public class Samurai extends Player {
                 currentFrame,
                 entityX, entityY
             );
-            System.out.println(entityX + " " + entityY);
         }
 
 

@@ -31,7 +31,6 @@ public abstract class Entity {
     }
 
     public void setEntityPosition(float x, float y) {
-//        System.out.println(x + " " + y);
         this.entityX = x;
         this.entityY = y;
     }
@@ -112,6 +111,14 @@ public abstract class Entity {
         if(currentHealth <= 0){
             die();
         }
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(int currentHealth) {
+        this.currentHealth = currentHealth;
     }
 
     private void die() {

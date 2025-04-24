@@ -35,7 +35,7 @@ public class Knight extends Player{
 
     public Knight(float x, float y)
     {
-        super(x,y, HeroType.KNIGHT);
+        super(x,y,HeroType.KNIGHT);
         this.animationManager = new AnimationManager();
         this.movement = new Movement(this);
         this.inputHandle = new InputHandle(this, movement);
