@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,7 +9,7 @@ import com.myteam.rpgsurvivor.screens.MainMenuScreen;
 import com.myteam.rpgsurvivor.screens.MapScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends ApplicationAdapter {
+public class Main extends Game {
     private MapScreen map;
     private MainMenuScreen mainMenuScreen;
 
@@ -16,7 +17,7 @@ public class Main extends ApplicationAdapter {
     public void create() {
         // Khởi tạo camera
        //map = new MapScreen();
-        mainMenuScreen = new MainMenuScreen();
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
@@ -27,7 +28,8 @@ public class Main extends ApplicationAdapter {
         // Cập nhật camera
         //map.update();
         //map.render();
-        mainMenuScreen.render(Gdx.graphics.getDeltaTime());
+        //mainMenuScreen.render(Gdx.graphics.getDeltaTime());
+        super.render();
     }
 
     @Override

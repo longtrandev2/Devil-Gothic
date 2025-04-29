@@ -1,6 +1,9 @@
 package com.myteam.rpgsurvivor.screens;
 
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,10 +19,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.myteam.rpgsurvivor.Main;
 
-public class MainMenuScreen {
+public class MainMenuScreen implements Screen {
+    private final Main game;
     private Stage stage;
     private Viewport viewport;
     private SpriteBatch batch;
@@ -50,17 +56,18 @@ public class MainMenuScreen {
     private int paddingY = 20;
     private int paddingX = 100;
 
-    public MainMenuScreen() {
+    public MainMenuScreen(final Main game) {
+        this.game = game;
         w = Gdx.graphics.getWidth();
         h = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
-
         viewport = new FitViewport(w, h, camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+
 
         loadTextures();
         setupLayout();
@@ -107,6 +114,8 @@ public class MainMenuScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Play button clicked");
+                game.setScreen(new ChosseHeroScreen(game));
+
             }
         });
 
@@ -149,15 +158,36 @@ public class MainMenuScreen {
 
     }
 
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
     public void render(float delta) {
         stage.act(delta);
         stage.draw();
     }
 
+    @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
 
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
+    }
+
+    @Override
     public void dispose() {
         stage.dispose();
         batch.dispose();
@@ -169,7 +199,5 @@ public class MainMenuScreen {
         settingHover.dispose();
         exitUnHover.dispose();
         exitHover.dispose();
-
-
     }
 }
