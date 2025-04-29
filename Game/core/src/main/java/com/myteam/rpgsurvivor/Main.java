@@ -30,11 +30,13 @@ public class Main extends Game {
         //map.render();
         //mainMenuScreen.render(Gdx.graphics.getDeltaTime());
         super.render();
+
     }
 
     @Override
     public void dispose() {
         //map.dispose();
         mainMenuScreen.dispose();
+
     }
 }
