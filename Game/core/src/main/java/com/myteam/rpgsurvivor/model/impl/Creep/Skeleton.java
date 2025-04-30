@@ -10,24 +10,21 @@ import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
-public class Goblin extends Enemy {
+public class Skeleton extends Enemy {
     private AnimationManager animationManager;
     private StateType currentState;
     private EnemyMovement enemyMovement;
 
-    public Goblin(float x, float y, Player player, AnimationForEnemy animationFactory) {
-        super(x, y, MonsterType.GOBLIN, player);
-        entityX = x;
-        entityY = y;
-        this.enemyMovement = new EnemyMovement(x,y,player,MonsterType.GOBLIN.stat.moveSpeed);
-        this.animationManager = animationFactory.createEnemyAnimation(MonsterType.GOBLIN);
+    public Skeleton(float x, float y, Player player, AnimationForEnemy animationFactory)
+    {
+        super(x,y, MonsterType.RAT, player);
+        this.enemyMovement = new EnemyMovement(x,y,player,MonsterType.SKELETON.stat.moveSpeed);
+        this.animationManager = animationFactory.createEnemyAnimation(MonsterType.SKELETON);
         this.currentState = StateType.STATE_IDLE;
 
         this.detectionRange = 1000f;
         this.attackRange = 10f;
-
     }
-
 
     @Override
     public void update(float deltaTime) {

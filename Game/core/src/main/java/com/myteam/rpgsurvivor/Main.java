@@ -16,8 +16,8 @@ public class Main extends Game {
     @Override
     public void create() {
         // Khởi tạo camera
-       //map = new MapScreen();
-        setScreen(new MainMenuScreen(this));
+       map = new MapScreen();
+       //setScreen(new MainMenuScreen(this));
     }
 
     @Override
@@ -26,17 +26,17 @@ public class Main extends Game {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Cập nhật camera
-        //map.update();
-        //map.render();
+        map.update();
+        map.render();
         //mainMenuScreen.render(Gdx.graphics.getDeltaTime());
-        super.render();
+        //super.render();
 
     }
 
     @Override
     public void dispose() {
-        //map.dispose();
-        mainMenuScreen.dispose();
+        map.dispose();
+        //mainMenuScreen.dispose();
 
     }
 }

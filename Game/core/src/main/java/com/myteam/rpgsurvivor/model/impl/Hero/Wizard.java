@@ -3,7 +3,7 @@ package com.myteam.rpgsurvivor.model.impl.Hero;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
-import com.myteam.rpgsurvivor.controller.movement.Movement;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
@@ -11,7 +11,7 @@ import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 public class Wizard extends Player {
     private InputHandle inputHandle;
-    private Movement movement;
+    private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
@@ -47,8 +47,8 @@ public class Wizard extends Player {
         super(x, y, HeroType.WIZARD);
         this.animationManager = new AnimationManager();
         this.skillEffectManager = new AnimationManager();
-        this.movement = new Movement(this);
-        this.inputHandle = new InputHandle(this, movement);
+        this.heroMovement = new HeroMovement(this);
+        this.inputHandle = new InputHandle(this, heroMovement);
 
         setupAnimation();
     }
@@ -124,8 +124,8 @@ public class Wizard extends Player {
     }
 
     @Override
-    public void update() {
-        float deltaTime = 1 / 60f;
+    public void update(float deltaTime) {
+        deltaTime = 1 / 60f;
         updateWithDeltaTime(deltaTime);
     }
 
@@ -147,7 +147,7 @@ public class Wizard extends Player {
             }
         }
 
-        movement.update();
+        heroMovement.update();
 
         if (!isAttacking && !isUsingSkill) {
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
@@ -167,7 +167,7 @@ public class Wizard extends Player {
         if (isUsingSkill) {
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
-                if (movement.isMoving()) {
+                if (heroMovement.isMoving()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
                     animationManager.setState(StateType.STATE_IDLE.stateType, true);
@@ -179,7 +179,7 @@ public class Wizard extends Player {
         if (isAttacking) {
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
-                if (movement.isMoving()) {
+                if (heroMovement.isMoving()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
                     animationManager.setState(StateType.STATE_IDLE.stateType, true);
@@ -188,7 +188,7 @@ public class Wizard extends Player {
             return;
         }
 
-        if (movement.isMoving()) {
+        if (heroMovement.isMoving()) {
             animationManager.setState(StateType.STATE_RUN.stateType, true);
         } else {
             animationManager.setState(StateType.STATE_IDLE.stateType, true);

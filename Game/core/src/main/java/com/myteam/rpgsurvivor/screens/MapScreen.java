@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.myteam.rpgsurvivor.controller.EnemySpawnController;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
 import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
@@ -26,6 +27,7 @@ public class MapScreen {
     private SpriteBatch batch;
     private Player chosenHero;
     private LayoutPlayScreen layoutPlayScreen;
+    private EnemySpawnController enemySpawnController;
 
     public MapScreen() {
         float w = Gdx.graphics.getWidth();
@@ -38,12 +40,18 @@ public class MapScreen {
             batch = new SpriteBatch();
             chosenHero = new Samurai(300,300);
             layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero);
+
         } catch (Exception e) {
             Gdx.app.error("MapScreen", "Error initializing: " + e.getMessage());
             e.printStackTrace();
         }
 
         loadMap();
+        enemySpawnController = new EnemySpawnController(chosenHero, map);
+
+        enemySpawnController.setMaxEnemiesOnMap(15);
+        enemySpawnController.setSpawnInterval(3.0f);
+        enemySpawnController.setTimeBetweenWaves(45.0f);
     }
 
     public void loadMap() {
@@ -62,32 +70,32 @@ public class MapScreen {
 
         camera.update();
 
-
-
-
         if (tiledMapRenderer != null) {
             tiledMapRenderer.setView(camera);
             tiledMapRenderer.render();
         }
 
+        batch.begin();
+
 
         if (!isPaused()) {
-            batch.begin();
             chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-            batch.end();
         }
+        if (enemySpawnController != null) {
+            enemySpawnController.render(batch, Gdx.graphics.getDeltaTime());
+        }
+
+        batch.end();
+
         layoutPlayScreen.render();
-
-
-
-
     }
 
     public void update() {
         camera.update();
         if (!isPaused()) {
-            chosenHero.update();
+            chosenHero.update(Gdx.graphics.getDeltaTime());
         }
+        enemySpawnController.update(Gdx.graphics.getDeltaTime());
         //System.out.println("Hero position: " + chosenHero.getEntityX() + ", " + chosenHero.getEntityY());
 
     }

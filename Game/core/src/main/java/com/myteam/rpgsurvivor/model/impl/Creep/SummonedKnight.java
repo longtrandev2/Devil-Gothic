@@ -102,7 +102,7 @@ public class SummonedKnight extends Entity {
 
     }
 
-    @Override
+
     public void update() {
         update(1/60f);
     }

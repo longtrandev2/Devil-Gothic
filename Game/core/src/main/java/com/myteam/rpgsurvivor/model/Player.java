@@ -1,6 +1,11 @@
 package com.myteam.rpgsurvivor.model;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
+
+import java.awt.*;
 
 public abstract class Player extends Entity{
 
@@ -15,6 +20,8 @@ public abstract class Player extends Entity{
     protected boolean isInvisible;
     protected boolean isInvulnerable;
     protected boolean isInteracting;
+
+    private ShapeRenderer shapeRenderer;
 
 
     public Player(float x, float y, HeroType heroType) {
@@ -35,7 +42,15 @@ public abstract class Player extends Entity{
         this.isInvisible = false;
         this.isInvulnerable = false;
         this.isInteracting = false;
+
+        this.hitbox = new Rectangle(x, y, 100, 50);
+
     }
+
+
+
+
+
 
 
 }

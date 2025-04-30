@@ -2,10 +2,11 @@ package com.myteam.rpgsurvivor.model.impl.Hero;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.BaseAttack;
 import com.myteam.rpgsurvivor.input.InputHandle;
-import com.myteam.rpgsurvivor.controller.movement.Movement;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
@@ -14,13 +15,14 @@ import com.myteam.rpgsurvivor.skills.SamuraiSkill;
 public class Samurai extends Player {
 
     private InputHandle inputHandler;
-    private Movement movement;
+    private HeroMovement heroMovement;
     private BaseAttack attackHandler;
     private SamuraiSkill skillHandler;
     private boolean facingRight = true;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
+    private ShapeRenderer shapeRenderer;
 
     private boolean showSmoke = false;
     private float smokeX, smokeY;
@@ -48,10 +50,11 @@ public class Samurai extends Player {
     public Samurai(float x, float y) {
         super(x, y, HeroType.SAMURAI);
         this.animationManager = new AnimationManager();
-        this.movement = new Movement(this);
-        this.inputHandler = new InputHandle(this, movement);
+        this.heroMovement = new HeroMovement(this);
+        this.inputHandler = new InputHandle(this, heroMovement);
         this.attackHandler = new BaseAttack(this);
         this.skillHandler = new SamuraiSkill(this);
+        this.shapeRenderer = new ShapeRenderer();
 
         setupAnimations();
     }
@@ -103,6 +106,9 @@ public class Samurai extends Player {
     public void render(SpriteBatch batch, float deltaTime) {
         stateTime += deltaTime;
         animationManager.update(deltaTime);
+        hitbox.setPosition(entityX, entityY);
+
+
 
         // Render nhân vật chính
         TextureRegion currentFrame = animationManager.getCurrentFrame();
@@ -152,12 +158,15 @@ public class Samurai extends Player {
                 dashAttackStateTime = 0f;
             }
         }
+
+
     }
 
     @Override
-    public void update() {
-        float deltaTime = 1/60f;
+    public void update(float deltaTime) {
+        deltaTime = 1/60f;
         updateWithDelta(deltaTime);
+        hitbox.setPosition(entityX,entityY);
     }
 
     public void updateWithDelta(float deltaTime) {
@@ -187,7 +196,7 @@ public class Samurai extends Player {
         }
 
         if (!skillHandler.isDashing()) {
-            movement.update();
+            heroMovement.update();
         } else {
             if (skillHandler.getDashProgress() > 0.8f && !showSkillEffect) {
                 showSkillEffect = true;
@@ -214,7 +223,7 @@ public class Samurai extends Player {
 
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
-                if (movement.isMoving() && !skillHandler.isDashing()) {
+                if (heroMovement.isMoving() && !skillHandler.isDashing()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else if (!skillHandler.isDashing()) {
                     animationManager.setState(StateType.STATE_IDLE.stateType, true);
@@ -228,14 +237,14 @@ public class Samurai extends Player {
 
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
-                if (movement.isMoving()) {
+                if (heroMovement.isMoving()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
                     animationManager.setState(StateType.STATE_IDLE.stateType, true);
                 }
             }
         }
-        else if (movement.isMoving() && !skillHandler.isDashing()) {
+        else if (heroMovement.isMoving() && !skillHandler.isDashing()) {
             animationManager.setState(StateType.STATE_RUN.stateType, true);
         }
         else if (!skillHandler.isDashing()) {

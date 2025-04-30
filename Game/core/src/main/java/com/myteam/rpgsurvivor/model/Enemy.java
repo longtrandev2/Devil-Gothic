@@ -1,28 +1,111 @@
 package com.myteam.rpgsurvivor.model;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
+
+import com.myteam.rpgsurvivor.controller.movement.EnemyMovement;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 
 public abstract class Enemy extends Entity {
-    //Stat
+    // Stat
     protected int level;
     protected Circle hitBox;
+    protected float attackCooldown;
+    protected float attackTimer;
+    protected Player targetPlayer;
 
     protected boolean isInvisible;
     protected boolean isInvulnerable;
     protected boolean isInteracting;
-    public Enemy(float x, float y, MonsterType enemyType) {
+
+    // Khoảng cách phát hiện và khoảng cách tấn công
+    protected float detectionRange;
+    protected float attackRange;
+
+    public Enemy(float x, float y, MonsterType enemyType, Player player) {
         this.entityX = x;
         this.entityY = y;
 
-        //Stat
+        // Stat
         this.stat = enemyType.stat;
-
         this.level = 1;
+        this.currentHealth = stat.maxHealth;
+
+        // Khởi tạo hitbox
+        hitBox = new Circle(x, y, 20f); // Bán kính hitbox
+
+        // Thiết lập player là mục tiêu
+        this.targetPlayer = player;
+
+        // Thiết lập các thuộc tính tấn công
+        this.attackCooldown = 1f / stat.attackSpeed; // Thời gian giữa các đòn tấn công
+        this.attackTimer = 0;
+        this.attackRange = stat.rangeAttack;
+        this.detectionRange = 200f; // Khoảng cách phát hiện player
+
+        this.movement = new EnemyMovement(x,y, player, stat.moveSpeed);
 
         this.isInvisible = false;
         this.isInvulnerable = false;
         this.isInteracting = false;
+        this.isAttack = false;
     }
 
+    @Override
+    public void update(float deltaTime) {
+        hitBox.setPosition(entityX, entityY);
+
+        // Kiểm tra player có trong tầm phát hiện không
+        if (isPlayerInDetectionRange()) {
+            if (isPlayerInAttackRange()) {
+                tryAttack();
+            }
+        }
+
+        if (attackTimer > 0) {
+            attackTimer -= deltaTime;
+        }
+    }
+
+    // Thay đổi phương thức render để truyền deltaTime cho update
+    @Override
+    public void render(SpriteBatch batch, float deltaTime) {
+        update(deltaTime);
+    }
+
+    private boolean isPlayerInDetectionRange() {
+        float distance = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
+        return distance <= detectionRange;
+    }
+
+    private boolean isPlayerInAttackRange() {
+        float distance = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
+        return distance <= attackRange;
+    }
+
+    private void tryAttack() {
+
+        if (attackTimer <= 0 && !isAttack) {
+            performAttack();
+
+            attackTimer = attackCooldown;
+        }
+    }
+
+    protected void performAttack() {
+
+    }
+
+    public void setDetectionRange(float range) {
+        this.detectionRange = range;
+    }
+
+    public void setAttackRange(float range) {
+        this.attackRange = range;
+    }
+
+    public Circle getHitBox() {
+        return hitBox;
+    }
 }

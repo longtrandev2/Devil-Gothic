@@ -3,8 +3,11 @@ package com.myteam.rpgsurvivor.model;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.controller.combat.attack.impl.Attack;
-import com.myteam.rpgsurvivor.controller.movement.Movement;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
+import com.badlogic.gdx.math.Rectangle;
+import com.myteam.rpgsurvivor.controller.movement.Movement;
+
 
 public abstract class Entity {
     protected AnimationManager animationManager;
@@ -15,11 +18,12 @@ public abstract class Entity {
     protected boolean isAttack;
     protected boolean isDead = false;
     protected boolean facingRight = true;
+    protected Rectangle hitbox;
 
     //Stat
     protected EntityStat stat;
     public abstract void render(SpriteBatch batch, float deltaTime);
-    public abstract void update();
+    public abstract void update(float deltaTime);
 
     // Các getter và setter cần thiết cho Movement
     public float getEntityX() {
@@ -48,8 +52,8 @@ public abstract class Entity {
         return movement;
     }
 
-    public void setMovement(Movement movement) {
-        this.movement = movement;
+    public void setMovement(Movement heroMovement) {
+        this.movement = heroMovement;
     }
 
     //Set, get stat
@@ -124,4 +128,10 @@ public abstract class Entity {
     private void die() {
         isDead = true;
     }
+
+    public boolean isDead()
+    {
+        return isDead;
+    }
+
 }

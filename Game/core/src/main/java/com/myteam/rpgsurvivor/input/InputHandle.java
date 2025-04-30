@@ -2,12 +2,12 @@ package com.myteam.rpgsurvivor.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.myteam.rpgsurvivor.controller.movement.Movement;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.model.Player;
 
 public class InputHandle {
     private Player player;
-    private Movement movement;
+    private HeroMovement heroMovement;
 
     public static final int ACTION_MOVE_UP = 0;
     public static final int ACTION_MOVE_DOWN = 1;
@@ -18,10 +18,10 @@ public class InputHandle {
 
     private boolean[] actions;
 
-    public InputHandle(Player player , Movement movement)
+    public InputHandle(Player player , HeroMovement heroMovement)
     {
         this.player = player;
-        this.movement = movement;
+        this.heroMovement = heroMovement;
         this.actions = new boolean[10];
     }
 
@@ -57,7 +57,7 @@ public class InputHandle {
 
         // Nếu đang di chuyển, cập nhật hướng di chuyển
         if (isMoving()) {
-            movement.setMovementDirection(
+            heroMovement.setMovementDirection(
                 actions[ACTION_MOVE_UP],
                 actions[ACTION_MOVE_DOWN],
                 actions[ACTION_MOVE_LEFT],
@@ -65,7 +65,7 @@ public class InputHandle {
             );
         } else {
             // Thêm xử lý khi không có phím di chuyển nào được nhấn - về trạng thái Idle
-            movement.setMovementDirection(false, false, false, false);
+            heroMovement.setMovementDirection(false, false, false, false);
         }
 
 
