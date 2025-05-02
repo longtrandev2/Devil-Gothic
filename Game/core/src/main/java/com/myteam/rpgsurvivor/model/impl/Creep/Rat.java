@@ -22,8 +22,7 @@ public class Rat extends Enemy {
         this.animationManager = animationFactory.createEnemyAnimation(MonsterType.RAT);
         this.currentState = StateType.STATE_IDLE;
 
-        this.detectionRange = 1000f;
-        this.attackRange = 10f;
+
     }
 
     @Override
@@ -75,6 +74,7 @@ public class Rat extends Enemy {
         }
 
         targetPlayer.takeDamge(getDamage());
+        targetPlayer.onHurt();
     }
 
     @Override

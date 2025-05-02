@@ -42,7 +42,7 @@ public abstract class Enemy extends Entity {
         this.attackCooldown = 1f / stat.attackSpeed; // Thời gian giữa các đòn tấn công
         this.attackTimer = 0;
         this.attackRange = stat.rangeAttack;
-        this.detectionRange = 200f; // Khoảng cách phát hiện player
+        this.detectionRange = 1000f;
 
         this.movement = new EnemyMovement(x,y, player, stat.moveSpeed);
 
@@ -74,12 +74,12 @@ public abstract class Enemy extends Entity {
         update(deltaTime);
     }
 
-    private boolean isPlayerInDetectionRange() {
+    public boolean isPlayerInDetectionRange() {
         float distance = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
         return distance <= detectionRange;
     }
 
-    private boolean isPlayerInAttackRange() {
+    public boolean isPlayerInAttackRange() {
         float distance = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
         return distance <= attackRange;
     }

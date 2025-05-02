@@ -39,8 +39,8 @@ public class EnemySpawnController {
 
         this.spawnInterval = 2.0f;
         this.spawnTimer = 0;
-        this.maxEnemiesOnMap = 20;
-        this.enemiesPerWave = 5;
+        this.maxEnemiesOnMap = 40;
+        this.enemiesPerWave = 1;
 
         this.currentWave = 1;
         this.waveTimer = 0;
@@ -95,8 +95,8 @@ public class EnemySpawnController {
     public Enemy createRandomEnemy (float x, float y)
     {
         MonsterType[] types = MonsterType.values();
-        MonsterType randomType = types[MathUtils.random(types.length - 1)];
-//        MonsterType randomType = MonsterType.GOBLIN;
+        //MonsterType randomType = types[MathUtils.random(types.length - 1)];
+        MonsterType randomType = MonsterType.GOBLIN;
 
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;

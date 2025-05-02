@@ -207,4 +207,9 @@ public class Wizard extends Player {
     public boolean isFacingRight() {
         return facingRight;
     }
+
+    @Override
+    public void onHurt() {
+
+    }
 }

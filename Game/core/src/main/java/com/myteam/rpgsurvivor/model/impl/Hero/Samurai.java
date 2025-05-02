@@ -277,4 +277,8 @@ public class Samurai extends Player {
     }
 
 
+    @Override
+    public void onHurt() {
+
+    }
 }

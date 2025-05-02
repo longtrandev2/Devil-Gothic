@@ -22,8 +22,7 @@ public class Skeleton extends Enemy {
         this.animationManager = animationFactory.createEnemyAnimation(MonsterType.SKELETON);
         this.currentState = StateType.STATE_IDLE;
 
-        this.detectionRange = 1000f;
-        this.attackRange = 10f;
+
     }
 
     @Override
@@ -75,6 +74,7 @@ public class Skeleton extends Enemy {
         }
 
         targetPlayer.takeDamge(getDamage());
+        targetPlayer.onHurt();
     }
 
     @Override

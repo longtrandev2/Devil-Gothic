@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.model.impl.Hero;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.input.InputHandle;
@@ -15,7 +16,10 @@ public class Knight extends Player{
     private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
+    private boolean isHurt = false;
     private float stateTime = 0;
+    private float hurtTimer = 0;
+    private ShapeRenderer shapeRenderer;
 
     private static final int IDLE_FRAME_COLS = 7;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -40,6 +44,7 @@ public class Knight extends Player{
         this.heroMovement = new HeroMovement(this);
         this.inputHandle = new InputHandle(this, heroMovement);
         this.knightSkill = new KnightSkill(this);
+        shapeRenderer = new ShapeRenderer();
 
         setupAnimation();
     }
@@ -50,6 +55,7 @@ public class Knight extends Player{
         float runFrameDuration = 0.1f;
         float attackFrameDuration = 0.08f;
         float skillFrameDuration = 0.08f;
+        float hurtFrameDuration = 0.1f;
 
 
         animationManager.addAnimation(
@@ -67,7 +73,7 @@ public class Knight extends Player{
         );
 
         animationManager.addAnimation(
-            StateType.STATE_SKILL.stateType,
+            StateType.STATE_ATTACK.stateType,
             "Hero/Knight/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png",
             ATTACK_FRAME_COLS, ATTACK_FRAME_ROWS,attackFrameDuration,
             false
@@ -79,10 +85,18 @@ public class Knight extends Player{
             SKILL_FRAME_COLS, SKILL_FRAME_ROWS,skillFrameDuration,
             false
         );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Hero/Knight/Knight 2D Pixel Art/Sprites/with_outline/HURT.png",
+            HURT_FRAME_COLS, HURT_FRAME_ROWS, hurtFrameDuration,
+            false
+        );
     }
 
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
+
         stateTime += deltaTime;
         animationManager.update(deltaTime);
 
@@ -107,12 +121,21 @@ public class Knight extends Player{
     public void updateWithDeltaTime(float deltaTime)
     {
         knightSkill.update(deltaTime);
+
+        if(isHurt)
+        {
+            hurtTimer -= deltaTime;
+            if(hurtTimer <= 0)
+            {
+                isHurt = false;
+            }
+        }
         if (!isAttacking) {
             inputHandle.handleInput();
 
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
                 isAttacking = true;
-                animationManager.setState(StateType.STATE_SKILL.stateType, true);
+                animationManager.setState(StateType.STATE_ATTACK.stateType, true);
             }
 
             if (inputHandle.isActionActive(InputHandle.ACTION_SKILL)) {
@@ -137,6 +160,11 @@ public class Knight extends Player{
 
     public void updateAnimationState(float deltaTime)
     {
+        if(isHurt)
+        {
+            animationManager.setState(StateType.STATE_HURT.stateType, true);
+            return;
+        }
         if (isUsingSkill) {
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
@@ -179,5 +207,13 @@ public class Knight extends Player{
 
     public boolean isFacingRight() {
         return facingRight;
+    }
+
+    @Override
+    public void onHurt()
+    {
+        isHurt = true;
+        hurtTimer = 0.4f;
+        animationManager.setState(StateType.STATE_HURT.stateType, true);
     }
 }

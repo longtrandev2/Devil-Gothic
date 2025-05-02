@@ -47,6 +47,13 @@ public abstract class Player extends Entity{
 
     }
 
+    public void takeDamage(int damage)
+    {
+        onHurt();
+    }
+
+    public abstract void onHurt();
+
 
 
 

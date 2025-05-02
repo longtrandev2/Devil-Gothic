@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.model.impl.Creep;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
@@ -14,6 +15,7 @@ public class Goblin extends Enemy {
     private AnimationManager animationManager;
     private StateType currentState;
     private EnemyMovement enemyMovement;
+    private ShapeRenderer shapeRenderer;
 
     public Goblin(float x, float y, Player player, AnimationForEnemy animationFactory) {
         super(x, y, MonsterType.GOBLIN, player);
@@ -22,9 +24,9 @@ public class Goblin extends Enemy {
         this.enemyMovement = new EnemyMovement(x,y,player,MonsterType.GOBLIN.stat.moveSpeed);
         this.animationManager = animationFactory.createEnemyAnimation(MonsterType.GOBLIN);
         this.currentState = StateType.STATE_IDLE;
+        shapeRenderer = new ShapeRenderer();
 
-        this.detectionRange = 1000f;
-        this.attackRange = 10f;
+
 
     }
 
@@ -36,6 +38,7 @@ public class Goblin extends Enemy {
         if (isDead) return;
 
         float distanceToPlayer = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
+        System.out.println(distanceToPlayer);
 
         if (distanceToPlayer <= detectionRange && distanceToPlayer > attackRange) {
             currentState = StateType.STATE_RUN;
@@ -78,13 +81,14 @@ public class Goblin extends Enemy {
         }
 
         targetPlayer.takeDamge(getDamage());
+        targetPlayer.onHurt();
     }
 
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
         if (isDead || animationManager == null) return;
 
-        // Gọi update với deltaTime
+
         update(deltaTime);
 
         animationManager.update(deltaTime);
@@ -114,6 +118,16 @@ public class Goblin extends Enemy {
                 height
             );
         }
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0,1,0,1);
+        shapeRenderer.rect(targetPlayer.getEntityX(), targetPlayer.getEntityY(),
+            targetPlayer.getWidth(), targetPlayer.getHeight());
+        shapeRenderer.circle(entityX, entityY,
+            10f);
+        shapeRenderer.end();
+
+
     }
 
 
