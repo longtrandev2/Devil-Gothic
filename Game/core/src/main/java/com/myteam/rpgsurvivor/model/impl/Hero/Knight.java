@@ -19,7 +19,6 @@ public class Knight extends Player{
     private boolean isHurt = false;
     private float stateTime = 0;
     private float hurtTimer = 0;
-    private ShapeRenderer shapeRenderer;
 
     private static final int IDLE_FRAME_COLS = 7;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -44,11 +43,14 @@ public class Knight extends Player{
         this.heroMovement = new HeroMovement(this);
         this.inputHandle = new InputHandle(this, heroMovement);
         this.knightSkill = new KnightSkill(this);
-        shapeRenderer = new ShapeRenderer();
-
         setupAnimation();
+//        setupHitBox();
     }
-
+    private void setupHitBox(){
+        TextureRegion idleFrame = animationManager.getIdleFrame();
+        System.out.println(idleFrame.getRegionWidth() + " " + idleFrame.getRegionHeight());
+        hitbox.setPosition(entityX + 36 ,entityY + 24);
+    }
     private void setupAnimation()
     {
         float idleFrameDuration = 0.15f;
@@ -116,12 +118,12 @@ public class Knight extends Player{
     public void update(float deltaTime) {
         deltaTime = 1/60f;
         updateWithDeltaTime(deltaTime);
+        super.update(deltaTime);
     }
 
     public void updateWithDeltaTime(float deltaTime)
     {
         knightSkill.update(deltaTime);
-
         if(isHurt)
         {
             hurtTimer -= deltaTime;
@@ -154,7 +156,6 @@ public class Knight extends Player{
         } else {
             inputHandle.handleInput();
         }
-
         updateAnimationState(deltaTime);
     }
 

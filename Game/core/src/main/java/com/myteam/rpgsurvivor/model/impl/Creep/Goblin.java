@@ -2,6 +2,7 @@ package com.myteam.rpgsurvivor.model.impl.Creep;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
@@ -16,17 +17,16 @@ public class Goblin extends Enemy {
     private StateType currentState;
     private EnemyMovement enemyMovement;
     private ShapeRenderer shapeRenderer;
-
+    private Rectangle hitboxPlayer;
     public Goblin(float x, float y, Player player, AnimationForEnemy animationFactory) {
         super(x, y, MonsterType.GOBLIN, player);
         entityX = x;
         entityY = y;
+        hitboxPlayer = targetPlayer.getHitbox();
         this.enemyMovement = new EnemyMovement(x,y,player,MonsterType.GOBLIN.stat.moveSpeed);
         this.animationManager = animationFactory.createEnemyAnimation(MonsterType.GOBLIN);
         this.currentState = StateType.STATE_IDLE;
         shapeRenderer = new ShapeRenderer();
-
-
 
     }
 
@@ -37,9 +37,7 @@ public class Goblin extends Enemy {
 
         if (isDead) return;
 
-        float distanceToPlayer = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
-        System.out.println(distanceToPlayer);
-
+        float distanceToPlayer = Vector2.dst(entityX, entityY, hitboxPlayer.getX(), hitboxPlayer.getY());
         if (distanceToPlayer <= detectionRange && distanceToPlayer > attackRange) {
             currentState = StateType.STATE_RUN;
 
@@ -49,12 +47,13 @@ public class Goblin extends Enemy {
             entityY = newDirection.y;
 
             // Cập nhật hướng nhìn dựa vào hướng di chuyển
-            if (targetPlayer.getEntityX() > entityX) {
+            if (hitboxPlayer.getX() > entityX) {
                 facingRight = true;
             } else {
                 facingRight = false;
             }
         } else if (distanceToPlayer <= attackRange) {
+            System.out.println(distanceToPlayer + " " + attackRange);
             if (isAttack) {
                 currentState = StateType.STATE_ATTACK;
             } else {
@@ -121,8 +120,7 @@ public class Goblin extends Enemy {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0,1,0,1);
-        shapeRenderer.rect(targetPlayer.getEntityX(), targetPlayer.getEntityY(),
-            targetPlayer.getWidth(), targetPlayer.getHeight());
+        shapeRenderer.rect(hitboxPlayer.getX(), hitboxPlayer.getY(), hitboxPlayer.getWidth(), hitboxPlayer.getHeight());
         shapeRenderer.circle(entityX, entityY,
             10f);
         shapeRenderer.end();

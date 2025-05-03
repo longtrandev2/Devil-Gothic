@@ -22,7 +22,6 @@ public class Samurai extends Player {
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
-    private ShapeRenderer shapeRenderer;
 
     private boolean showSmoke = false;
     private float smokeX, smokeY;
@@ -54,9 +53,9 @@ public class Samurai extends Player {
         this.inputHandler = new InputHandle(this, heroMovement);
         this.attackHandler = new BaseAttack(this);
         this.skillHandler = new SamuraiSkill(this);
-        this.shapeRenderer = new ShapeRenderer();
 
         setupAnimations();
+//        setupHitBox();
     }
 
     private void setupAnimations() {
@@ -106,9 +105,6 @@ public class Samurai extends Player {
     public void render(SpriteBatch batch, float deltaTime) {
         stateTime += deltaTime;
         animationManager.update(deltaTime);
-        hitbox.setPosition(entityX, entityY);
-
-
 
         // Render nhân vật chính
         TextureRegion currentFrame = animationManager.getCurrentFrame();
@@ -166,7 +162,7 @@ public class Samurai extends Player {
     public void update(float deltaTime) {
         deltaTime = 1/60f;
         updateWithDelta(deltaTime);
-        hitbox.setPosition(entityX,entityY);
+        super.update(deltaTime);
     }
 
     public void updateWithDelta(float deltaTime) {

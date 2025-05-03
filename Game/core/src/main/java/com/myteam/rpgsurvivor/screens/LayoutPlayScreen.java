@@ -32,24 +32,35 @@ public class LayoutPlayScreen {
     private Texture frameBlood;
     private Texture bloodTexture;
 
-    private TextureRegion[] bloodFrames;
+    private TextureRegion fullBloodFrame;
 
     private float avatarFrameSize = 80;
     private float bloodBarWidth = 200;
     private float bloodBarHeight = 40;
     private float padding = 10;
-    private float bloodBarInnerPaddingX = 6;
-    private float bloodBarInnerPaddingY = 6;
+    private float bloodBarInnerPaddingX = 10;
+    private float bloodBarInnerPaddingY = 10;
 
     private float maxHealth ;
     private float currentHealth ;
 
     private static final int BLOOD_FRAME_COLS = 6;
     private static final int BLOOD_FRAME_ROWS = 1;
-    private int currentBloodFrame = 0;
 
     private boolean isPaused = false;
 
+
+    //Kích thước thanh máu và frame máu
+    float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX)  + 15 ;
+    float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
+
+    float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
+
+    float avatarPadding = 5;
+    float avatarSize = avatarFrameSize - (avatarPadding * 2);
+    //Vị trí khung máu
+    float bloodBarX = padding + avatarFrameSize + padding;
+    float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
     public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero)
     {
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -106,33 +117,19 @@ public class LayoutPlayScreen {
 
     private void setupBloodFrames()
     {
-        bloodFrames = new TextureRegion[BLOOD_FRAME_COLS];
+        fullBloodFrame = new TextureRegion();
         float frameWidth = bloodTexture.getWidth() / BLOOD_FRAME_COLS;
         float frameHeight = bloodTexture.getHeight() / BLOOD_FRAME_ROWS;
 
-        for (int i = 0 ; i < BLOOD_FRAME_COLS ; ++i)
-        {
-            bloodFrames[i] = new TextureRegion(bloodTexture, i * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
-        }
+            fullBloodFrame = new TextureRegion(bloodTexture, 0 * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
     }
 
     private void updateHealth(float health)
     {
         currentHealth = Math.max(0, Math.min(health, maxHealth));
-        float healthPercent = currentHealth / maxHealth;
-        if (healthPercent >= 0.81f) {
-            currentBloodFrame = 0;
-        } else if (healthPercent >= 0.61f) {
-            currentBloodFrame = 1;
-        } else if (healthPercent >= 0.41f) {
-            currentBloodFrame = 2;
-        } else if (healthPercent >= 0.21f) {
-            currentBloodFrame = 3;
-        } else if (healthPercent > 0f) {
-            currentBloodFrame = 4;
-        } else {
-            currentBloodFrame = 5;
-        }
+
+//        System.out.println(currentHealth + "/" + maxHealth + ": " + healthPercent);
+
     }
 
     public void createPauseButton() {
@@ -163,17 +160,13 @@ public class LayoutPlayScreen {
         stage.addActor(pauseButton);
     }
     public void render() {
-        updateHealth(currentHealth);
-
+        updateHealth(chosenHero.getCurrentHealth());
         stage.act(Gdx.graphics.getDeltaTime());
         batch.begin();
 
         if(!isPaused)
         {
-            float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
 
-            float avatarPadding = 5;
-            float avatarSize = avatarFrameSize - (avatarPadding * 2);
 
             batch.draw(frameAvatar,
                 padding,
@@ -187,8 +180,6 @@ public class LayoutPlayScreen {
                 avatarSize,
                 avatarSize);
 
-            float bloodBarX = padding + avatarFrameSize + padding;
-            float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
 
             batch.draw(frameBlood,
                 bloodBarX,
@@ -196,15 +187,16 @@ public class LayoutPlayScreen {
                 bloodBarWidth,
                 bloodBarHeight);
 
-            float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX);
-            float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
 
-            // Draw current blood frame based on health percentage
-            batch.draw(bloodFrames[currentBloodFrame],
-                bloodBarX + bloodBarInnerPaddingX - 12,
-                bloodBarY + bloodBarInnerPaddingY - 1,
-                innerBloodWidth,
-                innerBloodHeight);
+            //Cập nhật lại % máu
+            float healthPercent = currentHealth /(float) maxHealth;
+            float currentBloodWidth = innerBloodWidth * healthPercent;
+
+            batch.draw(fullBloodFrame,
+                bloodBarX + bloodBarInnerPaddingX ,
+                bloodBarY + bloodBarInnerPaddingY  ,
+                currentBloodWidth,
+                innerBloodHeight );
         }
 
         batch.end();

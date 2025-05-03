@@ -133,5 +133,7 @@ public abstract class Entity {
     {
         return isDead;
     }
-
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
 }

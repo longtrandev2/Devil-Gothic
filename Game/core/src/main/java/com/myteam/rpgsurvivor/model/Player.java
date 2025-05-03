@@ -3,9 +3,13 @@ package com.myteam.rpgsurvivor.model;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 import java.awt.*;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public abstract class Player extends Entity{
 
@@ -22,7 +26,8 @@ public abstract class Player extends Entity{
     protected boolean isInteracting;
 
     private ShapeRenderer shapeRenderer;
-
+    private float offsetX;
+    private float offsetY;
 
     public Player(float x, float y, HeroType heroType) {
         this.entityX = x;
@@ -37,27 +42,22 @@ public abstract class Player extends Entity{
         this.healthPoints = 0;
         this.damagePoints = 0;
         this.speedPoints = 0;
-
-
+        this.currentHealth = stat.maxHealth;
         this.isInvisible = false;
         this.isInvulnerable = false;
         this.isInteracting = false;
 
-        this.hitbox = new Rectangle(x, y, 100, 50);
-
+        this.hitbox = heroType.hitbox.createHitbox(entityX , entityY );
+        offsetX = heroType.hitbox.getOffsetX();
+        offsetY = heroType.hitbox.getOffsetY();
     }
 
-    public void takeDamage(int damage)
-    {
-        onHurt();
+    @Override
+    public void update(float deltaTime){
+        this.setCurrentHealth(max(0, this.currentHealth));
+        hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
+//        System.out.println(hitbox.x + " " + hitbox.y);
     }
-
     public abstract void onHurt();
-
-
-
-
-
-
 
 }

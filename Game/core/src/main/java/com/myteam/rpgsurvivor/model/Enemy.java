@@ -75,12 +75,12 @@ public abstract class Enemy extends Entity {
     }
 
     public boolean isPlayerInDetectionRange() {
-        float distance = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
+        float distance = Vector2.dst(entityX, entityY, targetPlayer.getHitbox().getX(), targetPlayer.getHitbox().getY());
         return distance <= detectionRange;
     }
 
     public boolean isPlayerInAttackRange() {
-        float distance = Vector2.dst(entityX, entityY, targetPlayer.getEntityX(), targetPlayer.getEntityY());
+        float distance = Vector2.dst(entityX, entityY,targetPlayer.getHitbox().getX(), targetPlayer.getHitbox().getY());
         return distance <= attackRange;
     }
 

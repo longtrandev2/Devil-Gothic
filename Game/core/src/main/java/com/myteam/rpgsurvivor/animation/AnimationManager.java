@@ -102,5 +102,8 @@ public class AnimationManager {
         return animations.containsKey(state);
     }
 
-
+    public TextureRegion getIdleFrame() {
+        Animation<TextureRegion> currentAnimation = animations.get("idle");
+        return currentAnimation.getKeyFrame(0, true );
+    }
 }

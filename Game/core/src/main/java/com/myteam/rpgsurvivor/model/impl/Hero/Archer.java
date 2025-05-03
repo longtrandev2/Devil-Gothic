@@ -127,6 +127,7 @@ public class Archer extends Player {
     public void update(float deltaTime) {
         deltaTime = 1/60f;
         updateWithDeltaTime(deltaTime);
+        super.update(deltaTime);
     }
 
     public void updateWithDeltaTime(float deltaTime)
