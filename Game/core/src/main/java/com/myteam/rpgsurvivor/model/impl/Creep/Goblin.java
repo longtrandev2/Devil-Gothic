@@ -2,6 +2,8 @@ package com.myteam.rpgsurvivor.model.impl.Creep;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
@@ -18,11 +20,13 @@ public class Goblin extends Enemy {
     private EnemyMovement enemyMovement;
     private ShapeRenderer shapeRenderer;
     private Rectangle hitboxPlayer;
+    private Rectangle hitboxEnemy;
     public Goblin(float x, float y, Player player, AnimationForEnemy animationFactory) {
         super(x, y, MonsterType.GOBLIN, player);
         entityX = x;
         entityY = y;
         hitboxPlayer = targetPlayer.getHitbox();
+        hitboxEnemy = getHitBox();
         this.enemyMovement = new EnemyMovement(x,y,player,MonsterType.GOBLIN.stat.moveSpeed);
         this.animationManager = animationFactory.createEnemyAnimation(MonsterType.GOBLIN);
         this.currentState = StateType.STATE_IDLE;
@@ -47,20 +51,24 @@ public class Goblin extends Enemy {
             entityY = newDirection.y;
 
             // Cập nhật hướng nhìn dựa vào hướng di chuyển
-            if (hitboxPlayer.getX() > entityX) {
-                facingRight = true;
-            } else {
-                facingRight = false;
-            }
-        } else if (distanceToPlayer <= attackRange) {
+
+        }
+        else if (hitboxEnemy.overlaps(hitboxPlayer)) {
             System.out.println(distanceToPlayer + " " + attackRange);
             if (isAttack) {
                 currentState = StateType.STATE_ATTACK;
             } else {
                 currentState = StateType.STATE_IDLE;
             }
+            //performAttacdsak();
         } else {
             currentState = StateType.STATE_IDLE;
+        }
+
+        if (targetPlayer.getHitbox().x > entityX) {
+            facingRight = true;
+        } else {
+            facingRight = false;
         }
 
         if (animationManager != null) {
@@ -92,38 +100,22 @@ public class Goblin extends Enemy {
 
         animationManager.update(deltaTime);
 
-        float drawX = entityX - animationManager.getCurrentFrame().getRegionWidth() / 2;
-        float drawY = entityY - animationManager.getCurrentFrame().getRegionHeight() / 4;
+//        float drawX = entityX - animationManager.getCurrentFrame().getRegionWidth() / 2;
+//        float drawY = entityY - animationManager.getCurrentFrame().getRegionHeight() / 4;
 
         // Thêm logic flip hình ảnh dựa trên hướng di chuyển
-        boolean flipX = !facingRight;
-        float width = animationManager.getCurrentFrame().getRegionWidth();
-        float height = animationManager.getCurrentFrame().getRegionHeight();
+        this.setFacingRight(facingRight);
+        animationManager.setFacingRight(facingRight);
 
-        if (flipX) {
-            batch.draw(
-                animationManager.getCurrentFrame(),
-                drawX + width,
-                drawY,
-                -width,
-                height
-            );
-        } else {
-            batch.draw(
-                animationManager.getCurrentFrame(),
-                drawX,
-                drawY,
-                width,
-                height
-            );
-        }
+        batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
 
+        batch.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0,1,0,1);
         shapeRenderer.rect(hitboxPlayer.getX(), hitboxPlayer.getY(), hitboxPlayer.getWidth(), hitboxPlayer.getHeight());
-        shapeRenderer.circle(entityX, entityY,
-            10f);
+        shapeRenderer.rect(hitboxEnemy.x, hitboxEnemy.y, hitboxEnemy.getWidth(), hitbox.getHeight());
         shapeRenderer.end();
+        batch.begin();
 
 
     }

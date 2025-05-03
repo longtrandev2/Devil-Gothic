@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
+import com.myteam.rpgsurvivor.controller.EnemySpawnController;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -20,6 +22,7 @@ public abstract class Player extends Entity{
     protected int healthPoints;
     protected int damagePoints;
     protected int speedPoints;
+    protected EnemySpawnController enemySpawnController;
 
     protected boolean isInvisible;
     protected boolean isInvulnerable;
@@ -47,7 +50,7 @@ public abstract class Player extends Entity{
         this.isInvulnerable = false;
         this.isInteracting = false;
 
-        this.hitbox = heroType.hitbox.createHitbox(entityX , entityY );
+        this.hitbox = heroType.hitbox.createHitbox(entityX , entityY);
         offsetX = heroType.hitbox.getOffsetX();
         offsetY = heroType.hitbox.getOffsetY();
     }
@@ -59,5 +62,19 @@ public abstract class Player extends Entity{
 //        System.out.println(hitbox.x + " " + hitbox.y);
     }
     public abstract void onHurt();
+
+    public void setEnemySpawnController (EnemySpawnController controller)
+    {
+        this.enemySpawnController = controller;
+    }
+
+    public ArrayList<Enemy> getEnemies()
+    {
+        return enemySpawnController.getActiveEnemies();
+    }
+
+    public void performAttack() {
+
+    }
 
 }

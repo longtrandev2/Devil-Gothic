@@ -2,6 +2,7 @@ package com.myteam.rpgsurvivor.model;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import com.myteam.rpgsurvivor.controller.movement.EnemyMovement;
@@ -10,7 +11,7 @@ import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 public abstract class Enemy extends Entity {
     // Stat
     protected int level;
-    protected Circle hitBox;
+    //protected Rectangle hitBox;
     protected float attackCooldown;
     protected float attackTimer;
     protected Player targetPlayer;
@@ -23,6 +24,9 @@ public abstract class Enemy extends Entity {
     protected float detectionRange;
     protected float attackRange;
 
+    private float offsetX;
+    private float offsetY;
+
     public Enemy(float x, float y, MonsterType enemyType, Player player) {
         this.entityX = x;
         this.entityY = y;
@@ -33,7 +37,9 @@ public abstract class Enemy extends Entity {
         this.currentHealth = stat.maxHealth;
 
         // Khởi tạo hitbox
-        hitBox = new Circle(x, y, 20f); // Bán kính hitbox
+       this.hitbox = enemyType.hitbox.createHitbox(entityX,entityY);
+       offsetX = enemyType.hitbox.getOffsetX();
+       offsetY = enemyType.hitbox.getOffsetY();
 
         // Thiết lập player là mục tiêu
         this.targetPlayer = player;
@@ -54,7 +60,7 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void update(float deltaTime) {
-        hitBox.setPosition(entityX, entityY);
+        hitbox.setPosition(entityX + offsetX, entityY + offsetY);
 
         // Kiểm tra player có trong tầm phát hiện không
         if (isPlayerInDetectionRange()) {
@@ -80,8 +86,9 @@ public abstract class Enemy extends Entity {
     }
 
     public boolean isPlayerInAttackRange() {
-        float distance = Vector2.dst(entityX, entityY,targetPlayer.getHitbox().getX(), targetPlayer.getHitbox().getY());
-        return distance <= attackRange;
+        return hitbox.overlaps(targetPlayer.hitbox);
+        //System.out.println(hitBox + " " + targetPlayer.hitbox);
+
     }
 
     private void tryAttack() {
@@ -105,7 +112,7 @@ public abstract class Enemy extends Entity {
         this.attackRange = range;
     }
 
-    public Circle getHitBox() {
-        return hitBox;
+    public Rectangle getHitBox() {
+        return hitbox;
     }
 }

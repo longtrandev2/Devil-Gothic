@@ -1,5 +1,6 @@
 package com.myteam.rpgsurvivor.controller.movement;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.model.Player;
 
@@ -7,6 +8,7 @@ public class EnemyMovement extends Movement {
     private float enemyX;
     private float enemyY;
     private Player player;
+    private Rectangle hitboxPlayer;
     private float moveSpeed;
     private float minDistanceToPlayer;
     private boolean isMoving;
@@ -18,11 +20,12 @@ public class EnemyMovement extends Movement {
         this.moveSpeed = moveSpeed;
         this.minDistanceToPlayer = 10f;
         this.isMoving = false;
+        this.hitboxPlayer = player.getHitbox();
     }
 
     public Vector2 move(float deltaTime) {
-        float playerX = player.getEntityX();
-        float playerY = player.getEntityY();
+        float playerX = hitboxPlayer.getX();
+        float playerY = hitboxPlayer.getY();
 
         Vector2 direction = new Vector2(playerX - enemyX, playerY - enemyY);
         Vector2 newPosition = new Vector2(enemyX, enemyY);

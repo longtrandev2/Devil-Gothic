@@ -38,7 +38,7 @@ public class MapScreen {
 
         try {
             batch = new SpriteBatch();
-            chosenHero = new Wizard(   300,300);
+            chosenHero = new Knight(   300,300);
             layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero);
 
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class MapScreen {
         loadMap();
         enemySpawnController = new EnemySpawnController(chosenHero, map);
 
-        enemySpawnController.setMaxEnemiesOnMap(3);
+        enemySpawnController.setMaxEnemiesOnMap(10);
         enemySpawnController.setSpawnInterval(3.0f);
         enemySpawnController.setTimeBetweenWaves(45.0f);
     }
