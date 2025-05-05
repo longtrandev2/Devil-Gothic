@@ -55,7 +55,7 @@ public class Knight extends Player{
     {
         float idleFrameDuration = 0.15f;
         float runFrameDuration = 0.1f;
-        float attackFrameDuration = 0.08f;
+        float attackFrameDuration = this.getAttackSpeed();
         float skillFrameDuration = 0.08f;
         float hurtFrameDuration = 0.1f;
 

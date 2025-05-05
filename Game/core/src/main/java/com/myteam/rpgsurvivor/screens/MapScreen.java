@@ -38,7 +38,7 @@ public class MapScreen {
 
         try {
             batch = new SpriteBatch();
-            chosenHero = new Knight(   300,300);
+            chosenHero = new Samurai(   300,300);
             layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero);
 
         } catch (Exception e) {

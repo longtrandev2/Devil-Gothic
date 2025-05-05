@@ -21,7 +21,10 @@ public class Samurai extends Player {
     private boolean facingRight = true;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
+    private boolean isHurt = false;
     private float stateTime = 0;
+    private float hurtTimer = 0;
+
 
     private boolean showSmoke = false;
     private float smokeX, smokeY;
@@ -36,16 +39,21 @@ public class Samurai extends Player {
 
     private static final int IDLE_FRAME_COLS = 10;
     private static final int IDLE_FRAME_ROWS = 1;
+
     private static final int RUN_FRAME_COLS = 16;
     private static final int RUN_FRAME_ROWS = 1;
+
     private static final int ATTACK_FRAME_COLS = 7;
     private static final int ATTACK_FRAME_ROWS = 1;
+
     private static final int SKILL_FRAME_COLS = 5;
     private static final int SKILL_FRAME_ROWS = 2;
+
     private static final int SMOKE_FRAME_COLS = 9;
     private static final int SMOKE_FRAME_ROWS = 1;
 
-
+    private static final int HURT_FRAME_COLS = 4;
+    private static final int HURT_FRAME_ROWS = 1;
     public Samurai(float x, float y) {
         super(x, y, HeroType.SAMURAI);
         this.animationManager = new AnimationManager();
@@ -61,9 +69,10 @@ public class Samurai extends Player {
     private void setupAnimations() {
         float idleFrameDuration = 0.15f;
         float runFrameDuration = 0.1f;
-        float attackFrameDuration = 0.08f;
+        float attackFrameDuration = this.getAttackSpeed();
         float skillFrameDuration = 0.08f;
         float smokeFrameDuration = 0.1f;
+        float hurtFrameDuration = 0.1f;
 
         animationManager.addAnimation(
             StateType.STATE_IDLE.stateType,
@@ -97,6 +106,13 @@ public class Samurai extends Player {
             StateType.STATE_SKILL_EFFECT.stateType,
             "Skills/Smoke/SmokeNDust P03 VFX 1.png",
             SMOKE_FRAME_COLS, SMOKE_FRAME_ROWS, smokeFrameDuration,
+            false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Hero/Samurai/FREE_Samurai 2D Pixel Art v1.2/Sprites/HURT.png",
+            HURT_FRAME_COLS, HURT_FRAME_ROWS, hurtFrameDuration,
             false
         );
     }
@@ -170,6 +186,15 @@ public class Samurai extends Player {
 
         skillHandler.update(deltaTime);
 
+        if(isHurt)
+        {
+            hurtTimer -= deltaTime;
+            if(hurtTimer <= 0)
+            {
+                isHurt = false;
+            }
+        }
+
         if (inputHandler.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking && !isUsingSkill
             && skillHandler.canDash()) {
             isUsingSkill = true;
@@ -212,6 +237,12 @@ public class Samurai extends Player {
     }
 
     private void updateAnimationState(float deltaTime) {
+        if(isHurt)
+        {
+            animationManager.setState(StateType.STATE_HURT.stateType, true);
+            return;
+        }
+
         if (skillHandler.isDashing() || isUsingSkill) {
             if (!animationManager.getCurrentState().equals(StateType.STATE_SKILL.stateType)) {
                 animationManager.setState(StateType.STATE_SKILL.stateType, true);
@@ -273,8 +304,10 @@ public class Samurai extends Player {
     }
 
 
-    @Override
-    public void onHurt() {
-
+    public void onHurt()
+    {
+        isHurt = true;
+        hurtTimer = 0.4f;
+        animationManager.setState(StateType.STATE_HURT.stateType, true);
     }
 }

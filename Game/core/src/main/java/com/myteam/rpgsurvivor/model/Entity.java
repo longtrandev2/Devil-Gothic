@@ -19,7 +19,7 @@ public abstract class Entity {
     protected boolean isDead = false;
     protected boolean facingRight = true;
     protected Rectangle hitbox;
-
+    protected Rectangle attackbox;
     //Stat
     protected EntityStat stat;
     public abstract void render(SpriteBatch batch, float deltaTime);

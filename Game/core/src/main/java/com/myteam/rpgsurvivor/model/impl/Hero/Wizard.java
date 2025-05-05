@@ -56,7 +56,7 @@ public class Wizard extends Player {
     public void setupAnimation() {
         float idleFrameDuration = 0.15f;
         float walkFrameDuration = 0.1f;
-        float attackFrameDuration = 0.08f;
+        float attackFrameDuration = this.getAttackSpeed();
         float skillFrameDuration = 0.08f;
         float skillEffectFrameDuration = 0.1f;
 
