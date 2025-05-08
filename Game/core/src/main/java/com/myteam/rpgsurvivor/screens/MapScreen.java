@@ -28,8 +28,10 @@ public class MapScreen {
     private Player chosenHero;
     private LayoutPlayScreen layoutPlayScreen;
     private EnemySpawnController enemySpawnController;
+    private String heroType;
 
-    public MapScreen() {
+    public MapScreen(String heroType) {
+        this.heroType = heroType;
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         camera = new OrthographicCamera();
@@ -38,8 +40,25 @@ public class MapScreen {
 
         try {
             batch = new SpriteBatch();
-            chosenHero = new Samurai(   300,300);
-            layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero);
+            switch (heroType)
+            {
+                case "Knight" :
+                    chosenHero = new Knight(400, 400);
+                    break;
+                case "Samurai" :
+                    chosenHero = new Samurai(400,400);
+                    break;
+                case "Archer" :
+                    chosenHero = new Archer(400, 400);
+                    break;
+                case "Wizard" :
+                    chosenHero = new Wizard(400, 400);
+                    break;
+                default:
+                    chosenHero = new Knight(400,400);
+                    break;
+            }
+            layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero,heroType);
 
         } catch (Exception e) {
             Gdx.app.error("MapScreen", "Error initializing: " + e.getMessage());

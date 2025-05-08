@@ -20,6 +20,7 @@ public class LayoutPlayScreen {
     private SpriteBatch batch;
     private Player chosenHero;
     private PauseScreen pauseScreen;
+    private String heroType;
 
     //Pause Button
     private Texture pauseUnactiveTexture;
@@ -61,11 +62,12 @@ public class LayoutPlayScreen {
     //Vị trí khung máu
     float bloodBarX = padding + avatarFrameSize + padding;
     float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
-    public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero)
+    public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero, String heroType)
     {
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+        this.heroType = heroType;
         this.chosenHero = chosenHero;
         maxHealth = chosenHero.getMaxHealth();
         currentHealth = chosenHero.getCurrentHealth();
@@ -99,7 +101,24 @@ public class LayoutPlayScreen {
         try {
             pauseUnactiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameUnactive.png"));
             pauseActiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameActive.png"));
-            heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+            switch (heroType)
+            {
+                case "Knight" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+                    break;
+                case "Samurai" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/SamuraiAva.png"));
+                    break;
+                case "Archer" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/archerAva.png"));
+                    break;
+                case "Wizard" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/wizardAva.png"));
+                    break;
+                default:
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+                    break;
+            }
             frameAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung ava.png"));
             frameBlood = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung Blood(1)(1)-1.png.png"));
             bloodTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/Blood.png"));
