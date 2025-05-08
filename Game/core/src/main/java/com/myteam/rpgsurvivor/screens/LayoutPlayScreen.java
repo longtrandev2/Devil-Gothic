@@ -164,8 +164,7 @@ public class LayoutPlayScreen {
             }
         };
 
-        pauseButton.setPosition(Gdx.graphics.getWidth() - pauseButton.getWidth() - padding,
-            Gdx.graphics.getHeight() - pauseButton.getHeight() - padding);
+
 
         pauseButton.addListener(new ClickListener() {
             @Override
@@ -243,7 +242,7 @@ public class LayoutPlayScreen {
 
     public PauseScreen getPauseScreen()
     {
-        return  pauseScreen;
+        return pauseScreen;
     }
 
     public void togglePause() {

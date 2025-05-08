@@ -123,6 +123,7 @@ public class MapScreen {
             map.dispose();
         }
         batch.dispose();
+        layoutPlayScreen.dispose();
 
 
     }
