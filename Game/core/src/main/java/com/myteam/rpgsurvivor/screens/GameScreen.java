@@ -16,7 +16,7 @@ public class GameScreen implements Screen {
     {
         this.game = game;
         this.heroType = heroType;
-        this.map = new MapScreen(heroType);
+        this.map = new MapScreen(heroType, game);
     }
     @Override
     public void show() {
@@ -31,7 +31,7 @@ public class GameScreen implements Screen {
         gameTime += delta;
         map.update();
 
-        map.render();
+        map.render(delta);
     }
 
     @Override
