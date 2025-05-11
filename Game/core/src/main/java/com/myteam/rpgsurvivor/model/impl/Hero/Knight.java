@@ -16,9 +16,7 @@ public class Knight extends Player{
     private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
-    private boolean isHurt = false;
     private float stateTime = 0;
-    private float hurtTimer = 0;
 
     private static final int IDLE_FRAME_COLS = 7;
     private static final int IDLE_FRAME_ROWS = 1;

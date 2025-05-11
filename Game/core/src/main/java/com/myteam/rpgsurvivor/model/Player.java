@@ -1,10 +1,13 @@
 package com.myteam.rpgsurvivor.model;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.MeleeAttackComponent;
+import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 import java.awt.*;
@@ -32,6 +35,8 @@ public abstract class Player extends Entity{
     private float offsetX;
     private float offsetY;
 
+    protected  MeleeAttackComponent attackHandler;
+
     public Player(float x, float y, HeroType heroType) {
         this.entityX = x;
         this.entityY = y;
@@ -51,6 +56,7 @@ public abstract class Player extends Entity{
         this.isInteracting = false;
 
         this.hitbox = heroType.hitbox.createHitbox(entityX , entityY);
+        this.attackbox = new Rectangle(hitbox);
         offsetX = heroType.hitbox.getOffsetX();
         offsetY = heroType.hitbox.getOffsetY();
     }
@@ -59,13 +65,15 @@ public abstract class Player extends Entity{
     public void update(float deltaTime){
         this.setCurrentHealth(max(0, this.currentHealth));
         hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
-//        System.out.println(hitbox.x + " " + hitbox.y);
+        DebugRenderer.drawRect(attackbox, Color.RED);
     }
     public abstract void onHurt();
 
     public void setEnemySpawnController (EnemySpawnController controller)
     {
+
         this.enemySpawnController = controller;
+        setMeleeAttackComponent();
     }
 
     public ArrayList<Enemy> getEnemies()
@@ -76,5 +84,7 @@ public abstract class Player extends Entity{
     public void performAttack() {
 
     }
-
+    public void setMeleeAttackComponent(){
+        this.attackHandler = new MeleeAttackComponent(this, enemySpawnController, this.getAttackSpeed(), this.getRangeAttack(), this.getDamage());
+    }
 }

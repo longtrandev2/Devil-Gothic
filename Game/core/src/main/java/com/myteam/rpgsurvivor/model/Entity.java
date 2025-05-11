@@ -2,8 +2,6 @@ package com.myteam.rpgsurvivor.model;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.myteam.rpgsurvivor.controller.combat.attack.impl.Attack;
-import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.badlogic.gdx.math.Rectangle;
 import com.myteam.rpgsurvivor.controller.movement.Movement;
@@ -14,7 +12,6 @@ public abstract class Entity {
     protected int currentHealth;
     protected Movement movement;
     protected float entityX, entityY;
-    protected Attack currentAttack;
     protected boolean isAttack;
     protected boolean isDead = false;
     protected boolean facingRight = true;
@@ -22,6 +19,10 @@ public abstract class Entity {
     protected Rectangle attackbox;
     //Stat
     protected EntityStat stat;
+
+    protected float hurtTimer = 0;
+    protected boolean isHurt = false;
+
     public abstract void render(SpriteBatch batch, float deltaTime);
     public abstract void update(float deltaTime);
 
@@ -133,7 +134,27 @@ public abstract class Entity {
     {
         return isDead;
     }
+
     public Rectangle getHitbox() {
         return hitbox;
+    }
+
+    public void setState(String currentState){
+        animationManager.setState(currentState, true);
+    }
+
+    public void setAttack(){
+        isAttack = true;
+    }
+    public boolean isAttack(){
+        return isAttack;
+    }
+
+    public Rectangle getAttackbox() {
+        return attackbox;
+    }
+
+    public void setAttackbox(Rectangle attackbox) {
+        this.attackbox = attackbox;
     }
 }

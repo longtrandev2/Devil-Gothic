@@ -89,11 +89,20 @@ public class Wizard extends Player {
         );
 
         skillEffectManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Hero/Wizard/Wizard Pack/SpriteSheet/Hit-Reisize.png",
+            SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectFrameDuration,
+            true
+        );
+
+        skillEffectManager.addAnimation(
             StateType.STATE_SKILL_EFFECT.stateType,
             "Skills/WizardSkill/Wizard Skill.png",
             SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectFrameDuration,
             true
         );
+
+
     }
 
     @Override
@@ -133,6 +142,20 @@ public class Wizard extends Player {
 
     public void updateWithDeltaTime(float deltaTime) {
         inputHandle.handleInput();
+
+        if(isHurt)
+        {
+            hurtTimer -= deltaTime;
+            if(hurtTimer <= 0)
+            {
+                isHurt = false;
+            }
+        }
+        if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
+            && !isAttacking) {
+            isAttacking = true;
+            attackHandler.tryAttack();
+        }
 
         if (inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking) {
             if (!isUsingSkill) {
@@ -212,6 +235,8 @@ public class Wizard extends Player {
 
     @Override
     public void onHurt() {
-
+        isHurt = true;
+        hurtTimer = 0.4f;
+        animationManager.setState(StateType.STATE_HURT.stateType, true);
     }
 }

@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
 import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
@@ -28,7 +30,7 @@ public class MapScreen {
     private Player chosenHero;
     private LayoutPlayScreen layoutPlayScreen;
     private EnemySpawnController enemySpawnController;
-
+    private boolean debugEnabled = false;
     public MapScreen() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -38,7 +40,7 @@ public class MapScreen {
 
         try {
             batch = new SpriteBatch();
-            chosenHero = new Samurai(   300,300);
+            chosenHero = new Wizard(   300,300);
             layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero);
 
         } catch (Exception e) {
@@ -52,6 +54,7 @@ public class MapScreen {
         enemySpawnController.setMaxEnemiesOnMap(10);
         enemySpawnController.setSpawnInterval(3.0f);
         enemySpawnController.setTimeBetweenWaves(45.0f);
+        chosenHero.setEnemySpawnController(enemySpawnController);
     }
 
     public void loadMap() {
@@ -65,6 +68,11 @@ public class MapScreen {
     }
 
     public void render() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            DebugRenderer.setEnabled(!debugEnabled);
+            debugEnabled = !debugEnabled;
+        }
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -86,6 +94,7 @@ public class MapScreen {
         }
 
         batch.end();
+        DebugRenderer.render();
         layoutPlayScreen.render();
     }
 

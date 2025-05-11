@@ -1,65 +1,65 @@
 package com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack;
 
-import com.myteam.rpgsurvivor.controller.combat.attack.impl.Attack;
-import com.myteam.rpgsurvivor.model.Player;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.debug.DebugRenderer;
+import com.myteam.rpgsurvivor.model.Entity;
+import com.myteam.rpgsurvivor.model.Enemy;
+public class MeleeAttackComponent {
 
-public class BaseHeroAttack implements AttackComponent {
-    private Player chosenHero;
-    private int damage;
-    private float range;
-    private int speedAttack;
-    private long lastAttackTime;
+    private final Entity owner;
+    private final EnemySpawnController enemySpawnController;
+    private final float attackCooldown;
+    private final float attackRange;
+    private final int damage;
+    private final float knockbackStrength = 150f;
+    private final float attackSpeed;
+    private float lastAttackTime;
 
-    public BaseHeroAttack(Player chosenHero) {
-        this.chosenHero = chosenHero;
-        this.damage = chosenHero.getDamage();
-        this.range = chosenHero.getRangeAttack();
-        this.speedAttack = 800;
-        this.lastAttackTime = 0;
+    public MeleeAttackComponent(Entity owner, EnemySpawnController enemySpawnController,
+                                float attackSpeed, float attackRange, int damage) {
+        this.owner = owner;
+        this.enemySpawnController = enemySpawnController;
+        this.attackCooldown = 1/ attackSpeed;
+        this.attackRange = attackRange;
+        this.attackSpeed = attackSpeed;
+        this.damage = damage;
+        this.lastAttackTime = -attackCooldown;
     }
 
-    public void update(float deltaTime, List <Enemy> enemies) {
+    public void tryAttack() {
+        float currentTime = getCurrentTime();
 
-    }
-    @Override
-    public boolean executeAttack() {
-        if (!canAttack()) {
-            return false;
+//        if (currentTime - lastAttackTime < attackCooldown) return;
+        lastAttackTime = currentTime;
+
+        Rectangle ownerBounds = owner.getHitbox();
+        float attackX = owner.isFacingRight()
+            ? ownerBounds.x + ownerBounds.width
+            : ownerBounds.x - attackRange;
+        float attackY = ownerBounds.y;
+
+        Rectangle attackArea = new Rectangle(attackX, attackY, attackRange, ownerBounds.height);
+        owner.setAttackbox(attackArea);
+
+        for (Enemy enemy : enemySpawnController.getActiveEnemies()) {
+            if (enemy.getHitBox().overlaps(attackArea)) {
+                System.out.println("Overlap");
+                // Gây damage và knockback
+                Vector2 knockback = new Vector2(owner.isFacingRight() ? 1 : -1, 0).scl(knockbackStrength);
+                enemy.takeDamge(damage);
+//                enemy.applyKnockback(knockback);
+                enemy.onHurt();
+            }
         }
-
-        lastAttackTime = System.currentTimeMillis();
-
-        return true;
     }
-
-    @Override
-    public int getCooldown() {
-        return speedAttack;
-    }
-
-    @Override
     public boolean canAttack() {
-        return System.currentTimeMillis() - lastAttackTime >= speedAttack;
+        return System.currentTimeMillis() - lastAttackTime >= attackSpeed;
     }
 
-    @Override
-    public int getDamage() {
-        return damage;
+    private float getCurrentTime() {
+        return System.nanoTime() / 1_000_000_000.0f;
     }
-
-    @Override
-    public float getRange() {
-        return range;
-    }
-
-
-    private boolean isEnemyInRange() {
-        return true;
-    }
-
-    private void applyDamageToEnemy() {
-        System.out.println("Enemy hit with damage: " + damage);
-    }
-
-
 }
