@@ -3,14 +3,14 @@ package com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack;
 import com.myteam.rpgsurvivor.controller.combat.attack.impl.Attack;
 import com.myteam.rpgsurvivor.model.Player;
 
-public class BaseAttack implements Attack {
+public class BaseHeroAttack implements AttackComponent {
     private Player chosenHero;
     private int damage;
     private float range;
     private int speedAttack;
     private long lastAttackTime;
 
-    public BaseAttack(Player chosenHero) {
+    public BaseHeroAttack(Player chosenHero) {
         this.chosenHero = chosenHero;
         this.damage = chosenHero.getDamage();
         this.range = chosenHero.getRangeAttack();
@@ -18,6 +18,9 @@ public class BaseAttack implements Attack {
         this.lastAttackTime = 0;
     }
 
+    public void update(float deltaTime, List <Enemy> enemies) {
+
+    }
     @Override
     public boolean executeAttack() {
         if (!canAttack()) {
@@ -25,8 +28,6 @@ public class BaseAttack implements Attack {
         }
 
         lastAttackTime = System.currentTimeMillis();
-
-        System.out.println("Samurai attack executed! Damage: " + damage + ", Range: " + range);
 
         return true;
     }
