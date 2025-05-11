@@ -3,7 +3,7 @@ package com.myteam.rpgsurvivor.model.impl.Hero;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
-import com.myteam.rpgsurvivor.controller.movement.Movement;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
@@ -11,7 +11,7 @@ import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 public class Archer extends Player {
     private InputHandle inputHandle;
-    private Movement movement;
+    private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
@@ -46,8 +46,8 @@ public class Archer extends Player {
         super(x,y,HeroType.ARCHER);
         this.animationManager = new AnimationManager();
         this.skillEffectManager = new AnimationManager();
-        this.movement = new Movement(this);
-        this.inputHandle = new InputHandle(this, movement);
+        this.heroMovement = new HeroMovement(this);
+        this.inputHandle = new InputHandle(this, heroMovement);
 
         setupAnimation();
     }
@@ -56,7 +56,7 @@ public class Archer extends Player {
     {
         float idleFrameDuration = 0.15f;
         float runFrameDuration = 0.1f;
-        float attackFrameDuration = 0.08f;
+        float attackFrameDuration = this.getAttackSpeed();
         float skillFrameDuration = 0.08f;
         float skillEffectDuration = 0.1f;
 
@@ -124,9 +124,10 @@ public class Archer extends Player {
     }
 
     @Override
-    public void update() {
-        float deltaTime = 1/60f;
+    public void update(float deltaTime) {
+        deltaTime = 1/60f;
         updateWithDeltaTime(deltaTime);
+        super.update(deltaTime);
     }
 
     public void updateWithDeltaTime(float deltaTime)
@@ -148,7 +149,7 @@ public class Archer extends Player {
                 skillEffectManager.setState( StateType.STATE_SKILL_EFFECT.stateType, true);
             }
         }
-        movement.update();
+        heroMovement.update();
 
         if (!isAttacking && !isUsingSkill) {
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
@@ -167,7 +168,7 @@ public class Archer extends Player {
         if (isUsingSkill) {
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
-                if (movement.isMoving()) {
+                if (heroMovement.isMoving()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
                     animationManager.setState(StateType.STATE_IDLE.stateType, true);
@@ -179,7 +180,7 @@ public class Archer extends Player {
         if (isAttacking) {
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
-                if (movement.isMoving()) {
+                if (heroMovement.isMoving()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
                     animationManager.setState(StateType.STATE_IDLE.stateType, true);
@@ -189,7 +190,7 @@ public class Archer extends Player {
         }
 
 
-        if (movement.isMoving()) {
+        if (heroMovement.isMoving()) {
             animationManager.setState(StateType.STATE_RUN.stateType, true);
         } else {
             animationManager.setState(StateType.STATE_IDLE.stateType, true);
@@ -205,5 +206,10 @@ public class Archer extends Player {
 
     public boolean isFacingRight() {
         return facingRight;
+    }
+
+    @Override
+    public void onHurt() {
+
     }
 }

@@ -31,6 +31,9 @@ public class ChosseHeroScreen implements Screen {
 
     // Background Choose Hero
     private Texture BGTexture;
+    private Texture backBtnUnActive;
+    private Texture backBtnActive;
+    private ImageButton backBtn;
 
     // Frame Hero and Avatar Hero;
     private Texture frameHero;
@@ -39,11 +42,8 @@ public class ChosseHeroScreen implements Screen {
     private Texture archerAva;
     private Texture wizardAva;
 
-    // Back button
-    private Texture backButtonTexture;
-    private ImageButton backButton;
-
     private float avatarFrameSize = 150;
+    private float padding = 10;
 
     public ChosseHeroScreen(final Main game) {
         this.game = game;
@@ -61,6 +61,7 @@ public class ChosseHeroScreen implements Screen {
 
         loadTextures();
         setupLayout();
+        createBackButton();
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -72,7 +73,8 @@ public class ChosseHeroScreen implements Screen {
         samuraiAva = new Texture("Menu/IngameIcon/SamuraiAva.png");
         archerAva = new Texture("Menu/IngameIcon/archerAva.png");
         wizardAva = new Texture("Menu/IngameIcon/wizardAva.png");
-        backButtonTexture = new Texture("Menu/IntroScreen/ExitIconUnHover.png");
+        backBtnActive = new Texture("Menu/ChossenHero/Back_ButtonActive.png");
+        backBtnUnActive = new Texture("Menu/ChossenHero/Back_ButtonUnActive.png");
     }
 
     public void setupLayout() {
@@ -97,15 +99,12 @@ public class ChosseHeroScreen implements Screen {
         heroTable.add(wizardTable).pad(50).size(avatarFrameSize * 1.5f);
 
         stage.addActor(heroTable);
-
-
     }
 
     private Table createHeroCell(final Texture heroTexture, final String heroType) {
         Table cell = new Table();
 
         Image heroAvatar = new Image(heroTexture);
-
         Image frame = new Image(frameHero);
 
         heroAvatar.setSize(avatarFrameSize * 0.8f, avatarFrameSize * 0.8f);
@@ -117,12 +116,35 @@ public class ChosseHeroScreen implements Screen {
 
         cell.add(heroStack).size(avatarFrameSize);
 
-
+        cell.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("ChosseHeroScreen", heroType + " selected");
+                // Create and set the DescriptionHero screen
+                game.setScreen(new DescriptionHero(game, ChosseHeroScreen.this, camera, heroType));
+            }
+        });
 
         return cell;
     }
 
+    public void createBackButton() {
+        TextureRegionDrawable backBtnUnActiveDrawable = new TextureRegionDrawable(backBtnUnActive);
+        TextureRegionDrawable backBtnActiveDrawable = new TextureRegionDrawable(backBtnActive);
 
+        backBtn = new ImageButton(backBtnUnActiveDrawable, backBtnActiveDrawable);
+        backBtn.setPosition(padding, h - backBtn.getHeight() - padding);
+
+        backBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("ChosseHeroScreen", "Back button clicked");
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        stage.addActor(backBtn);
+    }
 
     @Override
     public void show() {
@@ -166,6 +188,7 @@ public class ChosseHeroScreen implements Screen {
         samuraiAva.dispose();
         archerAva.dispose();
         wizardAva.dispose();
-        backButtonTexture.dispose();
+        backBtnUnActive.dispose();
+        backBtnActive.dispose();
     }
 }

@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,14 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.model.Player;
 
-public class LayoutPlayScreen {
+public class LayoutPlayScreen implements Screen {
+    private Main game;
     private Stage stage;
     private Viewport viewport;
     private SpriteBatch batch;
     private Player chosenHero;
     private PauseScreen pauseScreen;
+    private String heroType;
 
     //Pause Button
     private Texture pauseUnactiveTexture;
@@ -32,36 +36,49 @@ public class LayoutPlayScreen {
     private Texture frameBlood;
     private Texture bloodTexture;
 
-    private TextureRegion[] bloodFrames;
+    private TextureRegion fullBloodFrame;
 
     private float avatarFrameSize = 80;
     private float bloodBarWidth = 200;
     private float bloodBarHeight = 40;
     private float padding = 10;
-    private float bloodBarInnerPaddingX = 6;
-    private float bloodBarInnerPaddingY = 6;
+    private float bloodBarInnerPaddingX = 10;
+    private float bloodBarInnerPaddingY = 10;
 
     private float maxHealth ;
     private float currentHealth ;
 
     private static final int BLOOD_FRAME_COLS = 6;
     private static final int BLOOD_FRAME_ROWS = 1;
-    private int currentBloodFrame = 0;
 
     private boolean isPaused = false;
 
-    public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero)
+
+    //Kích thước thanh máu và frame máu
+    float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX)  + 15 ;
+    float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
+
+    float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
+
+    float avatarPadding = 5;
+    float avatarSize = avatarFrameSize - (avatarPadding * 2);
+    //Vị trí khung máu
+    float bloodBarX = padding + avatarFrameSize + padding;
+    float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
+    public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero, String heroType, Main game)
     {
+        this.game = game;
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+        this.heroType = heroType;
         this.chosenHero = chosenHero;
         maxHealth = chosenHero.getMaxHealth();
         currentHealth = chosenHero.getCurrentHealth();
-        pauseScreen = new PauseScreen(camera);
+        pauseScreen = new PauseScreen(camera,game);
         pauseScreen.setListener(new PauseScreenListener() {
             @Override
-            public void onHomeButtonClicked() {
+            public void onBackButtonClicked() {
                 System.out.println("Home button clicked");
                 togglePause();
                 isPaused = false;
@@ -83,12 +100,33 @@ public class LayoutPlayScreen {
                 isPaused = false;
                 Gdx.input.setInputProcessor(stage);
             }
+
+
+
+
         });
 
         try {
             pauseUnactiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameUnactive.png"));
             pauseActiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameActive.png"));
-            heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+            switch (heroType)
+            {
+                case "Knight" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+                    break;
+                case "Samurai" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/SamuraiAva.png"));
+                    break;
+                case "Archer" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/archerAva.png"));
+                    break;
+                case "Wizard" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/wizardAva.png"));
+                    break;
+                default:
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+                    break;
+            }
             frameAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung ava.png"));
             frameBlood = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung Blood(1)(1)-1.png.png"));
             bloodTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/Blood.png"));
@@ -106,33 +144,19 @@ public class LayoutPlayScreen {
 
     private void setupBloodFrames()
     {
-        bloodFrames = new TextureRegion[BLOOD_FRAME_COLS];
+        fullBloodFrame = new TextureRegion();
         float frameWidth = bloodTexture.getWidth() / BLOOD_FRAME_COLS;
         float frameHeight = bloodTexture.getHeight() / BLOOD_FRAME_ROWS;
 
-        for (int i = 0 ; i < BLOOD_FRAME_COLS ; ++i)
-        {
-            bloodFrames[i] = new TextureRegion(bloodTexture, i * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
-        }
+            fullBloodFrame = new TextureRegion(bloodTexture, 0 * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
     }
 
     private void updateHealth(float health)
     {
         currentHealth = Math.max(0, Math.min(health, maxHealth));
-        float healthPercent = currentHealth / maxHealth;
-        if (healthPercent >= 0.81f) {
-            currentBloodFrame = 0;
-        } else if (healthPercent >= 0.61f) {
-            currentBloodFrame = 1;
-        } else if (healthPercent >= 0.41f) {
-            currentBloodFrame = 2;
-        } else if (healthPercent >= 0.21f) {
-            currentBloodFrame = 3;
-        } else if (healthPercent > 0f) {
-            currentBloodFrame = 4;
-        } else {
-            currentBloodFrame = 5;
-        }
+
+//        System.out.println(currentHealth + "/" + maxHealth + ": " + healthPercent);
+
     }
 
     public void createPauseButton() {
@@ -148,32 +172,34 @@ public class LayoutPlayScreen {
             }
         };
 
-        pauseButton.setPosition(Gdx.graphics.getWidth() - pauseButton.getWidth() - padding,
-            Gdx.graphics.getHeight() - pauseButton.getHeight() - padding);
 
         pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Hien thi menu
-                togglePause();
                 System.out.println("Pause button clicked");
+                togglePause();
             }
         });
 
         stage.addActor(pauseButton);
     }
-    public void render() {
-        updateHealth(currentHealth);
 
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.input.setInputProcessor(stage);
+        updateHealth(chosenHero.getCurrentHealth());
         stage.act(Gdx.graphics.getDeltaTime());
         batch.begin();
 
         if(!isPaused)
         {
-            float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
 
-            float avatarPadding = 5;
-            float avatarSize = avatarFrameSize - (avatarPadding * 2);
 
             batch.draw(frameAvatar,
                 padding,
@@ -187,8 +213,6 @@ public class LayoutPlayScreen {
                 avatarSize,
                 avatarSize);
 
-            float bloodBarX = padding + avatarFrameSize + padding;
-            float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
 
             batch.draw(frameBlood,
                 bloodBarX,
@@ -196,27 +220,43 @@ public class LayoutPlayScreen {
                 bloodBarWidth,
                 bloodBarHeight);
 
-            float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX);
-            float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
 
-            // Draw current blood frame based on health percentage
-            batch.draw(bloodFrames[currentBloodFrame],
-                bloodBarX + bloodBarInnerPaddingX - 12,
-                bloodBarY + bloodBarInnerPaddingY - 1,
-                innerBloodWidth,
-                innerBloodHeight);
+            //Cập nhật lại % máu
+            float healthPercent = currentHealth /(float) maxHealth;
+            float currentBloodWidth = innerBloodWidth * healthPercent;
+
+            batch.draw(fullBloodFrame,
+                bloodBarX + bloodBarInnerPaddingX ,
+                bloodBarY + bloodBarInnerPaddingY  ,
+                currentBloodWidth,
+                innerBloodHeight );
         }
 
         batch.end();
         stage.draw();
 
         if (isPaused) {
-            pauseScreen.render();
+            pauseScreen.render(Gdx.graphics.getDeltaTime());
         }
     }
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     public void dispose() {
@@ -228,11 +268,6 @@ public class LayoutPlayScreen {
         frameAvatar.dispose();
         frameBlood.dispose();
         bloodTexture.dispose();
-    }
-
-    public PauseScreen getPauseScreen()
-    {
-        return  pauseScreen;
     }
 
     public void togglePause() {

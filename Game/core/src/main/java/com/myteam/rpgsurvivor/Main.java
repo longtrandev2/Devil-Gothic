@@ -17,7 +17,9 @@ public class Main extends Game {
     public void create() {
         // Khởi tạo camera
        //map = new MapScreen();
-        setScreen(new MainMenuScreen(this));
+       setScreen(new MainMenuScreen(this));
+
+
     }
 
     @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="128" height="77" tilewidth="10" tileheight="10" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="128" height="77" tilewidth="10" tileheight="10" infinite="0" nextlayerid="20" nextobjectid="27">
  <tileset firstgid="1" source="mainlevbuild.tsx"/>
  <tileset firstgid="6529" name="torch_3" tilewidth="10" tileheight="10" tilecount="1" columns="1">
   <image source="torch_3.png" width="16" height="15"/>
@@ -250,5 +250,59 @@
 0,1840,0,0,0,2668,2669,0,7155,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1610613320,1610613422,1610613524,1610613626,1610613728,1610613830,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2668,2669,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1457
 </data>
   </layer>
+ </group>
+ <objectgroup id="5" name="Khu Spawn 1" offsetx="37.5" offsety="37.75">
+  <object id="14" x="987.5" y="299.917">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Khu Spawn 2">
+  <object id="15" x="1188" y="268">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Khu Spawn 3">
+  <object id="16" x="1116.33" y="157">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="Khu Spawn 4">
+  <object id="17" x="317.333" y="168.667">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="Khu Spawn 5">
+  <object id="11" x="65.9091" y="495.727">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="Khu Spawn 6">
+  <object id="13" x="66.6667" y="587">
+   <point/>
+  </object>
+ </objectgroup>
+ <group id="13" name="Collision">
+  <objectgroup id="19" name="Khu 6">
+   <object id="25" x="54.75" y="603.375">
+    <polygon points="0,0 -1.75,-3.125 -8.5,-6.75 -13.125,-10.75 -15.5,-15.625 -15.75,-20.375 -12.375,-25.625 -6.625,-28.875 -2.875,-31.875 0.375,-35.875 2.125,-40.375 4.5,-43.25 7.875,-45 13.25,-45.375 17.375,-43.25 19.875,-40.625 21.25,-37.25 22.625,-33.875 24.25,-31.25 25.875,-29.625 28.125,-29 33,-26.875 35.625,-25.25 37.375,-22.5 38.125,-18.375 37.625,-13.375 36.125,-10.125 31.875,-6.5 25.625,-4.125 23.375,-3 22,-0.375 21.25,2 20.375,4.5 19.375,6.25 17.125,8.625 15,10 13.125,10.75 10.625,10.625 8.5,10.25 6.5,9.625 4,8.375 2.25,6.5 0.625,3"/>
+   </object>
+  </objectgroup>
+  <objectgroup id="18" name="Khu 5">
+   <object id="26" x="64.5" y="469">
+    <polygon points="0,0 -6.75,2.25 -10.75,11.75 -14,16 -22,18.75 -24,20.25 -25.75,24.25 -25.75,27.5 -25,30.5 -22.25,34.5 -16.75,38 -13.25,39.25 -10,43.75 -8.5,47.25 -6.75,51.25 -4.25,52.75 -0.25,54.5 2.75,54.75 6.5,54 8.25,52.5 12.75,45 14,42.5 16.5,40.25 22.5,39.25 25.75,37.75 27.5,34 28.5,29.75 28.75,24 26.5,19.25 23.25,15.5 18.75,14 13.75,12 10.5,9.5 8.5,4 6,1 3.5,-0.5"/>
+   </object>
+  </objectgroup>
+  <objectgroup id="17" name="Khu 4">
+   <object id="21" x="203.667" y="131.333" width="164.667" height="64.3333"/>
+  </objectgroup>
+  <objectgroup id="16" name="Khu 3">
+   <object id="20" x="1083" y="121.667" width="66.6667" height="64.6667"/>
+  </objectgroup>
+  <objectgroup id="15" name="Khu 2">
+   <object id="19" x="1153.67" y="232" width="65.3333" height="63.6667"/>
+  </objectgroup>
+  <objectgroup id="14" name="Khu 1">
+   <object id="18" x="993.667" y="302" width="64.3333" height="63.6667"/>
+  </objectgroup>
  </group>
 </map>
