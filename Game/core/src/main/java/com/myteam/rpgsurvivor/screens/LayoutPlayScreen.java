@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,14 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.model.Player;
 
-public class LayoutPlayScreen {
+public class LayoutPlayScreen implements Screen {
+    private Main game;
     private Stage stage;
     private Viewport viewport;
     private SpriteBatch batch;
     private Player chosenHero;
     private PauseScreen pauseScreen;
+    private String heroType;
 
     //Pause Button
     private Texture pauseUnactiveTexture;
@@ -61,18 +65,20 @@ public class LayoutPlayScreen {
     //Vị trí khung máu
     float bloodBarX = padding + avatarFrameSize + padding;
     float bloodBarY = topY + (avatarFrameSize - bloodBarHeight) / 2;
-    public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero)
+    public LayoutPlayScreen(OrthographicCamera camera, Player chosenHero, String heroType, Main game)
     {
+        this.game = game;
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+        this.heroType = heroType;
         this.chosenHero = chosenHero;
         maxHealth = chosenHero.getMaxHealth();
         currentHealth = chosenHero.getCurrentHealth();
-        pauseScreen = new PauseScreen(camera);
+        pauseScreen = new PauseScreen(camera,game);
         pauseScreen.setListener(new PauseScreenListener() {
             @Override
-            public void onHomeButtonClicked() {
+            public void onBackButtonClicked() {
                 System.out.println("Home button clicked");
                 togglePause();
                 isPaused = false;
@@ -94,12 +100,33 @@ public class LayoutPlayScreen {
                 isPaused = false;
                 Gdx.input.setInputProcessor(stage);
             }
+
+
+
+
         });
 
         try {
             pauseUnactiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameUnactive.png"));
             pauseActiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameActive.png"));
-            heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+            switch (heroType)
+            {
+                case "Knight" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+                    break;
+                case "Samurai" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/SamuraiAva.png"));
+                    break;
+                case "Archer" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/archerAva.png"));
+                    break;
+                case "Wizard" :
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/wizardAva.png"));
+                    break;
+                default:
+                    heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+                    break;
+            }
             frameAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung ava.png"));
             frameBlood = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung Blood(1)(1)-1.png.png"));
             bloodTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/Blood.png"));
@@ -145,21 +172,27 @@ public class LayoutPlayScreen {
             }
         };
 
-        pauseButton.setPosition(Gdx.graphics.getWidth() - pauseButton.getWidth() - padding,
-            Gdx.graphics.getHeight() - pauseButton.getHeight() - padding);
 
         pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Hien thi menu
-                togglePause();
                 System.out.println("Pause button clicked");
+                togglePause();
             }
         });
 
         stage.addActor(pauseButton);
     }
-    public void render() {
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.input.setInputProcessor(stage);
         updateHealth(chosenHero.getCurrentHealth());
         stage.act(Gdx.graphics.getDeltaTime());
         batch.begin();
@@ -203,12 +236,27 @@ public class LayoutPlayScreen {
         stage.draw();
 
         if (isPaused) {
-            pauseScreen.render();
+            pauseScreen.render(Gdx.graphics.getDeltaTime());
         }
     }
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     public void dispose() {
@@ -220,11 +268,6 @@ public class LayoutPlayScreen {
         frameAvatar.dispose();
         frameBlood.dispose();
         bloodTexture.dispose();
-    }
-
-    public PauseScreen getPauseScreen()
-    {
-        return  pauseScreen;
     }
 
     public void togglePause() {

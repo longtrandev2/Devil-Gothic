@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,28 +13,38 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.myteam.rpgsurvivor.Main;
 
-public class PauseScreen {
+public class PauseScreen implements Screen {
+    private Main game;
     private Stage stage;
     private Viewport viewport;
     private SpriteBatch batch;
+    private OrthographicCamera camera;
+    private ShowControlScreen showControlScreen;
 
     // Screen
     private Texture backgroundTexture;
-    private Texture titleTexture;
-    private Texture nameTexture;
 
-    // Home Button
-    private Texture homeTexture;
-    private ImageButton homeButton;
 
-    // Resume Button
-    private Texture resumeTexture;
-    private ImageButton resumeButton;
+    private Texture controlUnActiveTexture;
+    private Texture controlActiveTexture;
+    private ImageButton controlBtn;
 
-    // Restart Button
-    private Texture restartTexture;
-    private ImageButton restartButton;
+
+    private Texture audioUnActiveTexure;
+    private Texture audioActiveTexture;
+    private ImageButton audioBtn;
+
+    private Texture backUnActiveTexture;
+    private Texture backActiveTexture;
+    private ImageButton backBtn;
+
+    private Texture resumeUnActiveTexture;
+    private Texture resumeActiveTexture;
+    private ImageButton resumeBtn;
+
+
 
     //Interface resolve event
     private PauseScreenListener listener ;
@@ -44,19 +55,26 @@ public class PauseScreen {
     private float titleWidth = 800;
     private float titleHeight = 200;
 
-    public PauseScreen (OrthographicCamera camera)
+    public PauseScreen (OrthographicCamera camera, Main game)
     {
+        this.game = game;
+        this.camera = camera;
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+        showControlScreen = new ShowControlScreen(game, PauseScreen.this,camera);
 
         try {
-            backgroundTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/Carved_9Slides.png"));
-            titleTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/Banner_Horizontal.png"));
-            homeTexture = new Texture((Gdx.files.internal("Menu/PauseMenu/UI_TravelBook_IconHome01a.png")));
-            resumeTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/UI_TravelBook_IconPlay01a.png"));
-            restartTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/UI_TravelBook_IconRestart01a.png"));
-            nameTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/GameName.png"));
+            backgroundTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/BackGround.png"));
+            controlUnActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/controlUnActive.png"));
+            controlActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/controlActive.png"));
+            audioUnActiveTexure = new Texture(Gdx.files.internal("Menu/PauseMenu/audioUnActive.png"));
+            audioActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/audioActive.png"));
+//            backUnActiveTexture = new Texture(Gdx.files.internal("Menu/ChossenHero/Back_ButtonUnActive.png"));
+//            backActiveTexture = new Texture(Gdx.files.internal("Menu/ChossenHero/Back_ButtonActive.png"));
+            resumeUnActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/resumeUnActive.png"));
+            resumeActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/resumeActive.png"));
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,68 +82,60 @@ public class PauseScreen {
 
         Gdx.input.setInputProcessor(stage);
     }
-
+    public ImageButton createButton(Texture unactiveBtn, Texture activeBtn)
+    {
+        TextureRegionDrawable unactiveDrawable = new TextureRegionDrawable(unactiveBtn);
+        TextureRegionDrawable activeDrawable = new TextureRegionDrawable(activeBtn);
+        ImageButton button = new ImageButton(unactiveDrawable,activeDrawable);
+        return button;
+    }
     public void createMenu()
     {
-        TextureRegionDrawable homeDrawable = new TextureRegionDrawable(homeTexture);
-        homeButton = new ImageButton(homeDrawable);
-        homeButton.addListener(new ClickListener() {
+        controlBtn = createButton(controlUnActiveTexture, controlActiveTexture);
+        audioBtn = createButton(audioUnActiveTexure, audioActiveTexture);
+//        backBtn = createButton(backUnActiveTexture, backActiveTexture);
+        resumeBtn = createButton(resumeUnActiveTexture,resumeActiveTexture);
+
+        controlBtn.setPosition(Gdx.graphics.getWidth() / 2 - 280, Gdx.graphics.getHeight() / 2 -  100);
+        audioBtn.setPosition(Gdx.graphics.getWidth() / 2 + 100, Gdx.graphics.getHeight() / 2 - 100);
+//        backBtn.setPosition(Gdx.graphics.getWidth() / 2 - 370, Gdx.graphics.getHeight() / 2 + 280);
+        resumeBtn.setPosition(Gdx.graphics.getWidth() / 2 - 30, Gdx.graphics.getHeight() / 2);
+        resumeBtn.setScale(4);
+
+        controlBtn.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("DescriptionHero", "Control button clicked");
+                showControlScreen.setShow(true);
+
+            }
+        });
+
+        resumeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listener != null) {
-                    listener.onHomeButtonClicked();
+                    listener.onBackButtonClicked();
                 }
             }
         });
 
-        TextureRegionDrawable resumeDrawable = new TextureRegionDrawable(resumeTexture);
-        resumeButton = new ImageButton(resumeDrawable);
-        resumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (listener != null) {
-                    listener.onResumeButtonClicked();
-                }
-            }
-        });
-
-        TextureRegionDrawable restartDrawable = new TextureRegionDrawable(restartTexture);
-        restartButton = new ImageButton(restartDrawable);
-        restartButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (listener != null) {
-                    listener.onRestartButtonClicked();
-                }
-            }
-        });
-
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
-        float centerX = screenWidth / 2;
-        float centerY = screenHeight / 2;
-
-        float totalButtonsWidth = (3 * buttonSize) + (2 * padding); // 3 buttons with padding between
-        float buttonsStartX = centerX - (totalButtonsWidth / 2);
-        float buttonsY = centerY - buttonSize - padding + 100;
-
-        homeButton.setSize(buttonSize, buttonSize);
-        homeButton.setPosition(buttonsStartX, buttonsY);
-
-        resumeButton.setSize(buttonSize, buttonSize);
-        resumeButton.setPosition(buttonsStartX + buttonSize + padding + 20, buttonsY);
-
-        restartButton.setSize(buttonSize, buttonSize);
-        restartButton.setPosition(buttonsStartX + (2 * (buttonSize + padding)), buttonsY);
-
-        stage.addActor(homeButton);
-        stage.addActor(resumeButton);
-        stage.addActor(restartButton);
+        stage.addActor(controlBtn);
+        stage.addActor(audioBtn);
+//        stage.addActor(backBtn);
+        stage.addActor(resumeBtn);
 
     }
 
-    public void render() {
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.input.setInputProcessor(stage);
         stage.act(Gdx.graphics.getDeltaTime());
         batch.begin();
 
@@ -139,24 +149,15 @@ public class PauseScreen {
 
         batch.draw(backgroundTexture, bgX, bgY, bgWidth, bgHeight);
 
-        float titleX = (screenWidth - titleWidth) / 2;
-        float titleY = bgY + bgHeight - titleHeight - padding;
 
-        batch.draw(titleTexture, titleX, titleY, titleWidth, titleHeight);
-
-        float nameWidth = 600;
-        float nameHeight = 100;
-        float nameX = (screenWidth - nameWidth) / 2;
-        float nameY = titleY + titleHeight + padding - 150;
-
-        batch.draw(nameTexture, nameX, nameY, nameWidth, nameHeight);
 
         batch.end();
         stage.draw();
-    }
 
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
+        if(showControlScreen.isShow())
+        {
+            showControlScreen.render(delta);
+        }
     }
 
     public void hide() {
@@ -167,14 +168,25 @@ public class PauseScreen {
         viewport.update(width, height, true);
     }
 
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+    @Override
     public void dispose() {
         stage.dispose();
         batch.dispose();
         backgroundTexture.dispose();
-        titleTexture.dispose();
-        homeTexture.dispose();
-        resumeTexture.dispose();
-        restartTexture.dispose();
+        controlUnActiveTexture.dispose();
+        controlActiveTexture.dispose();
+        audioUnActiveTexure.dispose();
+        audioUnActiveTexure.dispose();
+
     }
 
     public void setListener(PauseScreenListener listener)
