@@ -1,6 +1,7 @@
 package com.myteam.rpgsurvivor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
 import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
@@ -31,6 +33,9 @@ public class MapScreen implements Screen {
     private Player chosenHero;
     private LayoutPlayScreen layoutPlayScreen;
     private EnemySpawnController enemySpawnController;
+
+    private boolean debugEnabled = false;
+
     private String heroType;
 
     public MapScreen(String heroType, Main game) {
@@ -44,6 +49,7 @@ public class MapScreen implements Screen {
 
         try {
             batch = new SpriteBatch();
+
             switch (heroType)
             {
                 case "Knight" :
@@ -74,6 +80,9 @@ public class MapScreen implements Screen {
         enemySpawnController.setMaxEnemiesOnMap(10);
         enemySpawnController.setSpawnInterval(3.0f);
         enemySpawnController.setTimeBetweenWaves(45.0f);
+      
+        chosenHero.setEnemySpawnController(enemySpawnController);
+      
         layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero,heroType,game);
     }
 
@@ -104,6 +113,10 @@ public class MapScreen implements Screen {
 
     @Override
     public void render(float delta) {
+          if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            DebugRenderer.setEnabled(!debugEnabled);
+            debugEnabled = !debugEnabled;
+        }
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -126,6 +139,8 @@ public class MapScreen implements Screen {
 
 
         batch.end();
+        DebugRenderer.render();
+
         layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
     }
 

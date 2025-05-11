@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.EnemyMovement;
+import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
@@ -38,6 +39,13 @@ public abstract class Enemy extends Entity {
     private Rectangle hitboxPlayer;
     private Rectangle hitboxEnemy;
 
+    //
+    private Vector2 velocity = new Vector2();
+    private float knockbackDecay = 10f;
+    private float maxKnockbackSpeed = 300f;
+
+
+
     public Enemy(float x, float y, MonsterType enemyType, Player player, AnimationForEnemy animationFactory) {
         this.entityX = x;
         this.entityY = y;
@@ -65,8 +73,8 @@ public abstract class Enemy extends Entity {
         this.currentState = StateType.STATE_IDLE;
         shapeRenderer = new ShapeRenderer();
 
-        // Thiết lập các thuộc tính tấn công
-        this.attackCooldown = 1f / stat.attackSpeed; // Thời gian giữa các đòn tấn công
+
+        this.attackCooldown = 1f / stat.attackSpeed;
         this.attackTimer = 0;
         this.attackRange = stat.rangeAttack;
         this.detectionRange = 1000f;
@@ -78,15 +86,46 @@ public abstract class Enemy extends Entity {
         this.isInteracting = false;
         this.isAttack = false;
 
-        //AttackBox
         this.attackbox = new Rectangle(hitbox);
-        attackbox.setSize(hitbox.getWidth() + attackRange * 2, hitbox.getHeight());
+        attackbox.setSize(hitbox.getWidth() + attackRange , hitbox.getHeight() + attackRange);
     }
 
     @Override
     public void update(float deltaTime) {
+//        if (!velocity.isZero()) {
+//            entityX += velocity.x * deltaTime;
+//            entityY += velocity.y * deltaTime;
+//
+//            float decay = knockbackDecay * deltaTime;
+//            if (velocity.len() <= decay) {
+//                velocity.setZero();
+//            } else {
+//                velocity.scl(1 - decay / velocity.len());
+//            }
+//        }
+        System.out.println(this + " " + currentHealth + " "  );
+        //hitbox
         hitbox.setPosition(entityX + offsetX, entityY + offsetY);
-        attackbox.setPosition(entityX + offsetX - attackRange, entityY + offsetY);
+
+        //attackbox
+       if(isFacingRight()){
+           attackbox.setPosition(entityX + offsetX , entityY + offsetY);
+       } else {
+           attackbox.setPosition(entityX + offsetX - attackRange, entityY + offsetY);
+       }
+
+        if (isDead) return;
+
+        if (isHurt) {
+            hurtTimer -= deltaTime;
+            if (hurtTimer <= 0) {
+                isHurt = false;
+            } else {
+                currentState = StateType.STATE_HURT;
+                    animationManager.setState(StateType.STATE_HURT.stateType, true);
+                return;
+            }
+        }
         // Kiểm tra player có trong tầm phát hiện không
         if (isPlayerInDetectionRange()) {
             if (isPlayerInAttackRange()) {
@@ -98,7 +137,7 @@ public abstract class Enemy extends Entity {
             attackTimer -= deltaTime;
         }
 
-        if (isDead) return;
+
         float dx = 0;
         //Tính hiệu dx nhỏ nhất
         if(hitboxEnemy.getX() + hitboxEnemy.getWidth()/2 < hitboxPlayer.getX())
@@ -139,6 +178,7 @@ public abstract class Enemy extends Entity {
             facingRight = false;
         }
 
+
         if (animationManager != null) {
             animationManager.setState(currentState.stateType, true);
 
@@ -164,16 +204,9 @@ public abstract class Enemy extends Entity {
 
         batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
 
-        batch.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0,1,0,1);
-        shapeRenderer.rect(hitboxPlayer.getX(), hitboxPlayer.getY(), hitboxPlayer.getWidth(), hitboxPlayer.getHeight());
-        shapeRenderer.rect(hitboxEnemy.x, hitboxEnemy.y, hitboxEnemy.getWidth(), hitbox.getHeight());
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(attackbox.getX(), attackbox.getY(), attackbox.getWidth(), attackbox.getHeight());
-        shapeRenderer.end();
-        batch.begin();
-
+        DebugRenderer.drawRect(hitboxPlayer, Color.GREEN);
+        DebugRenderer.drawRect(getHitBox(), Color.YELLOW);
+        DebugRenderer.drawRect(attackbox , Color.RED);
 
         update(deltaTime);
     }
@@ -222,5 +255,21 @@ public abstract class Enemy extends Entity {
     }
     public boolean isDead() {
         return isDead;
+    }
+
+    public void onHurt() {
+        System.out.println("onhurt");
+        System.out.println("current state: " + currentState);
+        isHurt = true;
+        hurtTimer = 0.4f;
+        animationManager.setState(StateType.STATE_HURT.stateType, true);
+    }
+
+    public void applyKnockback(Vector2 force) {
+        // Giới hạn lực bật lùi không vượt quá max
+        if (force.len() > maxKnockbackSpeed) {
+            force.setLength(maxKnockbackSpeed);
+        }
+        velocity.add(force);
     }
 }

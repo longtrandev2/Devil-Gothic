@@ -46,6 +46,11 @@ public class AnimationForEnemy {
             4,1, DEFAULT_FRAME_DURATION, true
         );
 
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/Creep 1/HobgoblinNoOutline/goblinsmasher_hurt.png",
+            1,1, DEFAULT_FRAME_DURATION, true
+        );
     }
 
     public void setUpSkeletonAnimation(AnimationManager animationManager)
@@ -62,6 +67,11 @@ public class AnimationForEnemy {
             13,1,DEFAULT_FRAME_DURATION,true
         );
 
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Hit.png",
+            18,1, DEFAULT_FRAME_DURATION,true
+        );
         animationManager.addAnimation(
             StateType.STATE_ATTACK.stateType,
             "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Attack.png",
@@ -87,6 +97,12 @@ public class AnimationForEnemy {
             StateType.STATE_ATTACK.stateType,
             "Enemy/Creep 2/NoneOutlinedRat/rat-attack.png",
             6,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/Creep 2/NoneOutlinedRat/rat-hurt.png",
+            1,1,DEFAULT_FRAME_DURATION,false
         );
     }
 

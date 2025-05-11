@@ -2,9 +2,8 @@ package com.myteam.rpgsurvivor.model.impl.Hero;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
-import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.BaseAttack;
+import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.MeleeAttackComponent;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.model.Player;
@@ -16,14 +15,11 @@ public class Samurai extends Player {
 
     private InputHandle inputHandler;
     private HeroMovement heroMovement;
-    private BaseAttack attackHandler;
     private SamuraiSkill skillHandler;
     private boolean facingRight = true;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
-    private boolean isHurt = false;
     private float stateTime = 0;
-    private float hurtTimer = 0;
 
 
     private boolean showSmoke = false;
@@ -59,7 +55,6 @@ public class Samurai extends Player {
         this.animationManager = new AnimationManager();
         this.heroMovement = new HeroMovement(this);
         this.inputHandler = new InputHandle(this, heroMovement);
-        this.attackHandler = new BaseAttack(this);
         this.skillHandler = new SamuraiSkill(this);
 
         setupAnimations();
@@ -213,7 +208,7 @@ public class Samurai extends Player {
         if (inputHandler.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
             && !isAttacking && !skillHandler.isDashing()) {
             isAttacking = true;
-            attackHandler.executeAttack();
+            attackHandler.tryAttack();
         }
 
         if (!skillHandler.isDashing()) {
