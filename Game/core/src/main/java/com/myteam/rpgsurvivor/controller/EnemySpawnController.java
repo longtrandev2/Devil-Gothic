@@ -20,15 +20,18 @@ public class EnemySpawnController {
     private Player player;
     private AnimationForEnemy enemyAnimation;
 
-
-    private float spawnTimer;
+    private int totalDeath = 0;
     private float spawnInterval;
+    private float spawnTimer;
     private int maxEnemiesOnMap;
     private int enemiesPerWave;
 
     private int currentWave;
     private float waveTimer;
     private float timeBetweenWaves;
+
+    private boolean prepareToNextStage;
+    private boolean isPaused;
 
     public EnemySpawnController(Player player, TiledMap map) {
         this.player = player;
@@ -39,64 +42,55 @@ public class EnemySpawnController {
 
         this.spawnInterval = 2.0f;
         this.spawnTimer = 0;
-        this.maxEnemiesOnMap = 40;
-        this.enemiesPerWave = 1;
+        this.maxEnemiesOnMap = 100;
+        this.enemiesPerWave = 5;
 
         this.currentWave = 1;
         this.waveTimer = 0;
         this.timeBetweenWaves = 30.0f;
+
+        this.prepareToNextStage = false;
+        this.isPaused = false;
     }
 
-    public void update(float deltaTime)
-    {
-        waveTimer += deltaTime;
-        if(waveTimer >= timeBetweenWaves)
-        {
-            startNewWave();
+    public void update(float deltaTime) {
+        if (isPaused) {
+            return;
         }
 
-        if(activeEnemy.size() < maxEnemiesOnMap)
-        {
-            spawnTimer += deltaTime;
 
-            if(spawnTimer >= spawnInterval)
-            {
-                spawnTimer = 0;
-                spawnEnemy();
-            }
+        if (totalDeath >= enemiesPerWave) {
+            System.out.println(totalDeath);
+            prepareToNextStage = true;
+            return;
         }
+
+        spawnTimer += deltaTime;
+        if (spawnTimer >= spawnInterval && activeEnemy.size() < maxEnemiesOnMap) {
+            spawnEnemy();
+            spawnTimer = 0;
+        }
+
         updateEnemy(deltaTime);
     }
 
-    public void startNewWave()
-    {
+    public void startNewWave() {
         ++currentWave;
         waveTimer = 0;
-
-        for (int i = 0 ; i < enemiesPerWave ; ++i)
-        {
-            if(activeEnemy.size() < maxEnemiesOnMap)
-            {
-                spawnEnemy();
-            }
-        }
-
+        spawnEnemy();
         spawnInterval = Math.max(0.5f, spawnInterval * 0.9f);
-        enemiesPerWave = Math.min(maxEnemiesOnMap / 2, enemiesPerWave + 1);
     }
 
-    public void spawnEnemy()
-    {
+    public void spawnEnemy() {
         Vector2 spawnPos = spawnPointManager.getRandomSpawnPosition();
         Enemy enemy = createRandomEnemy(spawnPos.x, spawnPos.y);
         activeEnemy.add(enemy);
     }
 
-    public Enemy createRandomEnemy (float x, float y)
-    {
+    public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
         MonsterType randomType = types[MathUtils.random(types.length - 1)];
-        //MonsterType randomType = MonsterType.RAT;
+        //MonsterType randomType = MonsterType.SKELETON;
 
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
@@ -123,15 +117,31 @@ public class EnemySpawnController {
 
             if (enemy.isDead()) {
                 activeEnemy.remove(i);
+                totalDeath++;
+                if (totalDeath >= enemiesPerWave) {
+                    prepareToNextStage = true;
+                }
             }
         }
     }
-
 
     public void render(SpriteBatch batch, float deltaTime) {
         for (Enemy enemy : activeEnemy) {
             enemy.render(batch, deltaTime);
         }
+    }
+
+    public boolean isPrepareToNextStage() {
+        return prepareToNextStage;
+    }
+
+    public void pauseSpawning() {
+        isPaused = true;
+    }
+
+    public void resumeSpawning() {
+        prepareToNextStage = false;
+        isPaused = false;
     }
 
     public ArrayList<Enemy> getActiveEnemies() {
@@ -150,8 +160,35 @@ public class EnemySpawnController {
         this.timeBetweenWaves = timeBetweenWaves;
     }
 
+    public float getTimeBetweenWaves() {
+        return timeBetweenWaves;
+    }
+
+    public int getMaxEnemiesOnMap() {
+        return maxEnemiesOnMap;
+    }
+
+    public float getSpawnInterval() {
+        return spawnInterval;
+    }
+
     public int getCurrentWave() {
         return currentWave;
     }
-}
 
+    public int getEnemiesPerWave() {
+        return enemiesPerWave;
+    }
+
+    public void setEnemiesPerWave(int enemiesPerWave) {
+        this.enemiesPerWave = enemiesPerWave;
+    }
+
+    public int getTotalDeaths() {
+        return totalDeath;
+    }
+
+    public void setTotalDeaths(int totalDeath) {
+        this.totalDeath = totalDeath;
+    }
+}

@@ -23,7 +23,6 @@ public class PauseScreen implements Screen {
     private OrthographicCamera camera;
     private ShowControlScreen showControlScreen;
 
-    // Screen
     private Texture backgroundTexture;
 
 

@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.controller.system.SystemController;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
@@ -33,6 +34,7 @@ public class MapScreen implements Screen {
     private Player chosenHero;
     private LayoutPlayScreen layoutPlayScreen;
     private EnemySpawnController enemySpawnController;
+    private SystemController systemController;
 
     private boolean debugEnabled = false;
 
@@ -46,6 +48,7 @@ public class MapScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
+        systemController = new SystemController(enemySpawnController,chosenHero,game, this, camera);
 
         try {
             batch = new SpriteBatch();
@@ -77,12 +80,11 @@ public class MapScreen implements Screen {
         loadMap();
         enemySpawnController = new EnemySpawnController(chosenHero, map);
 
-        enemySpawnController.setMaxEnemiesOnMap(10);
-        enemySpawnController.setSpawnInterval(3.0f);
-        enemySpawnController.setTimeBetweenWaves(45.0f);
-      
+
         chosenHero.setEnemySpawnController(enemySpawnController);
-      
+
+        systemController = new SystemController(enemySpawnController, chosenHero, game, this, camera);
+
         layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero,heroType,game);
     }
 
@@ -101,9 +103,8 @@ public class MapScreen implements Screen {
         camera.update();
         if (!isPaused()) {
             chosenHero.update(Gdx.graphics.getDeltaTime());
+            systemController.update(Gdx.graphics.getDeltaTime());
         }
-        enemySpawnController.update(Gdx.graphics.getDeltaTime());
-        //System.out.println("Hero position: " + chosenHero.getEntityX() + ", " + chosenHero.getEntityY());
     }
 
     @Override
@@ -131,9 +132,13 @@ public class MapScreen implements Screen {
 
 
         if (!isPaused()) {
-            chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-            if (enemySpawnController != null) {
+            if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
+                chosenHero.render(batch, Gdx.graphics.getDeltaTime());
                 enemySpawnController.render(batch, Gdx.graphics.getDeltaTime());
+            }
+            else
+            {
+                systemController.render(Gdx.graphics.getDeltaTime());
             }
         }
 
@@ -170,6 +175,7 @@ public class MapScreen implements Screen {
         }
         batch.dispose();
         layoutPlayScreen.dispose();
+        systemController.dispose();
 
 
     }

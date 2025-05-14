@@ -103,7 +103,7 @@ public abstract class Enemy extends Entity {
 //                velocity.scl(1 - decay / velocity.len());
 //            }
 //        }
-        System.out.println(this + " " + currentHealth + " "  );
+        //System.out.println(this + " " + currentHealth + " " + getDamage() );
         //hitbox
         hitbox.setPosition(entityX + offsetX, entityY + offsetY);
 
@@ -272,4 +272,6 @@ public abstract class Enemy extends Entity {
         }
         velocity.add(force);
     }
+
+
 }

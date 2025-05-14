@@ -70,7 +70,7 @@ public class AnimationForEnemy {
         animationManager.addAnimation(
             StateType.STATE_HURT.stateType,
             "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Hit.png",
-            18,1, DEFAULT_FRAME_DURATION,true
+            8,1, DEFAULT_FRAME_DURATION,true
         );
         animationManager.addAnimation(
             StateType.STATE_ATTACK.stateType,
