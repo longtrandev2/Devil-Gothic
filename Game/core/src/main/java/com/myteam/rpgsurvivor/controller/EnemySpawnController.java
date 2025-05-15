@@ -9,9 +9,8 @@ import com.myteam.rpgsurvivor.controller.spawn.SpawnPointManager;
 import com.myteam.rpgsurvivor.model.Enemy;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
-import com.myteam.rpgsurvivor.model.impl.Creep.Goblin;
-import com.myteam.rpgsurvivor.model.impl.Creep.Rat;
-import com.myteam.rpgsurvivor.model.impl.Creep.Skeleton;
+import com.myteam.rpgsurvivor.model.impl.Creep.*;
+
 import java.util.ArrayList;
 
 public class EnemySpawnController {
@@ -90,7 +89,7 @@ public class EnemySpawnController {
     public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
         MonsterType randomType = types[MathUtils.random(types.length - 1)];
-        //MonsterType randomType = MonsterType.SKELETON;
+        //MonsterType randomType = MonsterType.ORC;
 
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
@@ -104,6 +103,10 @@ public class EnemySpawnController {
                 return new Skeleton(x, y, player, enemyAnimation);
             case RAT:
                 return new Rat(x, y, player, enemyAnimation);
+            case ORC:
+                return new Orc(x, y, player, enemyAnimation);
+            case VAMPIRE:
+                return new Vampire(x, y, player, enemyAnimation);
             default:
                 return new Goblin(x, y, player, enemyAnimation);
         }

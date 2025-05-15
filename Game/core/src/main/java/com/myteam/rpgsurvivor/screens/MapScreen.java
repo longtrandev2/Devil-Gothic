@@ -129,12 +129,12 @@ public class MapScreen implements Screen {
 
         batch.begin();
 
-
+        layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
         if (!isPaused()) {
             if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
+
                 chosenHero.render(batch, Gdx.graphics.getDeltaTime());
                 enemySpawnController.render(batch, Gdx.graphics.getDeltaTime());
-                layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
             }
             else
             {

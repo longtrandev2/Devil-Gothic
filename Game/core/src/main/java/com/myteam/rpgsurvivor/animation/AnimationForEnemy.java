@@ -20,6 +20,10 @@ public class AnimationForEnemy {
                 break;
             case RAT:
                 setUpRatAnimation(animationManager);
+            case ORC:
+                setUpOrcAnimation(animationManager);
+            case VAMPIRE:
+                setUpVampireAnimation(animationManager);
                 break;
 
         }
@@ -105,5 +109,60 @@ public class AnimationForEnemy {
             1,1,DEFAULT_FRAME_DURATION,false
         );
     }
+
+    public void setUpOrcAnimation(AnimationManager animationManager)
+    {
+        animationManager.addAnimation(
+            StateType.STATE_IDLE.stateType,
+            "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Idle.png",
+            6,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_RUN.stateType,
+            "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Walk.png",
+            8,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_ATTACK.stateType,
+            "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Attack01.png",
+            6,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Hurt.png",
+            4,1,DEFAULT_FRAME_DURATION,false
+        );
+    }
+
+    public void setUpVampireAnimation(AnimationManager animationManager)
+    {
+        animationManager.addAnimation(
+            StateType.STATE_IDLE.stateType,
+            "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_idle.png",
+            6,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_RUN.stateType,
+            "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_movement.png",
+            8,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_ATTACK.stateType,
+            "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_attack.png",
+            16,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_take_damage.png",
+            5,1,DEFAULT_FRAME_DURATION,false
+        );
+    }
+
 
 }

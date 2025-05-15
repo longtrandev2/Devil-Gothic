@@ -22,6 +22,7 @@ public class PauseScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private ShowControlScreen showControlScreen;
+    private MainMenuScreen mainMenuScreen;
 
     private Texture backgroundTexture;
 
@@ -35,9 +36,9 @@ public class PauseScreen implements Screen {
     private Texture audioActiveTexture;
     private ImageButton audioBtn;
 
-    private Texture backUnActiveTexture;
-    private Texture backActiveTexture;
-    private ImageButton backBtn;
+    private Texture exitUnActiveTexture;
+    private Texture exitActiveTexture;
+    private ImageButton exitBtn;
 
     private Texture resumeUnActiveTexture;
     private Texture resumeActiveTexture;
@@ -62,6 +63,7 @@ public class PauseScreen implements Screen {
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
         showControlScreen = new ShowControlScreen(game, PauseScreen.this,camera);
+        mainMenuScreen = new MainMenuScreen(game);
 
         try {
             backgroundTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/BackGround.png"));
@@ -69,8 +71,8 @@ public class PauseScreen implements Screen {
             controlActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/controlActive.png"));
             audioUnActiveTexure = new Texture(Gdx.files.internal("Menu/PauseMenu/audioUnActive.png"));
             audioActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/audioActive.png"));
-//            backUnActiveTexture = new Texture(Gdx.files.internal("Menu/ChossenHero/Back_ButtonUnActive.png"));
-//            backActiveTexture = new Texture(Gdx.files.internal("Menu/ChossenHero/Back_ButtonActive.png"));
+            exitUnActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/exitUnActive.png"));
+            exitActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/exitActive.png"));
             resumeUnActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/resumeUnActive.png"));
             resumeActiveTexture = new Texture(Gdx.files.internal("Menu/PauseMenu/resumeActive.png"));
 
@@ -92,12 +94,12 @@ public class PauseScreen implements Screen {
     {
         controlBtn = createButton(controlUnActiveTexture, controlActiveTexture);
         audioBtn = createButton(audioUnActiveTexure, audioActiveTexture);
-//        backBtn = createButton(backUnActiveTexture, backActiveTexture);
+        exitBtn = createButton(exitUnActiveTexture, exitActiveTexture);
         resumeBtn = createButton(resumeUnActiveTexture,resumeActiveTexture);
 
         controlBtn.setPosition(Gdx.graphics.getWidth() / 2 - 280, Gdx.graphics.getHeight() / 2 -  100);
         audioBtn.setPosition(Gdx.graphics.getWidth() / 2 + 100, Gdx.graphics.getHeight() / 2 - 100);
-//        backBtn.setPosition(Gdx.graphics.getWidth() / 2 - 370, Gdx.graphics.getHeight() / 2 + 280);
+        exitBtn.setPosition(Gdx.graphics.getWidth() / 2 - 280, Gdx.graphics.getHeight() / 2 - 200);
         resumeBtn.setPosition(Gdx.graphics.getWidth() / 2 - 30, Gdx.graphics.getHeight() / 2);
         resumeBtn.setScale(4);
 
@@ -120,9 +122,16 @@ public class PauseScreen implements Screen {
             }
         });
 
+        exitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+               game.setScreen(mainMenuScreen);
+            }
+        });
+
         stage.addActor(controlBtn);
         stage.addActor(audioBtn);
-//        stage.addActor(backBtn);
+        stage.addActor(exitBtn);
         stage.addActor(resumeBtn);
 
     }
