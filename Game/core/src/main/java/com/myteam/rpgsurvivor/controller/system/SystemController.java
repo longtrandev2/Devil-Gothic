@@ -118,6 +118,13 @@ public class SystemController implements Screen {
     }
 
     public void update(float deltaTime) {
+        if (isWaitingForNextStage) {
+            stageTransitionTimer += deltaTime;
+            if (upgradeScreen.isDone()) {
+                startNextStage();
+            }
+            return;
+        }
 
         enemySpawnController.update(deltaTime);
         stageTimer += deltaTime;
@@ -126,13 +133,9 @@ public class SystemController implements Screen {
             prepareForNextStage();
         }
 
-        if(upgradeScreen.isDone())
-        {
-                startNextStage();
-        }
-
         updateDifficulty();
     }
+
 
     private void prepareForNextStage() {
         stageCompleted = true;
@@ -156,6 +159,7 @@ public class SystemController implements Screen {
         isShowingUpgradeScreen = false;
         stageCompleted = false;
         isWaitingForNextStage = false;
+        player.addSkillPoints(10);
         enemySpawnController.setTotalDeaths(0);
         enemySpawnController.resumeSpawning();
 

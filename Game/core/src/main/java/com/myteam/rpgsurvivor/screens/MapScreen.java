@@ -48,7 +48,6 @@ public class MapScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
-        systemController = new SystemController(enemySpawnController,chosenHero,game, this, camera);
 
         try {
             batch = new SpriteBatch();
@@ -135,6 +134,7 @@ public class MapScreen implements Screen {
             if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
                 chosenHero.render(batch, Gdx.graphics.getDeltaTime());
                 enemySpawnController.render(batch, Gdx.graphics.getDeltaTime());
+                layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
             }
             else
             {
@@ -146,7 +146,6 @@ public class MapScreen implements Screen {
         batch.end();
         DebugRenderer.render();
 
-        layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
     }
 
     @Override

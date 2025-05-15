@@ -119,9 +119,13 @@ public class ChosseHeroScreen implements Screen {
         cell.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("ChosseHeroScreen", heroType + " selected");
-                // Create and set the DescriptionHero screen
-                game.setScreen(new DescriptionHero(game, ChosseHeroScreen.this, camera, heroType));
+                try
+                {
+                    Gdx.app.log("ChosseHeroScreen", heroType + " selected");
+                    game.setScreen(new DescriptionHero(game, ChosseHeroScreen.this, camera, heroType));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

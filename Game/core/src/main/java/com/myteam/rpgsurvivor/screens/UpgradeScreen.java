@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -94,14 +95,15 @@ public class UpgradeScreen implements Screen {
     private Label atkSpeedLabel;
     private Label skillLabel;
     private BitmapFont font;
+    private Label.LabelStyle description;
 
     public UpgradeScreen(OrthographicCamera camera, Main game, Player chosenHero) {
         this.game = game;
         this.camera = camera;
-        this.player = chosenHero;
-        this.viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-        this.batch = new SpriteBatch();
-        this.stage = new Stage(viewport, batch);
+        player = chosenHero;
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        batch = new SpriteBatch();
+        stage = new Stage(viewport, batch);
         this.isDone = false;
 
 
@@ -110,11 +112,22 @@ public class UpgradeScreen implements Screen {
         loadTexture();
         createFont();
         createMenu();
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void createFont() {
-        font = new BitmapFont();
-        font.getData().setScale(1.5f);
+        try {
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Menu/Font/antiquity-print.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter titleParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            titleParams.size = 18;
+            titleParams.color = Color.BLACK;
+
+            font = generator.generateFont(titleParams);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        description = new Label.LabelStyle(font, Color.BLACK);
     }
 
     public void loadTexture() {
@@ -149,28 +162,19 @@ public class UpgradeScreen implements Screen {
         playActive = new Texture(Gdx.files.internal("Menu/Description hero/PlayBtnActive (1).png"));
     }
 
-    public ImageButton createButton(Texture unactiveBtn, Texture activeBtn)
-    {
+    public ImageButton createButton(Texture unactiveBtn, Texture activeBtn) {
         TextureRegionDrawable unactiveDrawable = new TextureRegionDrawable(unactiveBtn);
         TextureRegionDrawable activeDrawable = new TextureRegionDrawable(activeBtn);
-        ImageButton button = new ImageButton(unactiveDrawable,activeDrawable);
+        ImageButton button = new ImageButton(unactiveDrawable, activeDrawable);
         return button;
     }
 
     public void createMenu() {
-
-//        Image bgImage = new Image(background);
-//        bgImage.setSize((float) (Gdx.graphics.getWidth() / 2 * 1.5), (float) (Gdx.graphics.getHeight() / 2 * 1.5));
-//        bgImage.setPosition(Gdx.graphics.getWidth() / 2 - 500, Gdx.graphics.getHeight() / 2 - 290);
-        //stage.addActor(bgImage);
-
         float paddingX = 100;
         float paddingY = 200;
 
-
         playBtn = createButton(playUnActive, playActive);
-        playBtn.setPosition(Gdx.graphics.getWidth() / 2 + 100, Gdx.graphics.getHeight() / 2 - 200);
-
+        playBtn.setPosition(Gdx.graphics.getWidth() / 2 + 460, Gdx.graphics.getHeight() / 2 - 240);
 
         healthInBtn = createButton(increaseHealthUnactive, increaseHealthActive);
         damageInBtn = createButton(increaseDamageUnactive, increaseDamageActive);
@@ -197,30 +201,34 @@ public class UpgradeScreen implements Screen {
         atkSpeedDeBtn.setPosition(Gdx.graphics.getWidth() / 2 - paddingX + 50, Gdx.graphics.getHeight() / 2 - paddingY + 80);
         skillDeBtn.setPosition(Gdx.graphics.getWidth() / 2 - paddingX + 50, Gdx.graphics.getHeight() / 2 - paddingY);
 
-        // Create labels
-        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
+        // Initialize labels with current player stats
+        availablePoints = player.getSkillPoints();
+        healthMod = player.getMaxHealth();
+        damageMod = player.getDamage();
+        speedMod = (int)player.getMoveSpeed();
+        atkSpeedMod = (int)(player.getAttackSpeed() * 100); // Convert to integer for display
+        skillMod = 0;
 
-        availablePointsLabel = new Label("Available Points: " + availablePoints, labelStyle);
-        availablePointsLabel.setPosition(Gdx.graphics.getWidth() / 2 + 100, Gdx.graphics.getHeight() / 2 + 100);
+        availablePointsLabel = new Label("Available Points: " + availablePoints, description);
+        availablePointsLabel.setPosition(Gdx.graphics.getWidth() / 2 + 180, Gdx.graphics.getHeight() / 2 - 235);
 
-        healthLabel = new Label("Health: +" + healthMod, labelStyle);
-        healthLabel.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - paddingY + 320);
+        float paddingXLabel = 400;
+        healthLabel = new Label("" + healthMod, description);
+        healthLabel.setPosition(Gdx.graphics.getWidth() / 2 + paddingXLabel, Gdx.graphics.getHeight() / 2 - paddingY + 220);
 
-        damageLabel = new Label("Damage: +" + damageMod, labelStyle);
-        damageLabel.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - paddingY + 250);
+        damageLabel = new Label("" + damageMod, description);
+        damageLabel.setPosition(Gdx.graphics.getWidth() / 2 + paddingXLabel, Gdx.graphics.getHeight() / 2 - paddingY + 160);
 
-        speedLabel = new Label("Speed: +" + speedMod, labelStyle);
-        speedLabel.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - paddingY + 160);
+        speedLabel = new Label("" + speedMod, description);
+        speedLabel.setPosition(Gdx.graphics.getWidth() / 2 + paddingXLabel, Gdx.graphics.getHeight() / 2 - paddingY + 100);
 
-        atkSpeedLabel = new Label("Attack Speed: +" + atkSpeedMod, labelStyle);
-        atkSpeedLabel.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - paddingY + 80);
+        atkSpeedLabel = new Label(String.format("%.2f", player.getAttackSpeed()), description);
+        atkSpeedLabel.setPosition(Gdx.graphics.getWidth() / 2 + paddingXLabel, Gdx.graphics.getHeight() / 2 - paddingY + 60);
 
-        skillLabel = new Label("Skill: +" + skillMod, labelStyle);
-        skillLabel.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - paddingY);
-
+        skillLabel = new Label("" + skillMod, description);
+        skillLabel.setPosition(Gdx.graphics.getWidth() / 2 + paddingXLabel, Gdx.graphics.getHeight() / 2 - paddingY);
 
         addButtonListeners();
-
 
         stage.addActor(healthInBtn);
         stage.addActor(damageInBtn);
@@ -234,29 +242,27 @@ public class UpgradeScreen implements Screen {
         stage.addActor(skillDeBtn);
         stage.addActor(playBtn);
 
-
         stage.setDebugAll(true);
 
-
-        //healthInBtn.setDebug(true);
-
-//        stage.addActor(availablePointsLabel);
-//        stage.addActor(healthLabel);
-//        stage.addActor(damageLabel);
-//        stage.addActor(speedLabel);
-//        stage.addActor(atkSpeedLabel);
-//        stage.addActor(skillLabel);
+        stage.addActor(availablePointsLabel);
+        stage.addActor(healthLabel);
+        stage.addActor(damageLabel);
+        stage.addActor(speedLabel);
+        stage.addActor(atkSpeedLabel);
+        stage.addActor(skillLabel);
     }
 
     private void addButtonListeners() {
+        availablePoints = player.getSkillPoints();
         healthInBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (availablePoints > 0) {
-                    healthMod++;
+                    player.spendSkillPointOnHealth();
                     availablePoints--;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Health increased: " + player.getMaxHealth());
                 }
             }
         });
@@ -265,10 +271,11 @@ public class UpgradeScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (availablePoints > 0) {
-                    damageMod++;
+                    player.spendSkillPointOnDamage();
                     availablePoints--;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Damage increased: " + player.getDamage());
                 }
             }
         });
@@ -277,10 +284,11 @@ public class UpgradeScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (availablePoints > 0) {
-                    speedMod++;
+                    player.spendSkillPointOnSpeed();
                     availablePoints--;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Speed increased: " + player.getMoveSpeed());
                 }
             }
         });
@@ -289,10 +297,11 @@ public class UpgradeScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (availablePoints > 0) {
-                    atkSpeedMod++;
+                    player.spendSkillPointOnAttackSpeed();
                     availablePoints--;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Attack Speed increased: " + player.getAttackSpeed());
                 }
             }
         });
@@ -304,7 +313,6 @@ public class UpgradeScreen implements Screen {
                     skillMod++;
                     availablePoints--;
                     updateLabels();
-
                 }
             }
         });
@@ -312,11 +320,12 @@ public class UpgradeScreen implements Screen {
         healthDeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (healthMod > 0) {
-                    healthMod--;
+                if (player.getHealthPoints() > 0) {
+                    player.deSpendSkillPointOnHealth();
                     availablePoints++;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Health decreased: " + player.getMaxHealth());
                 }
             }
         });
@@ -324,11 +333,12 @@ public class UpgradeScreen implements Screen {
         damageDeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (damageMod > 0) {
-                    damageMod--;
+                if (player.getDamagePoints() > 0) {
+                    player.deSpendSkillPointOnDamage();
                     availablePoints++;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Damage decreased: " + player.getDamage());
                 }
             }
         });
@@ -336,11 +346,12 @@ public class UpgradeScreen implements Screen {
         speedDeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (speedMod > 0) {
-                    speedMod--;
+                if (player.getSpeedPoints() > 0) {
+                    player.deSpendSkillPointOnSpeed();
                     availablePoints++;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Speed decreased: " + player.getMoveSpeed());
                 }
             }
         });
@@ -348,11 +359,12 @@ public class UpgradeScreen implements Screen {
         atkSpeedDeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (atkSpeedMod > 0) {
-                    atkSpeedMod--;
+                if (player.getAttackSpeedPoints() > 0) {
+                    player.deSpendSkillPointOnAttackSpeed();
                     availablePoints++;
+                    updateStatsFromPlayer();
                     updateLabels();
-
+                    System.out.println("Attack Speed decreased: " + player.getAttackSpeed());
                 }
             }
         });
@@ -371,40 +383,29 @@ public class UpgradeScreen implements Screen {
         playBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                applyStatsToPlayer();
                 setDone(true);
                 System.out.println("Play button clicked, returning to game");
             }
         });
+        player.setSkillPoints(availablePoints);
+    }
+
+
+    private void updateStatsFromPlayer() {
+        healthMod = player.getMaxHealth();
+        damageMod = player.getDamage();
+        speedMod = (int)player.getMoveSpeed();
     }
 
     private void updateLabels() {
         availablePointsLabel.setText("Available Points: " + availablePoints);
-        healthLabel.setText("Health: +" + healthMod);
-        damageLabel.setText("Damage: +" + damageMod);
-        speedLabel.setText("Speed: +" + speedMod);
-        atkSpeedLabel.setText("Attack Speed: +" + atkSpeedMod);
-        skillLabel.setText("Skill: +" + skillMod);
+        healthLabel.setText("" + healthMod);
+        damageLabel.setText("" + damageMod);
+        speedLabel.setText("" + speedMod);
+        atkSpeedLabel.setText(String.format("%.2f", player.getAttackSpeed()));
+        skillLabel.setText("" + skillMod);
     }
 
-    private void applyStatsToPlayer() {
-
-        if (player != null) {
-//            player.increaseMaxHealth(healthMod * 10);
-//            player.increaseDamage(damageMod * 2);
-//            player.increaseSpeed(speedMod * 0.1f)
-//            player.increaseAttackSpeed(atkSpeedMod * 0.05f);
-//            player.increaseSkill(skillMod);
-
-            System.out.println("Applied stats to player - Health: +" + (healthMod * 10) +
-                ", Damage: +" + (damageMod * 2) +
-                ", Speed: +" + (speedMod * 0.1f) +
-                ", Attack Speed: +" + (atkSpeedMod * 0.05f) +
-                ", Skill: +" + skillMod);
-        } else {
-            System.err.println("Warning: Player is null, stats not applied");
-        }
-    }
 
     @Override
     public void show() {
@@ -427,15 +428,12 @@ public class UpgradeScreen implements Screen {
 
         batch.draw(background, bgX, bgY, bgWidth, bgHeight);
 
-
-
         batch.end();
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
@@ -499,17 +497,18 @@ public class UpgradeScreen implements Screen {
 
     public void reset() {
         isDone = false;
-        availablePoints = 10;
-        healthMod = 0;
-        damageMod = 0;
-        speedMod = 0;
-        atkSpeedMod = 0;
+        availablePoints = player.getSkillPoints();
+
+        // Initialize stats from player's current values
+        healthMod = player.getMaxHealth();
+        damageMod = player.getDamage();
+        speedMod = (int)player.getMoveSpeed();
+        atkSpeedMod = (int)(player.getAttackSpeed() * 100); // Store as integer for internal tracking
         skillMod = 0;
 
         if (availablePointsLabel != null) {
             updateLabels();
         }
-
     }
 
     public Stage getStage() {
