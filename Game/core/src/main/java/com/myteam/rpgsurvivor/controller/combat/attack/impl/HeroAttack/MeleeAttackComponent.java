@@ -48,7 +48,7 @@ public class MeleeAttackComponent {
             if (enemy.getHitBox().overlaps(attackArea)) {
                 System.out.println("Overlap");
                 // Gây damage và knockback
-                Vector2 knockback = new Vector2(owner.isFacingRight() ? 1 : -1, 0).scl(knockbackStrength);
+//                Vector2 knockback = new Vector2(owner.isFacingRight() ? 1 : -1, 0).scl(knockbackStrength);
                 enemy.takeDamge(damage);
 //                enemy.applyKnockback(knockback);
                 enemy.onHurt();

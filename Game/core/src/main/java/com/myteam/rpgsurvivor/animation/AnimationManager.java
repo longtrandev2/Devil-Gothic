@@ -17,16 +17,14 @@ public class AnimationManager {
 
     private boolean facingRight;
 
-    public AnimationManager()
-    {
+    public AnimationManager() {
         this.animations = new HashMap<>();
         this.currentState = StateType.STATE_IDLE.stateType;
         this.stateTime = 0f;
         this.facingRight = true;
     }
 
-    public void addAnimation(String stateName, String pathAnimation, int cols, int rows, float frameDuration, boolean loop)
-    {
+    public void addAnimation(String stateName, String pathAnimation, int cols, int rows, float frameDuration, boolean loop) {
         Animation<TextureRegion> animation = AnimationLoader.getInstance().loadAnimation(pathAnimation, cols, rows, frameDuration);
         animation.setPlayMode(loop ? Animation.PlayMode.LOOP : Animation.PlayMode.NORMAL);
         animations.put(stateName, animation);
@@ -102,8 +100,37 @@ public class AnimationManager {
         return animations.containsKey(state);
     }
 
-    public TextureRegion getIdleFrame() {
-        Animation<TextureRegion> currentAnimation = animations.get("idle");
-        return currentAnimation.getKeyFrame(0, true );
+
+    public float getAnimationProgress() {
+        Animation<TextureRegion> currentAnimation = animations.get(currentState);
+        if (currentAnimation == null) return 0f;
+
+        float duration = currentAnimation.getAnimationDuration();
+        if (duration == 0) return 1f; // tránh chia cho 0
+
+        return Math.min(stateTime / duration, 1f); // Clamp từ 0 đến 1
+    }
+
+    public AnimationManager copy() {
+        AnimationManager newManager = new AnimationManager();
+
+        // Giả sử bạn lưu các Animation theo Map<String, Animation<TextureRegion>>
+        for (HashMap.Entry<String, Animation<TextureRegion>> entry : this.animations.entrySet()) {
+            Animation<TextureRegion> original = entry.getValue();
+
+            // Tạo animation mới dùng cùng frame (frames có thể dùng lại)
+            Animation<TextureRegion> copied = new Animation<>(
+                original.getFrameDuration(),
+                original.getKeyFrames()
+            );
+            copied.setPlayMode(original.getPlayMode());
+
+            newManager.animations.put(entry.getKey(), copied);
+        }
+
+        // Copy state hiện tại nếu cần
+        newManager.setState(this.currentState, true);
+
+        return newManager;
     }
 }

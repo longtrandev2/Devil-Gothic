@@ -80,9 +80,9 @@ public class MapScreen implements Screen {
         enemySpawnController.setMaxEnemiesOnMap(10);
         enemySpawnController.setSpawnInterval(3.0f);
         enemySpawnController.setTimeBetweenWaves(45.0f);
-      
+
         chosenHero.setEnemySpawnController(enemySpawnController);
-      
+
         layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero,heroType,game);
     }
 
