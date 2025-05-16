@@ -66,7 +66,7 @@ public class SystemController implements Screen {
         this.stage = new Stage(viewport, batch);
         this.upgradeScreen = new UpgradeScreen(camera, game, player);
 
-        this.currentStage = 1;
+        this.currentStage = enemySpawnController.getCurrentWave();
         this.stageTimer = 0f;
         this.stageDuration = 30f;
         this.stageCompleted = false;

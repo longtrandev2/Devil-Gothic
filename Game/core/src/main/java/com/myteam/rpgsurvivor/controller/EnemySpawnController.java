@@ -8,14 +8,18 @@ import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
 import com.myteam.rpgsurvivor.controller.spawn.SpawnPointManager;
 import com.myteam.rpgsurvivor.model.Enemy;
 import com.myteam.rpgsurvivor.model.Player;
+import com.myteam.rpgsurvivor.model.enum_type.BossType;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
+import com.myteam.rpgsurvivor.model.impl.Boss.SlimeBoss;
 import com.myteam.rpgsurvivor.model.impl.Creep.*;
+
 
 import java.util.ArrayList;
 
 public class EnemySpawnController {
     private SpawnPointManager spawnPointManager;
     private ArrayList<Enemy> activeEnemy;
+    private ArrayList<Enemy> activeBoss;
     private Player player;
     private AnimationForEnemy enemyAnimation;
 
@@ -31,12 +35,15 @@ public class EnemySpawnController {
 
     private boolean prepareToNextStage;
     private boolean isPaused;
+    private boolean isBossWave;
+    private boolean bossSpawned;
 
     public EnemySpawnController(Player player, TiledMap map) {
         this.player = player;
         this.spawnPointManager = new SpawnPointManager();
         this.spawnPointManager.loadFromMap(map);
         this.activeEnemy = new ArrayList<>();
+        this.activeBoss = new ArrayList<>();
         this.enemyAnimation = new AnimationForEnemy();
 
         this.spawnInterval = 2.0f;
@@ -50,34 +57,46 @@ public class EnemySpawnController {
 
         this.prepareToNextStage = false;
         this.isPaused = false;
+        this.isBossWave = (currentWave % 5 == 0);
+        this.bossSpawned = false;
     }
 
     public void update(float deltaTime) {
+        System.out.println(currentWave);
+        System.out.println(isBossWave);
         if (isPaused) {
             return;
         }
 
+        if (totalDeath >= enemiesPerWave && !isBossWave) {
+            System.out.println("Regular wave completed - Deaths: " + totalDeath);
+            prepareToNextStage = true;
+            return;
+        }
 
-        if (totalDeath >= enemiesPerWave) {
-            System.out.println(totalDeath);
+        if (isBossWave && activeBoss.isEmpty() && bossSpawned) {
+            System.out.println("Boss wave completed");
             prepareToNextStage = true;
             return;
         }
 
         spawnTimer += deltaTime;
-        if (spawnTimer >= spawnInterval && activeEnemy.size() < maxEnemiesOnMap) {
-            spawnEnemy();
-            spawnTimer = 0;
+
+        if (!isBossWave) {
+            if (spawnTimer >= spawnInterval && activeEnemy.size() < maxEnemiesOnMap) {
+                spawnEnemy();
+                spawnTimer = 0;
+            }
+            updateEnemy(deltaTime);
         }
-
-        updateEnemy(deltaTime);
-    }
-
-    public void startNewWave() {
-        ++currentWave;
-        waveTimer = 0;
-        spawnEnemy();
-        spawnInterval = Math.max(0.5f, spawnInterval * 0.9f);
+        else {
+            if (bossSpawned) {
+                spawnBoss();
+                bossSpawned = true;
+                spawnTimer = 0;
+            }
+            updateBoss(deltaTime);
+        }
     }
 
     public void spawnEnemy() {
@@ -86,13 +105,35 @@ public class EnemySpawnController {
         activeEnemy.add(enemy);
     }
 
+    public void spawnBoss() {
+        Vector2 spawnPos = spawnPointManager.getSpawnBossPosition();
+        Enemy enemy = createBoss(spawnPos.x, spawnPos.y);
+        activeBoss.add(enemy);
+    }
+
     public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
         MonsterType randomType = types[MathUtils.random(types.length - 1)];
-        //MonsterType randomType = MonsterType.ORC;
 
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
+    }
+
+    public Enemy createBoss(float x, float y) {
+        BossType[] types = BossType.values();
+        BossType randomType = BossType.SLIME_BOSS;
+
+        Enemy boss = createBossByType(randomType, x, y);
+        return boss;
+    }
+
+    private Enemy createBossByType(BossType type, float x, float y) {
+        switch (type) {
+            case SLIME_BOSS:
+                return new SlimeBoss(x,y,player,enemyAnimation);
+            default:
+                return new SlimeBoss(x, y, player, enemyAnimation);
+        }
     }
 
     private Enemy createEnemyByType(MonsterType type, float x, float y) {
@@ -128,8 +169,30 @@ public class EnemySpawnController {
         }
     }
 
-    public void render(SpriteBatch batch, float deltaTime) {
+    private void updateBoss(float deltaTime) {
+        for (int i = activeBoss.size() - 1; i >= 0; i--) {
+            Enemy enemy = activeBoss.get(i);
+
+            enemy.update(deltaTime);
+
+            if (enemy.isDead()) {
+                activeBoss.remove(i);
+            }
+        }
+        if(activeBoss.isEmpty())
+        {
+            prepareToNextStage = true;
+        }
+    }
+
+    public void renderCreep(SpriteBatch batch, float deltaTime) {
         for (Enemy enemy : activeEnemy) {
+            enemy.render(batch, deltaTime);
+        }
+    }
+
+    public void renderBoss(SpriteBatch batch, float deltaTime) {
+        for (Enemy enemy : activeBoss) {
             enemy.render(batch, deltaTime);
         }
     }
@@ -145,6 +208,12 @@ public class EnemySpawnController {
     public void resumeSpawning() {
         prepareToNextStage = false;
         isPaused = false;
+        currentWave++;
+        totalDeath = 0;
+        isBossWave = currentWave % 5 == 0;
+        bossSpawned = false;
+        activeEnemy.clear();
+        activeBoss.clear();
     }
 
     public ArrayList<Enemy> getActiveEnemies() {

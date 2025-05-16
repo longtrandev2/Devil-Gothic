@@ -11,6 +11,7 @@ import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.EnemyMovement;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
+import com.myteam.rpgsurvivor.model.enum_type.BossType;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
@@ -32,7 +33,6 @@ public abstract class Enemy extends Entity {
     private float offsetX;
     private float offsetY;
 
-    private AnimationManager animationManager;
     private StateType currentState;
     private EnemyMovement enemyMovement;
     private ShapeRenderer shapeRenderer;
@@ -70,6 +70,50 @@ public abstract class Enemy extends Entity {
         hitboxEnemy = getHitBox();
         this.enemyMovement = new EnemyMovement(x,y,player,enemyType.stat.moveSpeed);
         this.animationManager = animationFactory.createEnemyAnimation(enemyType);
+        this.currentState = StateType.STATE_IDLE;
+        shapeRenderer = new ShapeRenderer();
+
+
+        this.attackCooldown = 1f / stat.attackSpeed;
+        this.attackTimer = 0;
+        this.attackRange = stat.rangeAttack;
+        this.detectionRange = 1000f;
+
+        this.movement = new EnemyMovement(x,y, player, stat.moveSpeed);
+
+        this.isInvisible = false;
+        this.isInvulnerable = false;
+        this.isInteracting = false;
+        this.isAttack = false;
+
+        this.attackbox = new Rectangle(hitbox);
+        attackbox.setSize(hitbox.getWidth() + attackRange , hitbox.getHeight() + attackRange);
+    }
+
+    public Enemy(float x, float y, BossType bossType, Player player, AnimationForEnemy animationFactory) {
+        this.entityX = x;
+        this.entityY = y;
+
+        // Stat
+        this.stat = bossType.stat;
+        this.level = 1;
+        this.currentHealth = stat.maxHealth;
+
+        // Khởi tạo hitbox
+        this.hitbox = bossType.hitbox.createHitbox(entityX,entityY);
+        offsetX = bossType.hitbox.getOffsetX();
+        offsetY = bossType.hitbox.getOffsetY();
+
+
+        // Thiết lập player là mục tiêu
+        this.targetPlayer = player;
+
+        entityX = x;
+        entityY = y;
+        hitboxPlayer = targetPlayer.getHitbox();
+        hitboxEnemy = getHitBox();
+        this.enemyMovement = new EnemyMovement(x,y,player,bossType.stat.moveSpeed);
+        this.animationManager = animationFactory.createBossAnimation(bossType);
         this.currentState = StateType.STATE_IDLE;
         shapeRenderer = new ShapeRenderer();
 

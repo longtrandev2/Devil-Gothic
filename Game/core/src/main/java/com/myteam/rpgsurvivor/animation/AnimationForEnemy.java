@@ -1,5 +1,6 @@
 package com.myteam.rpgsurvivor.animation;
 
+import com.myteam.rpgsurvivor.model.enum_type.BossType;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
@@ -24,6 +25,20 @@ public class AnimationForEnemy {
                 setUpOrcAnimation(animationManager);
             case VAMPIRE:
                 setUpVampireAnimation(animationManager);
+                break;
+
+        }
+        return animationManager;
+    }
+
+    public AnimationManager createBossAnimation(BossType monsterType)
+    {
+        AnimationManager animationManager = new AnimationManager();
+
+        switch (monsterType)
+        {
+            case SLIME_BOSS:
+                setUpSlimeBossAnimation(animationManager);
                 break;
 
         }
@@ -161,6 +176,39 @@ public class AnimationForEnemy {
             StateType.STATE_HURT.stateType,
             "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_take_damage.png",
             5,1,DEFAULT_FRAME_DURATION,false
+        );
+    }
+
+    public void setUpSlimeBossAnimation(AnimationManager animationManager)
+    {
+        animationManager.addAnimation(
+            StateType.STATE_IDLE.stateType,
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_idle_1.png",
+            6,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_RUN.stateType,
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_walk_12.png",
+            12,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_ATTACK.stateType,
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_cleave_1.png",
+            15,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_take_hit_1.png",
+            5,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_DEATH.stateType,
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_death_1.png",
+            22,1,DEFAULT_FRAME_DURATION, false
         );
     }
 

@@ -8,7 +8,8 @@ public enum StateType {
     STATE_ATTACK("attack"),
     STATE_SKILL("skills"),
     STATE_SKILL_EFFECT("skillEffects"),
-    STATE_HURT("hurt");
+    STATE_HURT("hurt"),
+    STATE_DEATH("death");
     public final String stateType;
 
     StateType(String stateType) {

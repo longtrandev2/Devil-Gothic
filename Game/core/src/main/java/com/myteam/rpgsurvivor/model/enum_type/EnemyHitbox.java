@@ -7,7 +7,8 @@ public enum EnemyHitbox {
     RAT(19,12,6,0),
     SKELETON(22,32,5,3),
     ORC(17,16,10,10),
-    VAMPIRE(17,16,10,10);
+    VAMPIRE(17,16,10,10),
+    SLIME_BOSS(50,50,50,50);
 
     public final float width;
     public final float height;

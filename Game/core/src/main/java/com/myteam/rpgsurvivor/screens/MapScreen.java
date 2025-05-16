@@ -3,10 +3,8 @@ package com.myteam.rpgsurvivor.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -21,9 +19,6 @@ import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
 import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
 import com.myteam.rpgsurvivor.model.impl.Hero.Samurai;
 import com.myteam.rpgsurvivor.model.impl.Hero.Wizard;
-
-import java.awt.*;
-
 
 public class MapScreen implements Screen {
     private Main game;
@@ -79,7 +74,6 @@ public class MapScreen implements Screen {
         loadMap();
         enemySpawnController = new EnemySpawnController(chosenHero, map);
 
-
         chosenHero.setEnemySpawnController(enemySpawnController);
 
         systemController = new SystemController(enemySpawnController, chosenHero, game, this, camera);
@@ -97,7 +91,6 @@ public class MapScreen implements Screen {
         }
     }
 
-
     public void update() {
         camera.update();
         if (!isPaused()) {
@@ -113,7 +106,7 @@ public class MapScreen implements Screen {
 
     @Override
     public void render(float delta) {
-          if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
             DebugRenderer.setEnabled(!debugEnabled);
             debugEnabled = !debugEnabled;
         }
@@ -130,22 +123,24 @@ public class MapScreen implements Screen {
         batch.begin();
 
         layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
+
         if (!isPaused()) {
             if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
-
                 chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-                enemySpawnController.render(batch, Gdx.graphics.getDeltaTime());
-            }
-            else
-            {
+                boolean isBossWave = enemySpawnController.getCurrentWave() % 5 == 0;
+                System.out.println(isBossWave);
+                if (isBossWave) {
+                    enemySpawnController.renderBoss(batch, Gdx.graphics.getDeltaTime());
+                } else {
+                    enemySpawnController.renderCreep(batch, Gdx.graphics.getDeltaTime());
+                }
+            } else {
                 systemController.render(Gdx.graphics.getDeltaTime());
             }
         }
 
-
         batch.end();
         DebugRenderer.render();
-
     }
 
     @Override
@@ -175,8 +170,6 @@ public class MapScreen implements Screen {
         batch.dispose();
         layoutPlayScreen.dispose();
         systemController.dispose();
-
-
     }
 
     public OrthographicCamera getCamera() {
