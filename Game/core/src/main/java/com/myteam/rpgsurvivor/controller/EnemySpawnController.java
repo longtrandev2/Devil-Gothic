@@ -90,7 +90,7 @@ public class EnemySpawnController {
             updateEnemy(deltaTime);
         }
         else {
-            if (bossSpawned) {
+            if (!bossSpawned) {
                 spawnBoss();
                 bossSpawned = true;
                 spawnTimer = 0;
