@@ -92,19 +92,18 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void update(float deltaTime) {
-//        if (!velocity.isZero()) {
-//            entityX += velocity.x * deltaTime;
-//            entityY += velocity.y * deltaTime;
-//
-//            float decay = knockbackDecay * deltaTime;
-//            if (velocity.len() <= decay) {
-//                velocity.setZero();
-//            } else {
-//                velocity.scl(1 - decay / velocity.len());
-//            }
-//        }
-        System.out.println(this + " " + currentHealth + " "  );
-        //hitbox
+        if (!velocity.isZero()) {
+            entityX += velocity.x * deltaTime;
+            entityY += velocity.y * deltaTime;
+
+            float decay = knockbackDecay * deltaTime;
+            if (velocity.len() <= decay) {
+                velocity.setZero();
+            } else {
+                velocity.scl(1 - decay / velocity.len());
+            }
+        }
+// hitbox
         hitbox.setPosition(entityX + offsetX, entityY + offsetY);
 
         //attackbox
