@@ -38,6 +38,7 @@ public abstract class Player extends Entity{
     private float offsetY;
 
     protected  MeleeAttackComponent attackHandler;
+    protected boolean attackTriggered = false;
 
     public Player(float x, float y, HeroType heroType) {
         this.entityX = x;

@@ -8,6 +8,11 @@ import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
+import com.myteam.rpgsurvivor.model.impl.projectile.Arrow;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Archer extends Player {
     private InputHandle inputHandle;
@@ -21,6 +26,10 @@ public class Archer extends Player {
 
     private float skillStateTime = 0f;
     private AnimationManager skillEffectManager;
+
+//    Arrow
+    private List<Arrow> arrows = new ArrayList<>();
+    private AnimationManager arrowAnimManager;
 
     private static final int IDLE_FRAME_COLS = 12;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -41,6 +50,8 @@ public class Archer extends Player {
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
 
 
+    private static final  int ARROW_FRAME_COLS = 1;
+    private static final int ARROW_FRAME_ROWS = 1;
     public Archer(float x, float y)
     {
         super(x,y,HeroType.ARCHER);
@@ -48,7 +59,6 @@ public class Archer extends Player {
         this.skillEffectManager = new AnimationManager();
         this.heroMovement = new HeroMovement(this);
         this.inputHandle = new InputHandle(this, heroMovement);
-
         setupAnimation();
     }
 
@@ -94,12 +104,24 @@ public class Archer extends Player {
             SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectDuration,
             true
         );
-
+// Arrow animation
+            arrowAnimManager = new AnimationManager();
+            arrowAnimManager.addAnimation(
+            "arrow",
+            "Hero/Achers/spriteSheet/arrow_.png",
+            ARROW_FRAME_COLS, ARROW_FRAME_ROWS,
+            0.1f,
+            true
+        );
     }
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
         stateTime += deltaTime;
         animationManager.update(deltaTime);
+
+        for (Arrow arrow : arrows) {
+            arrow.render(batch);
+        }
 
         TextureRegion currentFrame = animationManager.getCurrentFrame();
         if(currentFrame != null)
@@ -128,6 +150,15 @@ public class Archer extends Player {
         deltaTime = 1/60f;
         updateWithDeltaTime(deltaTime);
         super.update(deltaTime);
+        Iterator<Arrow> iter = arrows.iterator();
+        while (iter.hasNext()) {
+            Arrow arrow = iter.next();
+            arrow.update(deltaTime, enemySpawnController.getActiveEnemies(), getDamage()); // truyền enemyList và sát thương
+            if (arrow.isDestroyed()) {
+                iter.remove();
+            }
+        }
+
     }
 
     public void updateWithDeltaTime(float deltaTime)
@@ -151,10 +182,15 @@ public class Archer extends Player {
         }
         heroMovement.update();
 
-        if (!isAttacking && !isUsingSkill) {
+        if (!isAttacking && !isUsingSkill && animationManager.getCurrentState().equals("idle")) {
             if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
                 isAttacking = true;
                 animationManager.setState(StateType.STATE_ATTACK.stateType, true);
+
+                // Tạo mũi tên khi bắt đầu tấn công
+                float arrowX = entityX + (facingRight ? +40 : -40);
+                float arrowY = entityY + 20; // chỉnh theo vị trí tay
+                arrows.add(new Arrow(arrowX, arrowY, facingRight, arrowAnimManager));
             }
         }
 

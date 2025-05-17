@@ -8,6 +8,10 @@ import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
+//import com.myteam.rpgsurvivor.model.impl.projectile.Arrow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Wizard extends Player {
     private InputHandle inputHandle;
@@ -23,6 +27,8 @@ public class Wizard extends Player {
     private float skillTimer = 0f;
 
     private AnimationManager skillEffectManager;
+
+
 
     private static final int IDLE_FRAME_COLS = 6;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -81,12 +87,7 @@ public class Wizard extends Player {
             false
         );
 
-        animationManager.addAnimation(
-            StateType.STATE_SKILL.stateType,
-            "Hero/Wizard/Wizard Pack/SpriteSheet/AttackSkill-Resize.png",
-            SKILL_FRAME_COLS, SKILL_FRAME_ROWS, skillFrameDuration,
-            false
-        );
+
 
         skillEffectManager.addAnimation(
             StateType.STATE_HURT.stateType,
@@ -152,12 +153,12 @@ public class Wizard extends Player {
             }
         }
         if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
-            && !isAttacking) {
+            && !isAttacking && animationManager.getCurrentState().equals("idle")) {
             isAttacking = true;
             attackHandler.tryAttack();
+            attackTriggered = false;
             animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }
-
         if (inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking) {
             if (!isUsingSkill) {
                 isUsingSkill = true;
@@ -175,12 +176,7 @@ public class Wizard extends Player {
 
         heroMovement.update();
 
-        if (!isAttacking && !isUsingSkill) {
-            if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
-                isAttacking = true;
-                animationManager.setState(StateType.STATE_ATTACK.stateType, true);
-            }
-        }
+
 
         updateAnimationState(deltaTime);
 
@@ -203,6 +199,13 @@ public class Wizard extends Player {
         }
 
         if (isAttacking) {
+            float progress = animationManager.getAnimationProgress();
+            System.out.println(progress);
+            if (!attackTriggered && progress >= 0.85f) {
+                attackHandler.tryAttack();
+                attackTriggered = true;
+            }
+
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
                 if (heroMovement.isMoving()) {

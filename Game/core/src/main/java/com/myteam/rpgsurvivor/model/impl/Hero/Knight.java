@@ -44,11 +44,7 @@ public class Knight extends Player{
         setupAnimation();
 //        setupHitBox();
     }
-    private void setupHitBox(){
-        TextureRegion idleFrame = animationManager.getIdleFrame();
-        System.out.println(idleFrame.getRegionWidth() + " " + idleFrame.getRegionHeight());
-        hitbox.setPosition(entityX + 36 ,entityY + 24);
-    }
+
     private void setupAnimation()
     {
         float idleFrameDuration = 0.15f;
@@ -133,8 +129,10 @@ public class Knight extends Player{
         if (!isAttacking) {
             inputHandle.handleInput();
 
-            if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
+            if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
+                && !isAttacking  && animationManager.getCurrentState().equals("idle")) {
                 isAttacking = true;
+                attackTriggered = false;
                 animationManager.setState(StateType.STATE_ATTACK.stateType, true);
             }
 
@@ -164,6 +162,16 @@ public class Knight extends Player{
             animationManager.setState(StateType.STATE_HURT.stateType, true);
             return;
         }
+
+        if (isAttacking) {
+            float progress = animationManager.getAnimationProgress();
+            System.out.println(progress);
+            if (!attackTriggered && progress >= 0.85f) {
+                attackHandler.tryAttack();
+                attackTriggered = true;
+            }
+        }
+
         if (isUsingSkill) {
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;

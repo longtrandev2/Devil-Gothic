@@ -190,6 +190,8 @@ public class Samurai extends Player {
             }
         }
 
+
+
         if (inputHandler.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking && !isUsingSkill
             && skillHandler.canDash()) {
             isUsingSkill = true;
@@ -206,9 +208,10 @@ public class Samurai extends Player {
         }
 
         if (inputHandler.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
-            && !isAttacking && !skillHandler.isDashing()) {
+            && !isAttacking && !skillHandler.isDashing() && animationManager.getCurrentState().equals("idle")) {
             isAttacking = true;
-            attackHandler.tryAttack();
+            attackTriggered = false;
+            animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }
 
         if (!skillHandler.isDashing()) {
@@ -236,6 +239,15 @@ public class Samurai extends Player {
         {
             animationManager.setState(StateType.STATE_HURT.stateType, true);
             return;
+        }
+
+        if (isAttacking) {
+            float progress = animationManager.getAnimationProgress();
+            System.out.println(progress);
+            if (!attackTriggered && progress >= 0.85f) {
+                attackHandler.tryAttack();
+                attackTriggered = true;
+            }
         }
 
         if (skillHandler.isDashing() || isUsingSkill) {
@@ -304,5 +316,8 @@ public class Samurai extends Player {
         isHurt = true;
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
+
     }
+
 }
+

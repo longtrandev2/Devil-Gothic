@@ -189,6 +189,18 @@ public abstract class Enemy extends Entity {
     public void update(float deltaTime) {
         updateHealth(getCurrentHealth());
         // Cập nhật vị trí hitbox
+        if (!velocity.isZero()) {
+            entityX += velocity.x * deltaTime;
+            entityY += velocity.y * deltaTime;
+
+            float decay = knockbackDecay * deltaTime;
+            if (velocity.len() <= decay) {
+                velocity.setZero();
+            } else {
+                velocity.scl(1 - decay / velocity.len());
+            }
+        }
+
         hitbox.setPosition(entityX + offsetX, entityY + offsetY);
 
         // Cập nhật vị trí attackbox
