@@ -28,6 +28,7 @@ public class Skeleton extends Enemy {
 
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
+        super.render(batch, deltaTime);
         update(deltaTime);
     }
 

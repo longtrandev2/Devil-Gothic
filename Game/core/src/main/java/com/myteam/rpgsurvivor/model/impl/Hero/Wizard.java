@@ -155,6 +155,7 @@ public class Wizard extends Player {
         if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
             && !isAttacking && animationManager.getCurrentState().equals("idle")) {
             isAttacking = true;
+            attackHandler.tryAttack();
             attackTriggered = false;
             animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }

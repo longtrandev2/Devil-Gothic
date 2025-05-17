@@ -14,4 +14,36 @@ public class EntityStat {
         this.attackSpeed = attackSpeed;
         this.rangeAttack = rangeAttack;
     }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public float getMoveSpeed() {
+        return moveSpeed;
+    }
+
+    public void setMoveSpeed(float moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
+
+    public float getAttackSpeed() {
+        return attackSpeed;
+    }
+
+    public void setAttackSpeed(float attackSpeed) {
+        this.attackSpeed = attackSpeed;
+    }
 }
