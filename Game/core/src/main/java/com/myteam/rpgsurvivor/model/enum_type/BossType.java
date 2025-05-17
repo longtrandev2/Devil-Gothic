@@ -3,7 +3,7 @@ package com.myteam.rpgsurvivor.model.enum_type;
 import com.myteam.rpgsurvivor.model.EntityStat;
 
 public enum BossType {
-    SLIME_BOSS(new EntityStat(100,100,50,2.0f,20f), EnemyHitbox.SLIME_BOSS);
+    SLIME_BOSS(new EntityStat(100,100,10,2.0f,20f), EnemyHitbox.SLIME_BOSS);
 
 
     public final EntityStat stat;

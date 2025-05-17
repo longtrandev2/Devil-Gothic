@@ -36,7 +36,6 @@ public class MeleeAttackComponent implements AttackComponent {
         if (attackTimer > 0) {
             attackTimer -= deltaTime;
         }
-
         if (attackBox.overlaps(targetPlayer.getHitbox()) && attackTimer <= 0 && !attacker.isAttack()) {
             attacker.setState(StateType.STATE_ATTACK.stateType);
             attackTimer = attackCooldown;

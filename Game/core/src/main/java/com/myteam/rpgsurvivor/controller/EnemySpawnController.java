@@ -57,7 +57,7 @@ public class EnemySpawnController {
 
         this.prepareToNextStage = false;
         this.isPaused = false;
-        this.isBossWave = (currentWave % 5 == 0);
+        this.isBossWave = (currentWave % 5 == 1);
         this.bossSpawned = false;
     }
 
@@ -90,7 +90,7 @@ public class EnemySpawnController {
             updateEnemy(deltaTime);
         }
         else {
-            if (bossSpawned) {
+            if (!bossSpawned) {
                 spawnBoss();
                 bossSpawned = true;
                 spawnTimer = 0;
@@ -113,7 +113,8 @@ public class EnemySpawnController {
 
     public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
-        MonsterType randomType = types[MathUtils.random(types.length - 1)];
+        //MonsterType randomType = types[MathUtils.random(types.length - 1)];
+        MonsterType randomType = MonsterType.VAMPIRE;
 
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
@@ -179,10 +180,7 @@ public class EnemySpawnController {
                 activeBoss.remove(i);
             }
         }
-        if(activeBoss.isEmpty())
-        {
-            prepareToNextStage = true;
-        }
+
     }
 
     public void renderCreep(SpriteBatch batch, float deltaTime) {
@@ -218,6 +216,10 @@ public class EnemySpawnController {
 
     public ArrayList<Enemy> getActiveEnemies() {
         return activeEnemy;
+    }
+
+    public ArrayList<Enemy> getActiveBoss() {
+        return activeBoss;
     }
 
     public void setMaxEnemiesOnMap(int maxEnemiesOnMap) {

@@ -21,8 +21,10 @@ public class AnimationForEnemy {
                 break;
             case RAT:
                 setUpRatAnimation(animationManager);
+                break;
             case ORC:
                 setUpOrcAnimation(animationManager);
+                break;
             case VAMPIRE:
                 setUpVampireAnimation(animationManager);
                 break;
@@ -183,25 +185,25 @@ public class AnimationForEnemy {
     {
         animationManager.addAnimation(
             StateType.STATE_IDLE.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_idle_1.png",
-            6,1,DEFAULT_FRAME_DURATION,true
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_idle_1(1).png",
+            5,1,DEFAULT_FRAME_DURATION,true
         );
 
         animationManager.addAnimation(
             StateType.STATE_RUN.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_walk_12.png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_walk_12(1).png",
             12,1,DEFAULT_FRAME_DURATION,true
         );
 
         animationManager.addAnimation(
             StateType.STATE_ATTACK.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_cleave_1.png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_cleave_1(1).png",
             15,1,DEFAULT_FRAME_DURATION,false
         );
 
         animationManager.addAnimation(
             StateType.STATE_HURT.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_take_hit_1.png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_take_hit_1(1).png",
             5,1,DEFAULT_FRAME_DURATION,false
         );
 
