@@ -57,7 +57,7 @@ public class EnemySpawnController {
 
         this.prepareToNextStage = false;
         this.isPaused = false;
-        this.isBossWave = (currentWave % 5 == 1);
+        this.isBossWave = (currentWave % 5 == 0);
         this.bossSpawned = false;
     }
 
@@ -113,8 +113,8 @@ public class EnemySpawnController {
 
     public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
-        //MonsterType randomType = types[MathUtils.random(types.length - 1)];
-        MonsterType randomType = MonsterType.VAMPIRE;
+        MonsterType randomType = types[MathUtils.random(types.length - 1)];
+        //MonsterType randomType = MonsterType.VAMPIRE;
 
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
