@@ -225,4 +225,7 @@ public abstract class Player extends Entity{
         return atkSpeedPoints;
     }
 
+    public HeroType getHeroType() {
+        return heroType;
+    }
 }

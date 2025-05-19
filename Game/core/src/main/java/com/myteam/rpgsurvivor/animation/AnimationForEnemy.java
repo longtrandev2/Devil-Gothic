@@ -42,6 +42,9 @@ public class AnimationForEnemy {
             case SLIME_BOSS:
                 setUpSlimeBossAnimation(animationManager);
                 break;
+            case SKELETON_KING:
+                setUpSkeletonKingAnimation(animationManager);
+                break;
 
         }
         return animationManager;
@@ -211,6 +214,39 @@ public class AnimationForEnemy {
             StateType.STATE_DEATH.stateType,
             "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_death_1.png",
             22,1,DEFAULT_FRAME_DURATION, false
+        );
+    }
+
+    public void setUpSkeletonKingAnimation(AnimationManager animationManager)
+    {
+        animationManager.addAnimation(
+            StateType.STATE_IDLE.stateType,
+            "Enemy/King Skeleton/Bringer-Of-Death/Sprite/Idle.png",
+            7,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_RUN.stateType,
+            "Enemy/King Skeleton/Bringer-Of-Death/Sprite/Walk.png",
+            8,1,DEFAULT_FRAME_DURATION,true
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_ATTACK.stateType,
+            "Enemy/King Skeleton/Bringer-Of-Death/Sprite/Attack.png",
+            10,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Enemy/King Skeleton/Bringer-Of-Death/Sprite/Hurt.png",
+            3,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(
+            StateType.STATE_DEATH.stateType,
+            "Enemy/King Skeleton/Bringer-Of-Death/Sprite/Death.png",
+            10,1,DEFAULT_FRAME_DURATION, false
         );
     }
 

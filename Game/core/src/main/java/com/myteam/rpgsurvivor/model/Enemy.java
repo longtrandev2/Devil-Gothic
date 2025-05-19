@@ -3,6 +3,7 @@ package com.myteam.rpgsurvivor.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,11 +11,13 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.myteam.rpgsurvivor.animation.AnimationForEnemy;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.EnemyMovement;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.enum_type.BossType;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
@@ -48,18 +51,22 @@ public abstract class Enemy extends Entity {
     private float maxKnockbackSpeed = 300f;
 
     private boolean bossTurn;
+
     private Texture frameHP;
     private Texture bloodTexture;
 
+    private Texture bossName;
+
     private TextureRegion fullBloodFrame;
+    private TextureRegion[] bloodFrames;
 
     private static final int BLOOD_FRAME_COLS = 6;
     private static final int BLOOD_FRAME_ROWS = 1;
 
 
-    private float bloodBarWidth = 200;
-    private float bloodBarHeight = 40;
-    private float padding = 10;
+    private float bloodBarWidth = 840;
+    private float bloodBarHeight = 122;
+    private float padding = 100;
     private float bloodBarInnerPaddingX = 10;
     private float bloodBarInnerPaddingY = 10;
 
@@ -67,6 +74,7 @@ public abstract class Enemy extends Entity {
     private float innerBloodHeight;
     private float bloodBarX;
     private float bloodBarY;
+
 
     public Enemy(float x, float y, MonsterType enemyType, Player player, AnimationForEnemy animationFactory) {
         this.entityX = x;
@@ -158,11 +166,11 @@ public abstract class Enemy extends Entity {
 
         // Khởi tạo textures cho thanh máu của boss
         frameHP = new Texture(Gdx.files.internal("Enemy/Asset For Boss/FrameHP.png"));
-        bloodTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/Blood.png"));
+        bloodTexture = new Texture(Gdx.files.internal("Enemy/Asset For Boss/BloodVer2.png"));
 
         // Khởi tạo kích thước thanh máu
-        innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX) + 15;
-        innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
+        innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX) + 30;
+        innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY) ;
         bloodBarX = padding + padding;
         bloodBarY = bloodBarHeight / 2;
 
@@ -171,15 +179,24 @@ public abstract class Enemy extends Entity {
 
         this.attackbox = new Rectangle(hitbox);
         attackbox.setSize(hitbox.getWidth() + attackRange , hitbox.getHeight() + attackRange);
+
+//        if(BossType.SLIME_BOSS.name().equals(bossType.name()))
+//        {
+            bossName = new Texture(Gdx.files.internal("Enemy/Asset For Boss/SlimebossName.png"));
+        //}
     }
 
     private void setupBloodFrames() {
-        fullBloodFrame = new TextureRegion();
+        bloodFrames = new TextureRegion[BLOOD_FRAME_COLS];
         float frameWidth = bloodTexture.getWidth() / BLOOD_FRAME_COLS;
         float frameHeight = bloodTexture.getHeight() / BLOOD_FRAME_ROWS;
 
-        fullBloodFrame = new TextureRegion(bloodTexture, 0 * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
+        for (int i = 0; i < BLOOD_FRAME_COLS; i++) {
+            bloodFrames[i] = new TextureRegion(bloodTexture, i * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
+        }
     }
+
+
 
     private void updateHealth(float health) {
         currentHealth = (int) Math.max(0, Math.min(health, getMaxHealth()));
@@ -300,18 +317,32 @@ public abstract class Enemy extends Entity {
 
         // Vẽ thanh máu nếu là boss
         if (bossTurn) {
-            // Vẽ khung thanh máu
-            batch.draw(frameHP, bloodBarX, bloodBarY, bloodBarWidth, bloodBarHeight);
-
-            // Tính toán tỷ lệ máu hiện tại và vẽ thanh máu
             float healthPercent = currentHealth / (float) getMaxHealth();
             float currentBloodWidth = innerBloodWidth * healthPercent;
+            // Vẽ khung thanh máu
+            int frameIndex;
+            if (healthPercent > 0.85f) {
+                frameIndex = 0;
+            } else if (healthPercent > 0.70f) {
+                frameIndex = 1;
+            } else if (healthPercent > 0.55f) {
+                frameIndex = 2;
+            } else if (healthPercent > 0.40f) {
+                frameIndex = 3;
+            } else if (healthPercent > 0.25f) {
+                frameIndex = 4;
+            } else {
+                frameIndex = 5;
+            }
 
-            batch.draw(fullBloodFrame,
-                bloodBarX + bloodBarInnerPaddingX,
-                bloodBarY + bloodBarInnerPaddingY,
-                currentBloodWidth,
+            // Vẽ frame máu tương ứng
+            batch.draw(bloodFrames[frameIndex],
+                bloodBarX,
+                bloodBarY ,
+                innerBloodWidth,
                 innerBloodHeight);
+
+            batch.draw(bossName,bloodBarX, bloodBarY + 100);
         }
 
         // Debug drawing
@@ -380,4 +411,6 @@ public abstract class Enemy extends Entity {
         }
         velocity.add(force);
     }
+
+
 }
