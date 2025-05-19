@@ -155,7 +155,7 @@ public abstract class Enemy extends Entity {
         this.attackRange = stat.rangeAttack;
         this.detectionRange = 1000f;
 
-        this.movement = new EnemyMovement(x,y, player, stat.moveSpeed);
+        this.movement = new EnemyMovement(hitboxEnemy.x, hitboxEnemy.y, player, stat.moveSpeed);
 
         this.isInvisible = false;
         this.isInvulnerable = false;
@@ -180,10 +180,14 @@ public abstract class Enemy extends Entity {
         this.attackbox = new Rectangle(hitbox);
         attackbox.setSize(hitbox.getWidth() + attackRange , hitbox.getHeight() + attackRange);
 
-//        if(BossType.SLIME_BOSS.name().equals(bossType.name()))
-//        {
+        if(BossType.SLIME_BOSS.name().equals(bossType.name()))
+        {
             bossName = new Texture(Gdx.files.internal("Enemy/Asset For Boss/SlimebossName.png"));
-        //}
+        }
+        else if(BossType.SKELETON_KING.name().equals(bossType.name()))
+        {
+            bossName = new Texture(Gdx.files.internal("Enemy/Asset For Boss/Igris.png"));
+        }
     }
 
     private void setupBloodFrames() {
@@ -284,9 +288,11 @@ public abstract class Enemy extends Entity {
             currentState = StateType.STATE_IDLE;
         }
 
-        if (targetPlayer.getHitbox().x > entityX) {
+        if (targetPlayer.getHitbox().x > entityX ) {
+            System.out.println(targetPlayer.getHitbox().x + " " + entityX);
             facingRight = true;
-        } else {
+        }
+        else {
             facingRight = false;
         }
 

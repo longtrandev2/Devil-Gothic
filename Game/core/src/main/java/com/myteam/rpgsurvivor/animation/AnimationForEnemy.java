@@ -188,31 +188,31 @@ public class AnimationForEnemy {
     {
         animationManager.addAnimation(
             StateType.STATE_IDLE.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_idle_1(1).png",
-            5,1,DEFAULT_FRAME_DURATION,true
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/Idle.png",
+            6,1,DEFAULT_FRAME_DURATION,true
         );
 
         animationManager.addAnimation(
             StateType.STATE_RUN.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_walk_12(1).png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/Walk.png",
             12,1,DEFAULT_FRAME_DURATION,true
         );
 
         animationManager.addAnimation(
             StateType.STATE_ATTACK.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_cleave_1(1).png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/Attack.png",
             15,1,DEFAULT_FRAME_DURATION,false
         );
 
         animationManager.addAnimation(
             StateType.STATE_HURT.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_take_hit_1(1).png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/TakeHit.png",
             5,1,DEFAULT_FRAME_DURATION,false
         );
 
         animationManager.addAnimation(
             StateType.STATE_DEATH.stateType,
-            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/demon_death_1.png",
+            "Enemy/Slime Boss/boss_demon_slime_FREE_v1.0/single sprites/Death.png",
             22,1,DEFAULT_FRAME_DURATION, false
         );
     }
@@ -222,7 +222,7 @@ public class AnimationForEnemy {
         animationManager.addAnimation(
             StateType.STATE_IDLE.stateType,
             "Enemy/King Skeleton/Bringer-Of-Death/Sprite/Idle.png",
-            7,1,DEFAULT_FRAME_DURATION,true
+            8,1,DEFAULT_FRAME_DURATION,true
         );
 
         animationManager.addAnimation(
