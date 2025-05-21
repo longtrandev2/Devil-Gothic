@@ -144,7 +144,8 @@ public class Knight extends Player{
                 }
             }
 
-            heroMovement.update();
+            if(!animationManager.getCurrentState().equals("attack"))
+                heroMovement.update();
 
             if (heroMovement.isMoving()) {
                 knightSkill.updatePositions();

@@ -3,8 +3,10 @@ package com.myteam.rpgsurvivor.animation;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class AnimationManager {
@@ -106,31 +108,37 @@ public class AnimationManager {
         if (currentAnimation == null) return 0f;
 
         float duration = currentAnimation.getAnimationDuration();
-        if (duration == 0) return 1f; // tránh chia cho 0
+        if (duration == 0) return 1f;
 
-        return Math.min(stateTime / duration, 1f); // Clamp từ 0 đến 1
+        return Math.min(stateTime / duration, 1f);
     }
 
     public AnimationManager copy() {
         AnimationManager newManager = new AnimationManager();
 
-        // Giả sử bạn lưu các Animation theo Map<String, Animation<TextureRegion>>
         for (HashMap.Entry<String, Animation<TextureRegion>> entry : this.animations.entrySet()) {
             Animation<TextureRegion> original = entry.getValue();
 
-            // Tạo animation mới dùng cùng frame (frames có thể dùng lại)
-            Animation<TextureRegion> copied = new Animation<>(
-                original.getFrameDuration(),
-                original.getKeyFrames()
-            );
+            // Clone từng frame thay vì gọi getKeyFrames()
+            float frameDuration = original.getFrameDuration();
+            int frameCount = (int) (original.getAnimationDuration() / frameDuration);
+
+            Array<TextureRegion> framesArray = new Array<>();
+
+            for (int i = 0; i < frameCount; i++) {
+                TextureRegion frame = original.getKeyFrame(i * frameDuration);
+                framesArray.add(new TextureRegion(frame)); // clone frame
+            }
+
+            Animation<TextureRegion> copied = new Animation<>(frameDuration, framesArray);
             copied.setPlayMode(original.getPlayMode());
 
             newManager.animations.put(entry.getKey(), copied);
         }
 
-        // Copy state hiện tại nếu cần
         newManager.setState(this.currentState, true);
-
         return newManager;
     }
+
+
 }
