@@ -58,4 +58,9 @@ public class GameScreen implements Screen {
     public void dispose() {
 
     }
+
+    public MapScreen getMap() {
+        return map;
+    }
+
 }

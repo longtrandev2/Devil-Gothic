@@ -109,6 +109,8 @@ public class UpgradeScreen implements Screen {
         stage = new Stage(viewport, batch);
         this.isDone = false;
 
+        availablePoints = chosenHero.getSkillPoints();
+
 
         reset();
 
@@ -233,8 +235,7 @@ public class UpgradeScreen implements Screen {
         atkSpeedDeBtn.setPosition(Gdx.graphics.getWidth() / 2 - paddingX + 50, Gdx.graphics.getHeight() / 2 - paddingY + 80);
         skillDeBtn.setPosition(Gdx.graphics.getWidth() / 2 - paddingX + 50, Gdx.graphics.getHeight() / 2 - paddingY);
 
-        // Initialize labels with current player stats
-        availablePoints = player.getSkillPoints();
+        //availablePoints = player.getSkillPoints();
         healthMod = player.getMaxHealth();
         damageMod = player.getDamage();
         speedMod = (int)player.getMoveSpeed();
@@ -285,7 +286,7 @@ public class UpgradeScreen implements Screen {
     }
 
     private void addButtonListeners() {
-        availablePoints = player.getSkillPoints();
+        //availablePoints = player.getSkillPoints();
         healthInBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -549,5 +550,13 @@ public class UpgradeScreen implements Screen {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public int getAvailablePoints() {
+        return availablePoints;
+    }
+
+    public void setAvailablePoints(int availablePoints) {
+        this.availablePoints = availablePoints;
     }
 }

@@ -100,27 +100,31 @@ public class LayoutPlayScreen implements Screen {
                 isPaused = false;
                 Gdx.input.setInputProcessor(stage);
             }
-
-
-
-
         });
 
+        loadTexture();
+        createPauseButton();
+
+        Gdx.input.setInputProcessor(stage);
+
+    }
+    private void loadTexture()
+    {
         try {
             pauseUnactiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameUnactive.png"));
             pauseActiveTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/pauseGameActive.png"));
-            switch (heroType)
+            switch (chosenHero.getHeroType().name())
             {
-                case "Knight" :
+                case "KNIGHT" :
                     heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
                     break;
-                case "Samurai" :
+                case "SAMURAI" :
                     heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/SamuraiAva.png"));
                     break;
-                case "Archer" :
+                case "ARCHER" :
                     heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/archerAva.png"));
                     break;
-                case "Wizard" :
+                case "WIZARD" :
                     heroAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/wizardAva.png"));
                     break;
                 default:
@@ -135,13 +139,7 @@ public class LayoutPlayScreen implements Screen {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        createPauseButton();
-
-        Gdx.input.setInputProcessor(stage);
-
     }
-
     private void setupBloodFrames()
     {
         fullBloodFrame = new TextureRegion();
@@ -281,5 +279,13 @@ public class LayoutPlayScreen implements Screen {
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public Player getChosenHero() {
+        return chosenHero;
+    }
+
+    public void setChosenHero(Player chosenHero) {
+        this.chosenHero = chosenHero;
     }
 }

@@ -244,5 +244,19 @@ public class SystemController implements Screen {
     public boolean isWaitingForNextStage() {
         return isWaitingForNextStage;
     }
+
+    public void setWaitingForNextStage(boolean waitingForNextStage) {
+        isWaitingForNextStage = waitingForNextStage;
+    }
+
+
+
+    public UpgradeScreen getUpgradeScreen() {
+        return upgradeScreen;
+    }
+
+    public void setUpgradeScreen(UpgradeScreen upgradeScreen) {
+        this.upgradeScreen = upgradeScreen;
+    }
 }
 

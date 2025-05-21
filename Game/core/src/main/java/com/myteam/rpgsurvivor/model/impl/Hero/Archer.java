@@ -15,8 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Archer extends Player {
-    private InputHandle inputHandle;
-    private HeroMovement heroMovement;
+//    private InputHandle inputHandle;
+//    private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
@@ -57,8 +57,8 @@ public class Archer extends Player {
         super(x,y,HeroType.ARCHER);
         this.animationManager = new AnimationManager();
         this.skillEffectManager = new AnimationManager();
-        this.heroMovement = new HeroMovement(this);
-        this.inputHandle = new InputHandle(this, heroMovement);
+//        this.heroMovement = new HeroMovement(this);
+//        this.inputHandle = new InputHandle(this, heroMovement);
         setupAnimation();
     }
 

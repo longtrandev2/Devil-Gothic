@@ -19,6 +19,8 @@ import com.myteam.rpgsurvivor.model.impl.Hero.Archer;
 import com.myteam.rpgsurvivor.model.impl.Hero.Knight;
 import com.myteam.rpgsurvivor.model.impl.Hero.Samurai;
 import com.myteam.rpgsurvivor.model.impl.Hero.Wizard;
+import com.myteam.rpgsurvivor.saveGame.GameSaveData;
+import com.myteam.rpgsurvivor.saveGame.GameSaveManager;
 
 public class MapScreen implements Screen {
     private Main game;
@@ -35,6 +37,14 @@ public class MapScreen implements Screen {
 
     private String heroType;
 
+    private GameSaveManager gameSaveManager;
+    private GameSaveData gameSaveData;
+
+    private boolean isSaving;
+    private float saveTimer = 0f;
+    private static final float SAVE_INTERVAL = 2.0f;
+
+
     public MapScreen(String heroType, Main game) {
         this.game = game;
         this.heroType = heroType;
@@ -43,6 +53,8 @@ public class MapScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
+        isSaving = false;
+
 
         try {
             batch = new SpriteBatch();
@@ -71,6 +83,7 @@ public class MapScreen implements Screen {
             e.printStackTrace();
         }
 
+
         loadMap();
         enemySpawnController = new EnemySpawnController(chosenHero, map);
 
@@ -83,6 +96,8 @@ public class MapScreen implements Screen {
         chosenHero.setEnemySpawnController(enemySpawnController);
 
         layoutPlayScreen = new LayoutPlayScreen(camera,chosenHero,heroType,game);
+
+        gameSaveManager = new GameSaveManager();
     }
 
     public void loadMap() {
@@ -101,7 +116,33 @@ public class MapScreen implements Screen {
             chosenHero.update(Gdx.graphics.getDeltaTime());
             systemController.update(Gdx.graphics.getDeltaTime());
         }
+        else {
+                if(isSaving == false)
+                {
+                    saveGame();
+                    isSaving = true;
+                }
+        }
+
     }
+
+    private void saveGame() {
+        try {
+            gameSaveData = new GameSaveData(this);
+            System.out.println(this);
+            gameSaveManager.saveGame(gameSaveData);
+            Gdx.app.log("MapScreen", "Game saved successfully");
+            System.out.println(gameSaveData.toString());
+        } catch (Exception e) {
+            Gdx.app.error("MapScreen", "Error saving game: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            isSaving = false;
+        }
+
+
+    }
+
 
     @Override
     public void show() {
@@ -182,5 +223,33 @@ public class MapScreen implements Screen {
 
     public boolean isPaused() {
         return layoutPlayScreen != null && layoutPlayScreen.isPaused();
+    }
+
+    public Main getGame() {
+        return game;
+    }
+
+    public Player getChosenHero() {
+        return chosenHero;
+    }
+
+    public EnemySpawnController getEnemySpawnController() {
+        return enemySpawnController;
+    }
+
+    public SystemController getSystemController() {
+        return systemController;
+    }
+
+    public void setChosenHero(Player chosenHero) {
+        this.chosenHero = chosenHero;
+    }
+
+    public LayoutPlayScreen getLayoutPlayScreen() {
+        return layoutPlayScreen;
+    }
+
+    public void setLayoutPlayScreen(LayoutPlayScreen layoutPlayScreen) {
+        this.layoutPlayScreen = layoutPlayScreen;
     }
 }

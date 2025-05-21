@@ -289,7 +289,7 @@ public abstract class Enemy extends Entity {
         }
 
         if (targetPlayer.getHitbox().x > entityX ) {
-            System.out.println(targetPlayer.getHitbox().x + " " + entityX);
+            //System.out.println(targetPlayer.getHitbox().x + " " + entityX);
             facingRight = true;
         }
         else {

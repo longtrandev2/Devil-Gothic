@@ -58,7 +58,7 @@ public class EnemySpawnController {
 
         this.prepareToNextStage = false;
         this.isPaused = false;
-        this.isBossWave = (currentWave % 5 == 1);
+        this.isBossWave = (currentWave % 5 == 0);
         this.bossSpawned = false;
     }
 
@@ -211,7 +211,7 @@ public class EnemySpawnController {
         isPaused = false;
         currentWave++;
         totalDeath = 0;
-        isBossWave = currentWave % 5 == 1;
+        isBossWave = currentWave % 5 == 0;
         bossSpawned = false;
         activeEnemy.clear();
         activeBoss.clear();
@@ -271,5 +271,9 @@ public class EnemySpawnController {
 
     public void setTotalDeaths(int totalDeath) {
         this.totalDeath = totalDeath;
+    }
+
+    public void setCurrentWave(int currentWave) {
+        this.currentWave = currentWave;
     }
 }
