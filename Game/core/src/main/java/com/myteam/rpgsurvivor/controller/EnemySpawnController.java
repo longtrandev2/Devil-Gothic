@@ -10,6 +10,7 @@ import com.myteam.rpgsurvivor.model.Enemy;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.BossType;
 import com.myteam.rpgsurvivor.model.enum_type.MonsterType;
+import com.myteam.rpgsurvivor.model.impl.Boss.SkeletonKing;
 import com.myteam.rpgsurvivor.model.impl.Boss.SlimeBoss;
 import com.myteam.rpgsurvivor.model.impl.Creep.*;
 
@@ -114,15 +115,13 @@ public class EnemySpawnController {
     public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
         MonsterType randomType = types[MathUtils.random(types.length - 1)];
-//        MonsterType randomType = MonsterType.VAMPIRE;
-
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
     }
 
     public Enemy createBoss(float x, float y) {
         BossType[] types = BossType.values();
-        BossType randomType = BossType.SLIME_BOSS;
+        BossType randomType = BossType.SKELETON_KING;
 
         Enemy boss = createBossByType(randomType, x, y);
         return boss;
@@ -132,6 +131,8 @@ public class EnemySpawnController {
         switch (type) {
             case SLIME_BOSS:
                 return new SlimeBoss(x,y,player,enemyAnimation);
+            case SKELETON_KING:
+                return new SkeletonKing(x,y,player,enemyAnimation);
             default:
                 return new SlimeBoss(x, y, player, enemyAnimation);
         }
@@ -214,6 +215,10 @@ public class EnemySpawnController {
         activeBoss.clear();
     }
 
+    public boolean isBossWave() {
+        return isBossWave;
+    }
+
     public ArrayList<Enemy> getActiveEnemies() {
         return activeEnemy;
     }
@@ -266,7 +271,11 @@ public class EnemySpawnController {
         this.totalDeath = totalDeath;
     }
 
+    public void setCurrentWave(int currentWave) {
+        this.currentWave = currentWave;
+
     public boolean isBossWave() {
         return isBossWave;
+
     }
 }

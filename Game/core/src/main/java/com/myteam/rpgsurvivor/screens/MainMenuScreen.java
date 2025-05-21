@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +24,11 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myteam.rpgsurvivor.Main;
+import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.MeleeAttackComponent;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
+import com.myteam.rpgsurvivor.input.InputHandle;
+import com.myteam.rpgsurvivor.saveGame.GameSaveData;
+import com.myteam.rpgsurvivor.saveGame.GameSaveManager;
 
 public class MainMenuScreen implements Screen {
     private final Main game;
@@ -33,6 +39,8 @@ public class MainMenuScreen implements Screen {
     private final float w;
     private final float h;
 
+    private GameSaveManager gameSaveManager = new GameSaveManager();
+
     // Background
     private Texture backGDTexture;
     private Texture logoGame;
@@ -41,6 +49,10 @@ public class MainMenuScreen implements Screen {
     private Texture playUnHover;
     private Texture playHover;
     private ImageButton playButton;
+
+    private Texture continueUnHover;
+    private Texture continueHover;
+    private ImageButton continueBtn;
 
     private Texture settingUnHover;
     private Texture settingHover;
@@ -56,6 +68,9 @@ public class MainMenuScreen implements Screen {
     private int paddingY = 20;
     private int paddingX = 100;
 
+    private GameScreen gameScreen;
+
+
     public MainMenuScreen(final Main game) {
         this.game = game;
         w = Gdx.graphics.getWidth();
@@ -69,6 +84,7 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(viewport, batch);
 
 
+
         loadTextures();
         setupLayout();
 
@@ -79,14 +95,17 @@ public class MainMenuScreen implements Screen {
         backGDTexture = new Texture(Gdx.files.internal("Menu/IntroScreen/BG.png"));
         logoGame = new Texture(Gdx.files.internal("Menu/IntroScreen/LogoGame.png"));
 
-        playUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/PlayIcon.png"));
-        playHover = new Texture(Gdx.files.internal("Menu/IntroScreen/PlayIconHover.png"));
+        playUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/NewGameUnActive.png"));
+        playHover = new Texture(Gdx.files.internal("Menu/IntroScreen/NewGameActive.png"));
 
-        settingUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/SettingIcon.png"));
-        settingHover = new Texture(Gdx.files.internal("Menu/IntroScreen/SettingIconHover.png"));
+        continueUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/ContinueUnActive.png"));
+        continueHover = new Texture(Gdx.files.internal("Menu/IntroScreen/ContinueActive.png"));
 
-        exitUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/ExitIconUnHover.png"));
-        exitHover = new Texture(Gdx.files.internal("Menu/IntroScreen/ExitIconHover.png"));
+        settingUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/SettingUnActive.png"));
+        settingHover = new Texture(Gdx.files.internal("Menu/IntroScreen/SettingActive.png"));
+
+        exitUnHover = new Texture(Gdx.files.internal("Menu/IntroScreen/ExitUnActive.png"));
+        exitHover = new Texture(Gdx.files.internal("Menu/IntroScreen/ExitActive.png"));
 
     }
 
@@ -102,6 +121,10 @@ public class MainMenuScreen implements Screen {
         TextureRegionDrawable playAC = new TextureRegionDrawable(playHover);
         playButton = new ImageButton(playUnAC, playAC);
 
+        TextureRegionDrawable continueUnAC = new TextureRegionDrawable(continueUnHover);
+        TextureRegionDrawable continueAC = new TextureRegionDrawable(continueHover);
+        continueBtn = new ImageButton(continueUnAC, continueAC);
+
         TextureRegionDrawable settingUnAC = new TextureRegionDrawable(settingUnHover);
         TextureRegionDrawable settingAC = new TextureRegionDrawable(settingHover);
         settingButton = new ImageButton(settingUnAC, settingAC);
@@ -116,6 +139,14 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.log("MainMenuScreen", "Play button clicked");
                 game.setScreen(new ChosseHeroScreen(game));
 
+            }
+        });
+
+        continueBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenuScreen", "Play button clicked");
+                loadSavedMapScreen();
             }
         });
 
@@ -143,19 +174,61 @@ public class MainMenuScreen implements Screen {
 
 
 
-        playButton.setSize(btnSizeWidth, btnSizeHeight);
-        playButton.setPosition(560, 300);
+        playButton.setPosition(150, 280);
         stage.addActor(playButton);
 
-        settingButton.setSize(btnSizeWidth, btnSizeHeight);
-        settingButton.setPosition(560, 200);
+        continueBtn.setPosition(150, 120);
+        stage.addActor(continueBtn);
+
+        settingButton.setPosition(900, 280);
         stage.addActor(settingButton);
 
-        exitButton.setSize(btnSizeWidth, btnSizeHeight);
-        exitButton.setPosition(560, 100);
+        exitButton.setPosition(900, 120);
         stage.addActor(exitButton);
 
 
+    }
+
+    private void loadSavedMapScreen() {
+        Gdx.app.log("MainMenuScreen", "Attempting to load saved game...");
+        GameSaveData saveData = gameSaveManager.loadGame();
+
+        if (saveData != null && saveData.getHeroName() != null) {
+            Gdx.app.log("MainMenuScreen", "Save data loaded successfully. Hero type: " + saveData.getHeroName());
+
+            try {
+                gameScreen = new GameScreen(game, saveData.getHeroName());
+
+                gameSaveManager.applyLoadedData(saveData, gameScreen.getMap());
+                System.out.println(gameScreen.getMap().getChosenHero().getHeroType().name());
+
+                if (gameScreen.getMap().getChosenHero() != null) {
+                    HeroMovement movement = new HeroMovement(gameScreen.getMap().getChosenHero());
+                    gameScreen.getMap().getChosenHero().setMovement(movement);
+
+                    InputHandle inputHandle = new InputHandle(
+                        gameScreen.getMap().getChosenHero(),
+                        gameScreen.getMap().getChosenHero().getHeroMovement()
+                    );
+                    gameScreen.getMap().getChosenHero().setInputHandle(inputHandle);
+                    gameScreen.getMap().getChosenHero().setAttackHandler(new MeleeAttackComponent(gameScreen.getMap().getChosenHero(), gameScreen.getMap().getEnemySpawnController(), gameScreen.getMap().getChosenHero().getAttackSpeed(), gameScreen.getMap().getChosenHero().getRangeAttack(), gameScreen.getMap().getChosenHero().getDamage()));
+                    gameScreen.getMap().setLayoutPlayScreen(new LayoutPlayScreen(camera,gameScreen.getMap().getChosenHero(), gameScreen.getMap().getChosenHero().getHeroType().name(),game));
+                    gameScreen.getMap().getSystemController().setUpgradeScreen(new UpgradeScreen(camera, game, gameScreen.getMap().getChosenHero()));
+                    game.setScreen(gameScreen);
+                    Gdx.app.log("MainMenuScreen", "Game loaded successfully");
+                } else {
+                    Gdx.app.error("MainMenuScreen", "Failed to create hero from save data");
+                    game.setScreen(new ChosseHeroScreen(game));
+                }
+            } catch (Exception e) {
+                Gdx.app.error("MainMenuScreen", "Error loading saved game: " + e.getMessage());
+                e.printStackTrace();
+                game.setScreen(new ChosseHeroScreen(game));
+            }
+        } else {
+            Gdx.app.error("MainMenuScreen", "No save data found or data is invalid");
+            game.setScreen(new ChosseHeroScreen(game));
+        }
     }
 
     @Override

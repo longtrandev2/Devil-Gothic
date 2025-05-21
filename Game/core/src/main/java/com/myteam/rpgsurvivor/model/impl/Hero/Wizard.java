@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Wizard extends Player {
-    private InputHandle inputHandle;
-    private HeroMovement heroMovement;
+//    private InputHandle inputHandle;
+//    private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
@@ -53,8 +53,8 @@ public class Wizard extends Player {
         super(x, y, HeroType.WIZARD);
         this.animationManager = new AnimationManager();
         this.skillEffectManager = new AnimationManager();
-        this.heroMovement = new HeroMovement(this);
-        this.inputHandle = new InputHandle(this, heroMovement);
+//        this.heroMovement = new HeroMovement(this);
+//        this.inputHandle = new InputHandle(this, heroMovement);
 
         setupAnimation();
     }

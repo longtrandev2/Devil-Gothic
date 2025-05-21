@@ -7,7 +7,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
 import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.MeleeAttackComponent;
+import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
+import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 import java.awt.*;
@@ -28,6 +30,8 @@ public abstract class Player extends Entity{
     protected int atkSpeedPoints;
     protected EnemySpawnController enemySpawnController;
     protected HeroType heroType;
+    protected InputHandle inputHandle;
+    protected HeroMovement heroMovement;
 
     protected boolean isInvisible;
     protected boolean isInvulnerable;
@@ -71,12 +75,16 @@ public abstract class Player extends Entity{
         this.attackbox = new Rectangle(hitbox);
         offsetX = heroType.hitbox.getOffsetX();
         offsetY = heroType.hitbox.getOffsetY();
+
+        this.heroMovement = new HeroMovement(this);
+        this.inputHandle = new InputHandle(this, heroMovement);
     }
 
     @Override
     public void update(float deltaTime){
         this.setCurrentHealth(max(0, this.currentHealth));
         hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
+        System.out.println(entityX + " " + entityY);
         DebugRenderer.drawRect(attackbox, Color.RED);
     }
     public abstract void onHurt();
@@ -225,4 +233,35 @@ public abstract class Player extends Entity{
         return atkSpeedPoints;
     }
 
+    public HeroType getHeroType() {
+        return heroType;
+    }
+
+    public HeroMovement getHeroMovement() {
+        return heroMovement;
+    }
+
+    public InputHandle getInputHandle() {
+        return inputHandle;
+    }
+
+    public void setInputHandle(InputHandle inputHandle) {
+        this.inputHandle = inputHandle;
+    }
+
+    public MeleeAttackComponent getAttackHandler() {
+        return attackHandler;
+    }
+
+    public void setAttackHandler(MeleeAttackComponent attackHandler) {
+        this.attackHandler = attackHandler;
+    }
+
+    public float getOffsetX() {
+        return offsetX;
+    }
+
+    public float getOffsetY() {
+        return offsetY;
+    }
 }

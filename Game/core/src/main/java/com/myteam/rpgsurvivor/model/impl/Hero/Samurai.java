@@ -13,8 +13,8 @@ import com.myteam.rpgsurvivor.skills.SamuraiSkill;
 
 public class Samurai extends Player {
 
-    private InputHandle inputHandler;
-    private HeroMovement heroMovement;
+//    private InputHandle inputHandler;
+//    private HeroMovement heroMovement;
     private SamuraiSkill skillHandler;
     private boolean facingRight = true;
     private boolean isAttacking = false;
@@ -53,8 +53,8 @@ public class Samurai extends Player {
     public Samurai(float x, float y) {
         super(x, y, HeroType.SAMURAI);
         this.animationManager = new AnimationManager();
-        this.heroMovement = new HeroMovement(this);
-        this.inputHandler = new InputHandle(this, heroMovement);
+//        this.heroMovement = new HeroMovement(this);
+//        this.inputHandler = new InputHandle(this, heroMovement);
         this.skillHandler = new SamuraiSkill(this);
 
         setupAnimations();
@@ -177,7 +177,7 @@ public class Samurai extends Player {
     }
 
     public void updateWithDelta(float deltaTime) {
-        inputHandler.handleInput();
+        inputHandle.handleInput();
 
         skillHandler.update(deltaTime);
 
@@ -192,7 +192,7 @@ public class Samurai extends Player {
 
 
 
-        if (inputHandler.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking && !isUsingSkill
+        if (inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking && !isUsingSkill
             && skillHandler.canDash()) {
             isUsingSkill = true;
 
@@ -204,10 +204,10 @@ public class Samurai extends Player {
             showDashAttack = true;
             dashAttackStateTime = 0f;
 
-            skillHandler.performDash(facingRight, inputHandler);
+            skillHandler.performDash(facingRight, inputHandle);
         }
 
-        if (inputHandler.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
+        if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
             && !isAttacking && !skillHandler.isDashing() && animationManager.getCurrentState().equals("idle")) {
             isAttacking = true;
             attackTriggered = false;

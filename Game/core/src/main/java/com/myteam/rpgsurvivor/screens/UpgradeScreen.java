@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.model.Player;
+import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 public class UpgradeScreen implements Screen {
     private Main game;
@@ -39,6 +40,8 @@ public class UpgradeScreen implements Screen {
     private int skillMod;
 
     private Texture background;
+
+    private Texture avatarHero;
 
     // Button textures
     private Texture increaseHealthUnactive;
@@ -106,6 +109,8 @@ public class UpgradeScreen implements Screen {
         stage = new Stage(viewport, batch);
         this.isDone = false;
 
+        availablePoints = chosenHero.getSkillPoints();
+
 
         reset();
 
@@ -160,6 +165,25 @@ public class UpgradeScreen implements Screen {
 
         playUnActive = new Texture(Gdx.files.internal("Menu/Description hero/PlayBtnUnActive (1).png"));
         playActive = new Texture(Gdx.files.internal("Menu/Description hero/PlayBtnActive (1).png"));
+
+        HeroType hero = player.getHeroType();
+        if(HeroType.KNIGHT.name().equals(hero.name()))
+        {
+            avatarHero = new Texture(Gdx.files.internal("Menu/IngameIcon/knightAva.png"));
+        }
+        else if(HeroType.SAMURAI.name().equals(hero.name()))
+        {
+            avatarHero = new Texture(Gdx.files.internal("Menu/IngameIcon/SamuraiAva.png"));
+
+        }
+        else if(HeroType.ARCHER.name().equals(hero.name()))
+        {
+            avatarHero = new Texture(Gdx.files.internal("Menu/IngameIcon/archerAva.png"));
+        }
+        else if(HeroType.WIZARD.name().equals(hero.name()))
+        {
+            avatarHero = new Texture(Gdx.files.internal("Menu/IngameIcon/wizardAva.png"));
+        }
     }
 
     public ImageButton createButton(Texture unactiveBtn, Texture activeBtn) {
@@ -172,6 +196,16 @@ public class UpgradeScreen implements Screen {
     public void createMenu() {
         float paddingX = 100;
         float paddingY = 200;
+
+        Image avatar = new Image(avatarHero);
+        avatar.setScale(2);
+        if(HeroType.KNIGHT.name().equals(player.getHeroType().name()))
+        {
+            avatar.setPosition(Gdx.graphics.getWidth() / 2 + 250, Gdx.graphics.getHeight() / 2 + 70);
+        }
+        else avatar.setPosition(Gdx.graphics.getWidth() / 2 + 270, Gdx.graphics.getHeight() / 2 + 70);
+
+        stage.addActor(avatar);
 
         playBtn = createButton(playUnActive, playActive);
         playBtn.setPosition(Gdx.graphics.getWidth() / 2 + 460, Gdx.graphics.getHeight() / 2 - 240);
@@ -201,8 +235,7 @@ public class UpgradeScreen implements Screen {
         atkSpeedDeBtn.setPosition(Gdx.graphics.getWidth() / 2 - paddingX + 50, Gdx.graphics.getHeight() / 2 - paddingY + 80);
         skillDeBtn.setPosition(Gdx.graphics.getWidth() / 2 - paddingX + 50, Gdx.graphics.getHeight() / 2 - paddingY);
 
-        // Initialize labels with current player stats
-        availablePoints = player.getSkillPoints();
+        //availablePoints = player.getSkillPoints();
         healthMod = player.getMaxHealth();
         damageMod = player.getDamage();
         speedMod = (int)player.getMoveSpeed();
@@ -242,7 +275,7 @@ public class UpgradeScreen implements Screen {
         stage.addActor(skillDeBtn);
         stage.addActor(playBtn);
 
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
 
         stage.addActor(availablePointsLabel);
         stage.addActor(healthLabel);
@@ -253,7 +286,7 @@ public class UpgradeScreen implements Screen {
     }
 
     private void addButtonListeners() {
-        availablePoints = player.getSkillPoints();
+        //availablePoints = player.getSkillPoints();
         healthInBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -517,5 +550,13 @@ public class UpgradeScreen implements Screen {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public int getAvailablePoints() {
+        return availablePoints;
+    }
+
+    public void setAvailablePoints(int availablePoints) {
+        this.availablePoints = availablePoints;
     }
 }

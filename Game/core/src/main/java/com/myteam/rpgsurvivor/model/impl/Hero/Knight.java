@@ -12,8 +12,8 @@ import com.myteam.rpgsurvivor.skills.KnightSkill;
 
 public class Knight extends Player{
     private KnightSkill knightSkill;
-    private InputHandle inputHandle;
-    private HeroMovement heroMovement;
+//    private InputHandle inputHandle;
+//    private HeroMovement heroMovement;
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
@@ -38,8 +38,8 @@ public class Knight extends Player{
     {
         super(x,y,HeroType.KNIGHT);
         this.animationManager = new AnimationManager();
-        this.heroMovement = new HeroMovement(this);
-        this.inputHandle = new InputHandle(this, heroMovement);
+//        this.heroMovement = new HeroMovement(this);
+//        this.inputHandle = new InputHandle(this, heroMovement);
         this.knightSkill = new KnightSkill(this);
         setupAnimation();
 //        setupHitBox();

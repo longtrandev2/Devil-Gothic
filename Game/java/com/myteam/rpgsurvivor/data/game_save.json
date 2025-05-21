@@ -1,0 +1,1 @@
+{heroType:Wizard,heroX:400,heroY:400,currentHealth:120,maxHealth:120,damage:40,moveSpeed:100,atkSpeed:0.09,currentWave:1,maxEnemiesOnMap:10,spawnInterval:3,timeBetweenWaves:45}

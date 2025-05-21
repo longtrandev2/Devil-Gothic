@@ -139,6 +139,10 @@ public abstract class Entity {
         return hitbox;
     }
 
+    public void setHitbox(Rectangle hitbox) {
+        this.hitbox = hitbox;
+    }
+
     public void setState(String currentState){
         animationManager.setState(currentState, true);
     }
