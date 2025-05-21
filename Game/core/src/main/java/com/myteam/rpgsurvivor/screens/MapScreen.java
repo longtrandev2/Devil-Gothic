@@ -131,8 +131,8 @@ public class MapScreen implements Screen {
         if (!isPaused()) {
             if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
                 chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-                boolean isBossWave = enemySpawnController.getCurrentWave() % 5 == 1;
-                System.out.println(isBossWave);
+                boolean isBossWave = enemySpawnController.getCurrentWave() % 5 == 0;
+//                System.out.println(isBossWave);
                 if (isBossWave) {
                     enemySpawnController.renderBoss(batch, Gdx.graphics.getDeltaTime());
                 } else {

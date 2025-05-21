@@ -7,6 +7,9 @@ import com.myteam.rpgsurvivor.controller.EnemySpawnController;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.Entity;
 import com.myteam.rpgsurvivor.model.Enemy;
+
+import java.util.ArrayList;
+
 public class MeleeAttackComponent {
 
     private final Entity owner;
@@ -43,8 +46,10 @@ public class MeleeAttackComponent {
 
         Rectangle attackArea = new Rectangle(attackX, attackY, attackRange, ownerBounds.height);
         owner.setAttackbox(attackArea);
-
-        for (Enemy enemy : enemySpawnController.getActiveEnemies()) {
+        ArrayList <Enemy> enemyWave;
+        if(enemySpawnController.isBossWave()) enemyWave = enemySpawnController.getActiveBoss();
+        else enemyWave = enemySpawnController.getActiveEnemies();
+        for (Enemy enemy : enemyWave) {
             if (enemy.getHitBox().overlaps(attackArea)) {
                 System.out.println("Overlap");
                 // Gây damage và knockback
@@ -54,6 +59,7 @@ public class MeleeAttackComponent {
                 enemy.onHurt();
             }
         }
+
     }
     public boolean canAttack() {
         return System.currentTimeMillis() - lastAttackTime >= attackSpeed;
