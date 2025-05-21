@@ -209,6 +209,7 @@ public abstract class Enemy extends Entity {
     @Override
     public void update(float deltaTime) {
         updateHealth(getCurrentHealth());
+//        System.out.println(getCurrentHealth());
         // Cập nhật vị trí hitbox
         if (!velocity.isZero()) {
             entityX += velocity.x * deltaTime;
@@ -382,6 +383,7 @@ public abstract class Enemy extends Entity {
 
         if(currentState == StateType.STATE_ATTACK) {
             targetPlayer.takeDamge(getDamage());
+            System.out.println("takedamge");
             targetPlayer.onHurt();
         }
     }
@@ -403,8 +405,6 @@ public abstract class Enemy extends Entity {
     }
 
     public void onHurt() {
-        System.out.println("onhurt");
-        System.out.println("current state: " + currentState);
         isHurt = true;
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);

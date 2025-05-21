@@ -92,7 +92,7 @@ public class Wizard extends Player {
         skillEffectManager.addAnimation(
             StateType.STATE_HURT.stateType,
             "Hero/Wizard/Wizard Pack/SpriteSheet/Hit-Reisize.png",
-            SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectFrameDuration,
+            HURT_FRAME_COLS, HURT_FRAME_ROWS, skillEffectFrameDuration,
             true
         );
 
@@ -155,7 +155,6 @@ public class Wizard extends Player {
         if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
             && !isAttacking && animationManager.getCurrentState().equals("idle")) {
             isAttacking = true;
-            attackHandler.tryAttack();
             attackTriggered = false;
             animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }
@@ -174,8 +173,8 @@ public class Wizard extends Player {
             }
         }
 
-        heroMovement.update();
-
+        if(!animationManager.getCurrentState().equals("attack"))
+            heroMovement.update();
 
 
         updateAnimationState(deltaTime);

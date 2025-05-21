@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.input.InputHandle;
+import com.myteam.rpgsurvivor.model.Enemy;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
@@ -46,6 +47,9 @@ public class Archer extends Player {
     private static final int ATTACK_FRAME_COLS = 15;
     private static final int ATTACK_FRAME_ROWS = 1;
 
+    private static final int HURT_COLS = 6;
+    private static final int HURT_ROWS = 1;
+
     private static final int SKILL_EFFECT_FRAME_COLS = 17;
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
 
@@ -68,6 +72,7 @@ public class Archer extends Player {
         float runFrameDuration = 0.1f;
         float attackFrameDuration = this.getAttackSpeed();
         float skillFrameDuration = 0.08f;
+        float hurtFrameDuration = 0.1f;
         float skillEffectDuration = 0.1f;
 
         animationManager.addAnimation(
@@ -98,6 +103,13 @@ public class Archer extends Player {
             false
         );
 
+        animationManager.addAnimation(
+            StateType.STATE_HURT.stateType,
+            "Hero/Achers/spriteSheet/take_hit_1.png",
+            HURT_COLS, HURT_ROWS,hurtFrameDuration,
+            false
+        );
+
         skillEffectManager.addAnimation(
             StateType.STATE_SKILL_EFFECT.stateType,
             "Hero/Achers/spriteSheet/arrow_shower_effect_1.png",
@@ -108,7 +120,7 @@ public class Archer extends Player {
             arrowAnimManager = new AnimationManager();
             arrowAnimManager.addAnimation(
             "arrow",
-            "Hero/Achers/spriteSheet/arrow_.png",
+            "Hero/Achers/aseprite/projectiles_and_effects.png",
             ARROW_FRAME_COLS, ARROW_FRAME_ROWS,
             0.1f,
             true
@@ -153,7 +165,10 @@ public class Archer extends Player {
         Iterator<Arrow> iter = arrows.iterator();
         while (iter.hasNext()) {
             Arrow arrow = iter.next();
-            arrow.update(deltaTime, enemySpawnController.getActiveEnemies(), getDamage()); // truyền enemyList và sát thương
+            ArrayList<Enemy> enemyWave;
+            if(enemySpawnController.isBossWave()) enemyWave = enemySpawnController.getActiveBoss();
+                else enemyWave = enemySpawnController.getActiveEnemies();
+            arrow.update(deltaTime, enemyWave, getDamage());
             if (arrow.isDestroyed()) {
                 iter.remove();
             }
@@ -163,6 +178,15 @@ public class Archer extends Player {
 
     public void updateWithDeltaTime(float deltaTime)
     {
+        if(isHurt)
+        {
+            hurtTimer -= deltaTime;
+            if(hurtTimer <= 0)
+            {
+                isHurt = false;
+            }
+        }
+
         inputHandle.handleInput();
 
         if(inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking)
@@ -180,25 +204,19 @@ public class Archer extends Player {
                 skillEffectManager.setState( StateType.STATE_SKILL_EFFECT.stateType, true);
             }
         }
+        if(!animationManager.getCurrentState().equals("attack"))
         heroMovement.update();
 
-        if (!isAttacking && !isUsingSkill && animationManager.getCurrentState().equals("idle")) {
-            if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK)) {
-                isAttacking = true;
-                animationManager.setState(StateType.STATE_ATTACK.stateType, true);
-
-                // Tạo mũi tên khi bắt đầu tấn công
-                float arrowX = entityX + (facingRight ? +40 : -40);
-                float arrowY = entityY + 20; // chỉnh theo vị trí tay
-                arrows.add(new Arrow(arrowX, arrowY, facingRight, arrowAnimManager));
-            }
+        if (inputHandle.isActionActive(InputHandle.ACTION_ATTACK) && attackHandler.canAttack()
+            && !isAttacking && animationManager.getCurrentState().equals("idle")) {
+            isAttacking = true;
+            attackTriggered = false;
+            animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }
 
         updateAnimationState(deltaTime);
 
-
     }
-
     public void updateAnimationState(float deltaTime)
     {
         if (isUsingSkill) {
@@ -214,6 +232,14 @@ public class Archer extends Player {
         }
 
         if (isAttacking) {
+            float progress = animationManager.getAnimationProgress();
+            System.out.println(progress);
+            if (!attackTriggered && progress >= 0.5) {
+                float arrowX = entityX + (facingRight ? + 95 : 65);
+                float arrowY = entityY + 5;
+                arrows.add(new Arrow(arrowX, arrowY, facingRight, arrowAnimManager));
+                attackTriggered = true;
+            }
             if (animationManager.isAnimationFinished()) {
                 isAttacking = false;
                 if (heroMovement.isMoving()) {
@@ -224,6 +250,7 @@ public class Archer extends Player {
             }
             return;
         }
+
 
 
         if (heroMovement.isMoving()) {
@@ -247,7 +274,7 @@ public class Archer extends Player {
     @Override
     public void onHurt() {
         isHurt = true;
-                hurtTimer = 0.4f;
+        hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
 
     }

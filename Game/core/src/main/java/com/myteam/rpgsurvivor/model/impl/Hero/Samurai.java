@@ -214,7 +214,7 @@ public class Samurai extends Player {
             animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }
 
-        if (!skillHandler.isDashing()) {
+        if (!skillHandler.isDashing() && !animationManager.getCurrentState().equals("attack")) {
             heroMovement.update();
         } else {
             if (skillHandler.getDashProgress() > 0.8f && !showSkillEffect) {

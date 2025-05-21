@@ -63,8 +63,8 @@ public class EnemySpawnController {
     }
 
     public void update(float deltaTime) {
-        System.out.println(currentWave);
-        System.out.println(isBossWave);
+//        System.out.println(currentWave);
+//        System.out.println(isBossWave);
         if (isPaused) {
             return;
         }
@@ -115,8 +115,6 @@ public class EnemySpawnController {
     public Enemy createRandomEnemy(float x, float y) {
         MonsterType[] types = MonsterType.values();
         MonsterType randomType = types[MathUtils.random(types.length - 1)];
-        //MonsterType randomType = MonsterType.VAMPIRE;
-
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
         return randomEnemy;
     }
@@ -275,5 +273,9 @@ public class EnemySpawnController {
 
     public void setCurrentWave(int currentWave) {
         this.currentWave = currentWave;
+
+    public boolean isBossWave() {
+        return isBossWave;
+
     }
 }
