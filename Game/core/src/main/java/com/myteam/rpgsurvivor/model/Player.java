@@ -96,6 +96,10 @@ public abstract class Player extends Entity{
         setMeleeAttackComponent();
     }
 
+    public EnemySpawnController getEnemySpawnController() {
+        return enemySpawnController;
+    }
+
     public ArrayList<Enemy> getEnemies()
     {
         return enemySpawnController.getActiveEnemies();

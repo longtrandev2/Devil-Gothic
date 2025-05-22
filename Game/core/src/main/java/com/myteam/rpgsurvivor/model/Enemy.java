@@ -400,10 +400,6 @@ public abstract class Enemy extends Entity {
         return hitbox;
     }
 
-    public boolean isDead() {
-        return isDead;
-    }
-
     public void onHurt() {
         isHurt = true;
         hurtTimer = 0.4f;

@@ -126,7 +126,7 @@ public abstract class Entity {
         this.currentHealth = currentHealth;
     }
 
-    private void die() {
+    public void die() {
         isDead = true;
     }
 

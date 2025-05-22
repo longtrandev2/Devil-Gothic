@@ -273,9 +273,6 @@ public class EnemySpawnController {
 
     public void setCurrentWave(int currentWave) {
         this.currentWave = currentWave;
-
-    public boolean isBossWave() {
-        return isBossWave;
-
     }
+
 }
