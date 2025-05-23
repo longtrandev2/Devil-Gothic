@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.MeleeAttackComponent;
 import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
+import com.myteam.rpgsurvivor.controller.system.AudioManager;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.saveGame.GameSaveData;
 import com.myteam.rpgsurvivor.saveGame.GameSaveManager;
@@ -40,6 +41,7 @@ public class MainMenuScreen implements Screen {
     private final float h;
 
     private GameSaveManager gameSaveManager = new GameSaveManager();
+    private AudioManager audioManager;
 
     // Background
     private Texture backGDTexture;
@@ -83,7 +85,7 @@ public class MainMenuScreen implements Screen {
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
 
-
+        audioManager = AudioManager.getInstance();
 
         loadTextures();
         setupLayout();
@@ -137,6 +139,8 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Play button clicked");
+                audioManager.playButtonClickSound();
+                audioManager.pauseMusic();
                 game.setScreen(new ChosseHeroScreen(game));
 
             }
@@ -146,6 +150,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Play button clicked");
+                audioManager.playButtonClickSound();
                 loadSavedMapScreen();
             }
         });
@@ -154,6 +159,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Settings button clicked");
+                audioManager.playButtonClickSound();
             }
         });
 
@@ -161,6 +167,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenuScreen", "Exit button clicked");
+                audioManager.playButtonClickSound();
                 Gdx.app.exit();
             }
         });
@@ -234,6 +241,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        audioManager.playMenuMusic();
     }
 
     @Override

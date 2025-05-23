@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myteam.rpgsurvivor.Main;
+import com.myteam.rpgsurvivor.controller.system.AudioManager;
 import com.myteam.rpgsurvivor.model.Player;
 
 public class ChosseHeroScreen implements Screen {
@@ -28,6 +29,8 @@ public class ChosseHeroScreen implements Screen {
     private Player chosenHero;
     private int w;
     private int h;
+
+    private AudioManager audioManager;
 
     // Background Choose Hero
     private Texture BGTexture;
@@ -47,6 +50,8 @@ public class ChosseHeroScreen implements Screen {
 
     public ChosseHeroScreen(final Main game) {
         this.game = game;
+
+        audioManager = AudioManager.getInstance();
 
         w = Gdx.graphics.getWidth();
         h = Gdx.graphics.getHeight();
@@ -122,6 +127,7 @@ public class ChosseHeroScreen implements Screen {
                 try
                 {
                     Gdx.app.log("ChosseHeroScreen", heroType + " selected");
+                    audioManager.playButtonClickSound();
                     game.setScreen(new DescriptionHero(game, ChosseHeroScreen.this, camera, heroType));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -143,6 +149,7 @@ public class ChosseHeroScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("ChosseHeroScreen", "Back button clicked");
+                audioManager.playButtonClickSound();
                 game.setScreen(new MainMenuScreen(game));
             }
         });

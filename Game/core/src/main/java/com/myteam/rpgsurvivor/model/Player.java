@@ -33,6 +33,7 @@ public abstract class Player extends Entity{
     protected InputHandle inputHandle;
     protected HeroMovement heroMovement;
 
+
     protected boolean isInvisible;
     protected boolean isInvulnerable;
     protected boolean isInteracting;

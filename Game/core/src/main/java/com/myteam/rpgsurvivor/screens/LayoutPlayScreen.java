@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myteam.rpgsurvivor.Main;
+import com.myteam.rpgsurvivor.controller.system.AudioManager;
 import com.myteam.rpgsurvivor.model.Player;
 
 public class LayoutPlayScreen implements Screen {
@@ -24,6 +25,8 @@ public class LayoutPlayScreen implements Screen {
     private Player chosenHero;
     private PauseScreen pauseScreen;
     private String heroType;
+
+    private AudioManager audioManager;
 
     //Pause Button
     private Texture pauseUnactiveTexture;
@@ -76,10 +79,12 @@ public class LayoutPlayScreen implements Screen {
         maxHealth = chosenHero.getMaxHealth();
         currentHealth = chosenHero.getCurrentHealth();
         pauseScreen = new PauseScreen(camera,game);
+        audioManager = AudioManager.getInstance();
         pauseScreen.setListener(new PauseScreenListener() {
             @Override
             public void onBackButtonClicked() {
                 System.out.println("Home button clicked");
+                audioManager.playButtonClickSound();
                 togglePause();
                 isPaused = false;
                 Gdx.input.setInputProcessor(stage);
@@ -88,6 +93,7 @@ public class LayoutPlayScreen implements Screen {
             @Override
             public void onResumeButtonClicked() {
                 System.out.println("Resume button clicked");
+                audioManager.playButtonClickSound();
                 togglePause();
                 isPaused = false;
                 Gdx.input.setInputProcessor(stage);
@@ -96,6 +102,7 @@ public class LayoutPlayScreen implements Screen {
             @Override
             public void onRestartButtonClicked() {
                 System.out.println("Restart button clicked");
+                audioManager.playButtonClickSound();
                 togglePause();
                 isPaused = false;
                 Gdx.input.setInputProcessor(stage);
@@ -176,6 +183,7 @@ public class LayoutPlayScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // Hien thi menu
                 System.out.println("Pause button clicked");
+                audioManager.playButtonClickSound();
                 togglePause();
             }
         });
