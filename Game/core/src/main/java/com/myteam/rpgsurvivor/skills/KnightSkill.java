@@ -2,6 +2,7 @@ package com.myteam.rpgsurvivor.skills;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.myteam.rpgsurvivor.animation.AnimationForSummondKnight;
+import com.myteam.rpgsurvivor.controller.EnemySpawnController;
 import com.myteam.rpgsurvivor.model.Enemy;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.impl.Hero.SummonedKnight;
@@ -21,6 +22,7 @@ public class KnightSkill {
     private List<SummonedKnight> summonedKnights;
     private float currentCooldown = 0f;
     private boolean isOnCooldown = false;
+    private EnemySpawnController enemySpawnController;
     Random rand = new Random();
 
     public KnightSkill(Knight owner) {
@@ -120,7 +122,7 @@ public class KnightSkill {
             if (targetEnemyForKnight == null) {
                 continue;
             }
-
+            System.out.println(targetEnemyForKnight);
             float angleRad = (float) Math.toRadians(angles[i]);
             float direction = owner.isFacingRight() ? 1 : -1;
 
@@ -137,12 +139,12 @@ public class KnightSkill {
             SummonedKnight summonedKnight = new SummonedKnight(
                 spawnX,
                 spawnY,
-                HeroType.SUMMON_KNIGHT,
                 targetEnemyForKnight,
                 animation
             );
 
             summonedKnight.setFacingRight(owner.isFacingRight());
+            summonedKnight.setEnemySpawnController(owner.getEnemySpawnController());
             summonedKnights.add(summonedKnight);
         }
     }
@@ -162,8 +164,10 @@ public class KnightSkill {
 
             if (knight.getTargetEnemy().isDead()) {
                 Enemy newTarget = findNewTarget();
+                System.out.println(newTarget);
                 if (newTarget != null) {
                     knight.updateTarget(newTarget);
+                    knight.setMovementToEnemy(newTarget);
                 }
             }
 

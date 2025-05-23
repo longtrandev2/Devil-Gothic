@@ -116,6 +116,7 @@ public class EnemySpawnController {
         MonsterType[] types = MonsterType.values();
         MonsterType randomType = types[MathUtils.random(types.length - 1)];
         Enemy randomEnemy = createEnemyByType(randomType, x, y);
+        //Enemy randomEnemy = createEnemyByType(MonsterType.VAMPIRE,x,y);
         return randomEnemy;
     }
 

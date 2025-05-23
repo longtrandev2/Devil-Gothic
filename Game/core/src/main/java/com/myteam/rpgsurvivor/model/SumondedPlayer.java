@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.animation.AnimationForSummondKnight;
+import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.controller.combat.attack.impl.HeroAttack.MeleeAttackComponent;
 import com.myteam.rpgsurvivor.controller.movement.EnemyMovement;
 import com.myteam.rpgsurvivor.controller.movement.SummonedKinghtMovement;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
@@ -17,6 +19,8 @@ public abstract class SumondedPlayer extends Entity{
     protected float attackCooldown;
     protected float attackTimer;
     protected Enemy targetEnemy;
+    protected MeleeAttackComponent attackComponent;
+    protected EnemySpawnController enemySpawnController;
 
     protected boolean isInvisible;
     protected boolean isInvulnerable;
@@ -55,7 +59,7 @@ public abstract class SumondedPlayer extends Entity{
         this.targetEnemy = enemy;
 
         hitboxPlayer = getHitbox();
-        hitboxEnemy = enemy.getHitbox();
+        hitboxEnemy = targetEnemy.getHitbox();
         this.summonedKinghtMovement = new SummonedKinghtMovement(x,y,enemy,heroType.stat.moveSpeed);
         this.animationManager = animation.createMiniKnightAnimation(heroType);
         this.currentState = StateType.STATE_IDLE;
@@ -66,6 +70,8 @@ public abstract class SumondedPlayer extends Entity{
         this.attackTimer = 0;
         this.attackRange = stat.rangeAttack;
         this.detectionRange = 1000f;
+
+        this.movement = new SummonedKinghtMovement(x,y,enemy,stat.moveSpeed);
 
         this.attackbox = new Rectangle(hitbox);
         attackbox.setSize(hitbox.getWidth() + attackRange , hitbox.getHeight() + attackRange);
@@ -112,8 +118,8 @@ public abstract class SumondedPlayer extends Entity{
         }
 
         // Kiểm tra player có trong tầm phát hiện không
-        if (isPlayerInDetectionRange()) {
-            if (isPlayerInAttackRange()) {
+        if (isEnemyInDetectionRange()) {
+            if (isEnemyInAttackRange()) {
                 tryAttack();
             }
         }
@@ -143,7 +149,7 @@ public abstract class SumondedPlayer extends Entity{
             entityX = newDirection.x;
             entityY = newDirection.y;
         }
-        else if (attackbox.overlaps(hitboxPlayer)) {
+        else if (attackbox.overlaps(hitboxEnemy)) {
             if (isAttack) {
                 currentState = StateType.STATE_ATTACK;
             } else {
@@ -197,13 +203,13 @@ public abstract class SumondedPlayer extends Entity{
         animationManager.setState(StateType.STATE_HURT.stateType, true);
     }
 
-    public boolean isPlayerInDetectionRange() {
+    public boolean isEnemyInDetectionRange() {
         float distance = Vector2.dst(entityX, entityY, targetEnemy.getHitbox().getX(), targetEnemy.getHitbox().getY());
         return distance <= detectionRange;
     }
 
-    public boolean isPlayerInAttackRange() {
-        return attackbox.overlaps(targetEnemy.hitbox);
+    public boolean isEnemyInAttackRange() {
+        return attackbox.overlaps(hitboxEnemy);
     }
 
     private void tryAttack() {
@@ -217,12 +223,36 @@ public abstract class SumondedPlayer extends Entity{
         isAttack = true;
         if (animationManager != null) {
             animationManager.setState(StateType.STATE_ATTACK.stateType, true);
+            attackComponent.tryAttack();
         }
 
         if(currentState == StateType.STATE_ATTACK) {
-            targetEnemy.takeDamge(getDamage());
-            System.out.println("takedamge");
-            targetEnemy.onHurt();
+//            targetEnemy.takeDamge(getDamage());
+//            //System.out.println("takedamge");
+//            targetEnemy.onHurt();
+            attackComponent.tryAttack();
         }
+    }
+
+    public void setEnemySpawnController (EnemySpawnController controller)
+    {
+
+        this.enemySpawnController = controller;
+        setMeleeAttackComponent();
+    }
+
+    public EnemySpawnController getEnemySpawnController() {
+        return enemySpawnController;
+    }
+
+    public void setMeleeAttackComponent(){
+        this.attackComponent = new MeleeAttackComponent(this, enemySpawnController, this.getAttackSpeed(), this.getRangeAttack(), this.getDamage());
+        System.out.println(this.getDamage());
+    }
+
+    public void setMovementToEnemy(Enemy enemy)
+    {
+        summonedKinghtMovement = new SummonedKinghtMovement(entityX, entityY, enemy, stat.moveSpeed);
+        movement = new SummonedKinghtMovement(entityX, entityY, enemy, stat.moveSpeed);
     }
 }

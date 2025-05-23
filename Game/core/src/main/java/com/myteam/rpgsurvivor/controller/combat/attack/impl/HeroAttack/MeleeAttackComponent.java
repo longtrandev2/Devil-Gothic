@@ -55,6 +55,7 @@ public class MeleeAttackComponent {
                 // Gây damage và knockback
 //                Vector2 knockback = new Vector2(owner.isFacingRight() ? 1 : -1, 0).scl(knockbackStrength);
                 enemy.takeDamge(damage);
+                System.out.println(enemy + " " + enemy.getCurrentHealth());
 //                enemy.applyKnockback(knockback);
                 enemy.onHurt();
             }

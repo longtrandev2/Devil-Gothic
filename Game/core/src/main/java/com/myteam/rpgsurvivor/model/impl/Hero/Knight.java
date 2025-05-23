@@ -42,7 +42,7 @@ public class Knight extends Player{
         this.animationManager = new AnimationManager();
         this.knightSkill = new KnightSkill(this);
         setupAnimation();
-//        setupHitBox();
+
     }
 
     private void setupAnimation()

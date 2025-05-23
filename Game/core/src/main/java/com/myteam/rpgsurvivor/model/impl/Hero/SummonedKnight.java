@@ -11,9 +11,9 @@ import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
 public class SummonedKnight extends SumondedPlayer {
     private float lifeDuration = 20f;
-    private float currentLifeTime = 0f;
+    private float currentLifeTime;
 
-    public SummonedKnight(float x, float y, HeroType heroType, Enemy enemy, AnimationForSummondKnight animation) {
+    public SummonedKnight(float x, float y, Enemy enemy, AnimationForSummondKnight animation) {
         super(x, y, HeroType.SUMMON_KNIGHT, enemy, animation);
         this.currentLifeTime = 0f;
     }
@@ -42,6 +42,7 @@ public class SummonedKnight extends SumondedPlayer {
 
         if (!isLifeTimeOver()) {
             super.update(deltaTime);
+            updateTarget(getTargetEnemy());
         }
     }
 

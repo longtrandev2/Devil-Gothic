@@ -383,7 +383,7 @@ public abstract class Enemy extends Entity {
 
         if(currentState == StateType.STATE_ATTACK) {
             targetPlayer.takeDamge(getDamage());
-            System.out.println("takedamge");
+            //System.out.println("takedamge");
             targetPlayer.onHurt();
         }
     }

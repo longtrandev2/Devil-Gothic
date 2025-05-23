@@ -84,7 +84,7 @@ public abstract class Player extends Entity{
     public void update(float deltaTime){
         this.setCurrentHealth(max(0, this.currentHealth));
         hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
-        System.out.println(entityX + " " + entityY);
+        //System.out.println(entityX + " " + entityY);
         DebugRenderer.drawRect(attackbox, Color.RED);
     }
     public abstract void onHurt();

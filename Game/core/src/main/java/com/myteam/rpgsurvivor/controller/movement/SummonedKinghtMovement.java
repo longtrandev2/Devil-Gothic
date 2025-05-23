@@ -15,7 +15,7 @@ public class SummonedKinghtMovement extends Movement{
     private float minDistanceToEnemy;
     private boolean isMoving;
 
-    public SummonedKinghtMovement(float playerX, float enemyY, Enemy enemy, float moveSpeed)
+    public SummonedKinghtMovement(float playerX, float playerY, Enemy enemy, float moveSpeed)
     {
         this.playerX = playerX;
         this.playerY = playerY;
