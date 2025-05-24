@@ -23,6 +23,7 @@ public class PauseScreen implements Screen {
     private OrthographicCamera camera;
     private ShowControlScreen showControlScreen;
     private MainMenuScreen mainMenuScreen;
+    private AudioScreen audioScreen;
 
     private Texture backgroundTexture;
 
@@ -63,6 +64,7 @@ public class PauseScreen implements Screen {
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
         showControlScreen = new ShowControlScreen(game, PauseScreen.this,camera);
+        audioScreen = new AudioScreen(game, PauseScreen.this,camera);
         mainMenuScreen = new MainMenuScreen(game);
 
         try {
@@ -121,6 +123,13 @@ public class PauseScreen implements Screen {
                 }
             }
         });
+        audioBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("DescriptionHero", "Audio button clicked");
+                audioScreen.setShow(true);
+            }
+        });
 
         exitBtn.addListener(new ClickListener() {
             @Override
@@ -165,6 +174,11 @@ public class PauseScreen implements Screen {
         if(showControlScreen.isShow())
         {
             showControlScreen.render(delta);
+        }
+
+        if(audioScreen.isShow())
+        {
+            audioScreen.render(delta);
         }
     }
 

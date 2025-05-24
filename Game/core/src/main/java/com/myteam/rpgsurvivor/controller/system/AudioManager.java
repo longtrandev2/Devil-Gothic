@@ -155,6 +155,15 @@ public class AudioManager implements Disposable {
         this.menuMusic = menuMusic;
     }
 
+    public boolean isSoundEnabled() {
+        return soundEnabled;
+    }
+
+    public boolean isPlaying()
+    {
+        return currentMusic.isPlaying();
+    }
+
     @Override
     public void dispose() {
         menuMusic.dispose();
