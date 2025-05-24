@@ -33,6 +33,7 @@ public abstract class Player extends Entity{
     protected InputHandle inputHandle;
     protected HeroMovement heroMovement;
 
+
     protected boolean isInvisible;
     protected boolean isInvulnerable;
     protected boolean isInteracting;
@@ -95,6 +96,7 @@ public abstract class Player extends Entity{
         }
         this.setCurrentHealth(max(0, this.currentHealth));
         hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
+
         DebugRenderer.drawRect(attackbox, Color.RED);
     }
     public abstract void onHurt();
@@ -104,6 +106,10 @@ public abstract class Player extends Entity{
 
         this.enemySpawnController = controller;
         setMeleeAttackComponent();
+    }
+
+    public EnemySpawnController getEnemySpawnController() {
+        return enemySpawnController;
     }
 
     public ArrayList<Enemy> getEnemies()

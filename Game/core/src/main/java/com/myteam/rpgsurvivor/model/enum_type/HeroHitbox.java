@@ -7,7 +7,7 @@ public enum HeroHitbox {
     SAMURAI(21, 33, (float) 37.5, (float)15),
     WIZARD(30, 40, 42, 24),
     ARCHER(36, 33, (float) 89.5, (float)0),
-    SUMMON_KNIGHT(18, 26, 0, 0),;
+    SUMMON_KNIGHT(18, 26, 5, 0),;
 
     public final float width;
     public final float height;

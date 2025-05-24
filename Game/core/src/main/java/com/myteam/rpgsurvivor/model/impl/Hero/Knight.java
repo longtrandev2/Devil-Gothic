@@ -3,6 +3,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
+import com.myteam.rpgsurvivor.controller.EnemySpawnController;
 import com.myteam.rpgsurvivor.controller.movement.HeroMovement;
 import com.myteam.rpgsurvivor.input.InputHandle;
 import com.myteam.rpgsurvivor.model.Player;
@@ -17,6 +18,7 @@ public class Knight extends Player{
     private boolean isAttacking = false;
     private boolean isUsingSkill = false;
     private float stateTime = 0;
+
 
     private static final int IDLE_FRAME_COLS = 7;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -38,11 +40,9 @@ public class Knight extends Player{
     {
         super(x,y,HeroType.KNIGHT);
         this.animationManager = new AnimationManager();
-//        this.heroMovement = new HeroMovement(this);
-//        this.inputHandle = new InputHandle(this, heroMovement);
         this.knightSkill = new KnightSkill(this);
         setupAnimation();
-//        setupHitBox();
+
     }
 
     private void setupAnimation()

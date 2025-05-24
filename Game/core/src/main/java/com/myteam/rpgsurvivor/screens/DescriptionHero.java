@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.myteam.rpgsurvivor.Main;
+import com.myteam.rpgsurvivor.controller.system.AudioManager;
 import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 
@@ -34,6 +35,8 @@ public class DescriptionHero implements Screen {
     private String heroType;
     private HeroType heroDescription;
     private GameScreen gameScreen;
+
+    private AudioManager audioManager;
 
     private Texture background;
 
@@ -60,6 +63,8 @@ public class DescriptionHero implements Screen {
         this.batch = new SpriteBatch();
         this.stage = new Stage(viewport, batch);
         this.gameScreen = new GameScreen(game, heroType);
+
+        audioManager = AudioManager.getInstance();
 
         createFont();
         loadTextures();
@@ -128,6 +133,7 @@ public class DescriptionHero implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("DescriptionHero", "Back button clicked");
+                audioManager.playButtonClickSound();
                 game.setScreen(previousScreen);
             }
         });
@@ -145,6 +151,7 @@ public class DescriptionHero implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("DescriptionHero", "Play button clicked with hero: " + heroType);
+                audioManager.playButtonClickSound();
                 game.setScreen(new GameScreen(game, heroType));
             }
         });

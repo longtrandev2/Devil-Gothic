@@ -306,14 +306,28 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
+
         if (isDead || animationManager == null) {
 
             return;
         }
 
+
         update(deltaTime);
 
         animationManager.update(deltaTime);
+
+        if (isDead)
+        {
+//            if(animationManager == null) return;
+//            else
+//            {
+                animationManager.setState(StateType.STATE_DEATH.stateType, true);
+                batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
+                return;
+//            }
+        }
+
 
         // Thiết lập hướng di chuyển
         this.setFacingRight(facingRight);
@@ -398,10 +412,6 @@ public abstract class Enemy extends Entity {
 
     public Rectangle getHitBox() {
         return hitbox;
-    }
-
-    public boolean isDead() {
-        return isDead;
     }
 
     public void onHurt() {

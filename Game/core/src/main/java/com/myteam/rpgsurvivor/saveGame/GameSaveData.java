@@ -47,7 +47,7 @@ public class GameSaveData {
             this.atkspeed = mapScreen.getChosenHero().getAttackSpeed();
             this.playerX = mapScreen.getChosenHero().getEntityX();
             this.playerY = mapScreen.getChosenHero().getEntityY();
-            this.skillPoints = mapScreen.getChosenHero().getSkillPoints();
+            //this.skillPoints = mapScreen.getChosenHero().getSkillPoints();
 //            this.inputHandle = mapScreen.getChosenHero().getInputHandle();
 //            this.heroMovement = mapScreen.getChosenHero().getHeroMovement();
         }

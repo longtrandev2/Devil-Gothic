@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.myteam.rpgsurvivor.Main;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.controller.system.AudioManager;
 import com.myteam.rpgsurvivor.controller.system.SystemController;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.Player;
@@ -32,6 +33,8 @@ public class MapScreen implements Screen {
     private LayoutPlayScreen layoutPlayScreen;
     private EnemySpawnController enemySpawnController;
     private SystemController systemController;
+
+    private AudioManager audioManager;
 
     private boolean debugEnabled = false;
 
@@ -54,6 +57,7 @@ public class MapScreen implements Screen {
         camera.setToOrtho(false, w, h);
         camera.update();
         isSaving = false;
+        audioManager = AudioManager.getInstance();
 
 
         try {
@@ -146,7 +150,14 @@ public class MapScreen implements Screen {
 
     @Override
     public void show() {
-
+        if(!isPaused())
+        {
+            audioManager.playGameMusic();
+        }
+        else
+        {
+            audioManager.pauseMusic();
+        }
     }
 
     @Override
@@ -167,20 +178,26 @@ public class MapScreen implements Screen {
 
         batch.begin();
 
-        layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
-
-        if (!isPaused()) {
-            if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
-                chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-                boolean isBossWave = enemySpawnController.isBossWave();
-
-                if (isBossWave) {
-                    enemySpawnController.renderBoss(batch, Gdx.graphics.getDeltaTime());
+        if(chosenHero.isDead())
+        {
+            layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
+        }
+        else
+        {
+            layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
+            if (!isPaused()) {
+                if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
+                    chosenHero.render(batch, Gdx.graphics.getDeltaTime());
+                    boolean isBossWave = enemySpawnController.isBossWave();
+                    //System.out.println(isBossWave);
+                    if (isBossWave) {
+                        enemySpawnController.renderBoss(batch, Gdx.graphics.getDeltaTime());
+                    } else {
+                        enemySpawnController.renderCreep(batch, Gdx.graphics.getDeltaTime());
+                    }
                 } else {
-                    enemySpawnController.renderCreep(batch, Gdx.graphics.getDeltaTime());
+                    systemController.render(Gdx.graphics.getDeltaTime());
                 }
-            } else {
-                systemController.render(Gdx.graphics.getDeltaTime());
             }
         }
 

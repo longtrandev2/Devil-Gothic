@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.controller.EnemySpawnController;
+import com.myteam.rpgsurvivor.controller.system.AudioManager;
 import com.myteam.rpgsurvivor.debug.DebugRenderer;
 import com.myteam.rpgsurvivor.model.Entity;
 import com.myteam.rpgsurvivor.model.Enemy;
@@ -20,6 +21,7 @@ public class MeleeAttackComponent {
     private final float knockbackStrength = 150f;
     private final float attackSpeed;
     private float lastAttackTime;
+    private AudioManager audioManager;
 
     public MeleeAttackComponent(Entity owner, EnemySpawnController enemySpawnController,
                                 float attackSpeed, float attackRange, int damage) {
@@ -30,6 +32,7 @@ public class MeleeAttackComponent {
         this.attackSpeed = attackSpeed;
         this.damage = damage;
         this.lastAttackTime = -attackCooldown;
+        audioManager = AudioManager.getInstance();
     }
 
     public void tryAttack() {
@@ -55,6 +58,8 @@ public class MeleeAttackComponent {
                 // Gây damage và knockback
 //                Vector2 knockback = new Vector2(owner.isFacingRight() ? 1 : -1, 0).scl(knockbackStrength);
                 enemy.takeDamge(damage);
+                audioManager.playAtkSound();
+                System.out.println(enemy + " " + enemy.getCurrentHealth());
 //                enemy.applyKnockback(knockback);
                 enemy.onHurt();
             }

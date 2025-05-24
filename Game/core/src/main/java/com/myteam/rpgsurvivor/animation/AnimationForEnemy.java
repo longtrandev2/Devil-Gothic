@@ -108,6 +108,7 @@ public class AnimationForEnemy {
             18,1, DEFAULT_FRAME_DURATION,false
         );
 
+
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Dead.png",
             15, 1, DEFAULT_FRAME_DURATION, true
@@ -172,6 +173,7 @@ public class AnimationForEnemy {
             "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Hurt.png",
             4,1,DEFAULT_FRAME_DURATION,false
         );
+
 
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Death.png",

@@ -20,7 +20,7 @@ public class GameScreen implements Screen {
     }
     @Override
     public void show() {
-
+        map.show();
     }
 
     @Override
