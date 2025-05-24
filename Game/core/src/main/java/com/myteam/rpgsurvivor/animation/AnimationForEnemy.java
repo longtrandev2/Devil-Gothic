@@ -75,6 +75,11 @@ public class AnimationForEnemy {
             "Enemy/Creep 1/HobgoblinNoOutline/goblinsmasher_hurt.png",
             1,1, DEFAULT_FRAME_DURATION, true
         );
+
+        animationManager.addAnimation(StateType.STATE_DEATH.stateType,
+            "Enemy/Creep 1/HobgoblinNoOutline/goblinsmasher_death.png",
+            6, 1, DEFAULT_FRAME_DURATION, true
+            );
     }
 
     public void setUpSkeletonAnimation(AnimationManager animationManager)
@@ -96,10 +101,16 @@ public class AnimationForEnemy {
             "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Hit.png",
             8,1, DEFAULT_FRAME_DURATION,true
         );
+
         animationManager.addAnimation(
             StateType.STATE_ATTACK.stateType,
             "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Attack.png",
             18,1, DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(StateType.STATE_DEATH.stateType,
+            "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Dead.png",
+            15, 1, DEFAULT_FRAME_DURATION, true
         );
     }
 
@@ -128,6 +139,12 @@ public class AnimationForEnemy {
             "Enemy/Creep 2/NoneOutlinedRat/rat-hurt.png",
             1,1,DEFAULT_FRAME_DURATION,false
         );
+
+        animationManager.addAnimation(StateType.STATE_DEATH.stateType,
+            "Enemy/Creep 2/NoneOutlinedRat/rat-death.png",
+            6, 1, DEFAULT_FRAME_DURATION, true
+        );
+
     }
 
     public void setUpOrcAnimation(AnimationManager animationManager)
@@ -155,6 +172,11 @@ public class AnimationForEnemy {
             "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Hurt.png",
             4,1,DEFAULT_FRAME_DURATION,false
         );
+
+        animationManager.addAnimation(StateType.STATE_DEATH.stateType,
+            "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Death.png",
+            4, 1, DEFAULT_FRAME_DURATION, true
+        );
     }
 
     public void setUpVampireAnimation(AnimationManager animationManager)
@@ -181,6 +203,11 @@ public class AnimationForEnemy {
             StateType.STATE_HURT.stateType,
             "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_take_damage.png",
             5,1,DEFAULT_FRAME_DURATION,false
+        );
+
+        animationManager.addAnimation(StateType.STATE_DEATH.stateType,
+            "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_death.png",
+            14, 1, DEFAULT_FRAME_DURATION, true
         );
     }
 
@@ -249,6 +276,4 @@ public class AnimationForEnemy {
             10,1,DEFAULT_FRAME_DURATION, false
         );
     }
-
-
 }

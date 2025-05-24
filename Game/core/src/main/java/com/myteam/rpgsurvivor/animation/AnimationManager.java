@@ -30,12 +30,19 @@ public class AnimationManager {
         Animation<TextureRegion> animation = AnimationLoader.getInstance().loadAnimation(pathAnimation, cols, rows, frameDuration);
         animation.setPlayMode(loop ? Animation.PlayMode.LOOP : Animation.PlayMode.NORMAL);
         animations.put(stateName, animation);
-
         if (animations.size() == 1) {
             currentState = stateName;
         }
     }
+    public void changeDurationAtk(float duration) {
+        Animation<TextureRegion> animation = animations.get(StateType.STATE_ATTACK.stateType);
+        System.out.println("change1");
 
+        if (animation == null) {
+            System.out.println("change2");
+            animation.setFrameDuration(duration);
+        }
+    }
     public void update(float deltaTime) {
         stateTime += deltaTime;
     }

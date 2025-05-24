@@ -243,7 +243,6 @@ public class Samurai extends Player {
 
         if (isAttacking) {
             float progress = animationManager.getAnimationProgress();
-            System.out.println(progress);
             if (!attackTriggered && progress >= 0.85f) {
                 attackHandler.tryAttack();
                 attackTriggered = true;
