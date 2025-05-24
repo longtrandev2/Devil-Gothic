@@ -31,10 +31,9 @@ public class Arrow {
 
     public void update(float deltaTime, List<Enemy> enemyList, int arrowDamage) {
         if (isDestroyed) return;
-        System.out.println("updating arrow");
         float dx = speed * deltaTime * (facingRight ? 1 : -1);
         position.x += dx;
-        hitbox.setPosition(position.x, position.y + 16.5f);
+        hitbox.setPosition(position.x + 15, position.y + 16.5f);
         animationManager.update(deltaTime);
         DebugRenderer.drawRect(hitbox, Color.ORANGE);
         if (position.x < 0 || position.x > Gdx.graphics.getWidth() || position.y < 0 || position.y > Gdx.graphics.getHeight()) {
@@ -57,10 +56,8 @@ public class Arrow {
 
         TextureRegion frame = animationManager.getCurrentFrame();
         if (frame != null) {
-            System.out.println("not null");
             float width = frame.getRegionWidth();
             float height = frame.getRegionHeight();
-            System.out.println("width: " + width + " height: " + height);
             float drawX = facingRight ? position.x : position.x + width;
             float scaleX = facingRight ? 1f : -1f;
 

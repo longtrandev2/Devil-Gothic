@@ -44,6 +44,10 @@ public abstract class Player extends Entity{
 
     protected  MeleeAttackComponent attackHandler;
     protected boolean attackTriggered = false;
+    protected boolean skillTriggered = false;
+
+    protected ArrayList<Enemy> enemyList;
+    private boolean enemyTurn = true;
 
     public Player(float x, float y, HeroType heroType) {
         this.entityX = x;
@@ -83,9 +87,16 @@ public abstract class Player extends Entity{
 
     @Override
     public void update(float deltaTime){
+        if(enemySpawnController.isBossWave()) {
+            enemyList = enemySpawnController.getActiveBoss();
+            enemyTurn = false;
+        } else if(enemyTurn) {
+            enemyList = enemySpawnController.getActiveEnemies();
+            enemyTurn = false;
+        }
         this.setCurrentHealth(max(0, this.currentHealth));
         hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
-        //System.out.println(entityX + " " + entityY);
+
         DebugRenderer.drawRect(attackbox, Color.RED);
     }
     public abstract void onHurt();
@@ -145,7 +156,7 @@ public abstract class Player extends Entity{
 
     public void increaseAttackSpeed()
     {
-        this.setAttackSpeed(getAttackSpeed() + 0.2f);
+        this.setAttackSpeed(getAttackSpeed() - 0.005f);
     }
 
     public void decreaseAttackSpeed()
@@ -168,7 +179,6 @@ public abstract class Player extends Entity{
     }
 
     public void deSpendSkillPointOnHealth() {
-            System.out.println(healthPoints);
             skillPoints++;
             healthPoints--;
             decreaseHealth();
@@ -176,21 +186,18 @@ public abstract class Player extends Entity{
     }
 
     public void deSpendSkillPointOnDamage() {
-            System.out.println(damagePoints);
             skillPoints++;
             damagePoints--;
             decreaseDamage();
     }
 
     public void deSpendSkillPointOnSpeed() {
-            System.out.println(speedPoints);
             skillPoints++;
             speedPoints--;
             decreaseMoveSpeed();
     }
 
     public void deSpendSkillPointOnAttackSpeed() {
-            System.out.println(atkSpeedPoints);
             skillPoints++;
             atkSpeedPoints--;
             decreaseAttackSpeed();
@@ -219,6 +226,7 @@ public abstract class Player extends Entity{
             skillPoints--;
             atkSpeedPoints++;
             increaseAttackSpeed();
+            animationManager.changeDurationAtk(this.getAttackSpeed());
 
     }
 

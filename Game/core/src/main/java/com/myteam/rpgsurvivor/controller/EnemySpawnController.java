@@ -179,6 +179,7 @@ public class EnemySpawnController {
             enemy.update(deltaTime);
 
             if (enemy.isDead()) {
+
                 activeBoss.remove(i);
             }
         }

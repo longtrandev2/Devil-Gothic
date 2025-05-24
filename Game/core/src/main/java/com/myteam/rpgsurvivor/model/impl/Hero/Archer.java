@@ -10,6 +10,7 @@ import com.myteam.rpgsurvivor.model.Player;
 import com.myteam.rpgsurvivor.model.enum_type.HeroType;
 import com.myteam.rpgsurvivor.model.enum_type.StateType;
 import com.myteam.rpgsurvivor.model.impl.projectile.Arrow;
+import com.myteam.rpgsurvivor.skills.ArcherBeamSkill;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,15 +23,14 @@ public class Archer extends Player {
     private boolean isUsingSkill = false;
     private float stateTime = 0;
 
-    private boolean showSkill = false;
+
     private float skillX, skillY;
 
-    private float skillStateTime = 0f;
-    private AnimationManager skillEffectManager;
 
 //    Arrow
     private List<Arrow> arrows = new ArrayList<>();
     private AnimationManager arrowAnimManager;
+    private ArcherBeamSkill archerBeamSkill;
 
     private static final int IDLE_FRAME_COLS = 12;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -60,9 +60,7 @@ public class Archer extends Player {
     {
         super(x,y,HeroType.ARCHER);
         this.animationManager = new AnimationManager();
-        this.skillEffectManager = new AnimationManager();
-//        this.heroMovement = new HeroMovement(this);
-//        this.inputHandle = new InputHandle(this, heroMovement);
+        this.archerBeamSkill = new ArcherBeamSkill();
         setupAnimation();
     }
 
@@ -96,12 +94,6 @@ public class Archer extends Player {
             false
         );
 
-        animationManager.addAnimation(
-            StateType.STATE_SKILL.stateType,
-            "Hero/Achers/spriteSheet/atkSkill.png",
-            SKILL_FRAME_COLS, SKILL_FRAME_ROWS,skillFrameDuration,
-            false
-        );
 
         animationManager.addAnimation(
             StateType.STATE_HURT.stateType,
@@ -110,12 +102,7 @@ public class Archer extends Player {
             false
         );
 
-        skillEffectManager.addAnimation(
-            StateType.STATE_SKILL_EFFECT.stateType,
-            "Hero/Achers/spriteSheet/arrow_shower_effect_1.png",
-            SKILL_EFFECT_FRAME_COLS, SKILL_EFFECT_FRAME_ROWS, skillEffectDuration,
-            true
-        );
+
 // Arrow animation
             arrowAnimManager = new AnimationManager();
             arrowAnimManager.addAnimation(
@@ -130,7 +117,6 @@ public class Archer extends Player {
     public void render(SpriteBatch batch, float deltaTime) {
         stateTime += deltaTime;
         animationManager.update(deltaTime);
-
         for (Arrow arrow : arrows) {
             arrow.render(batch);
         }
@@ -143,18 +129,8 @@ public class Archer extends Player {
                 entityX, entityY
             );
         }
-
-        if(showSkill)
-        {
-            skillStateTime += deltaTime;
-            skillEffectManager.update(deltaTime);
-
-            TextureRegion skillEffectFrame = skillEffectManager.getCurrentFrame();
-            if(skillEffectFrame != null)
-            {
-                batch.draw(skillEffectFrame, skillX, skillY);
-            }
-        }
+        if(archerBeamSkill.isActive())
+            archerBeamSkill.render(batch, deltaTime);
     }
 
     @Override
@@ -173,7 +149,7 @@ public class Archer extends Player {
                 iter.remove();
             }
         }
-
+        archerBeamSkill.update(deltaTime, enemyList);
     }
 
     public void updateWithDeltaTime(float deltaTime)
@@ -189,21 +165,17 @@ public class Archer extends Player {
 
         inputHandle.handleInput();
 
-        if(inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking)
-        {
-            if(!isUsingSkill)
-            {
-                isUsingSkill = true;
-                animationManager.setState(StateType.STATE_SKILL.stateType, true);
+        if(inputHandle.isActionActive(InputHandle.ACTION_SKILL)
+            && !isAttacking && !isUsingSkill
+            && animationManager.getCurrentState().equals("idle")) {
 
-                showSkill = true;
-                skillStateTime = 0f;
-                skillX = entityX + (facingRight ? 100 : -100);
-                skillY = entityY;
-
-                skillEffectManager.setState( StateType.STATE_SKILL_EFFECT.stateType, true);
-            }
+        if (archerBeamSkill.isReady()) {
+            isUsingSkill = true;
+            skillTriggered = false;
+            animationManager.setState(StateType.STATE_ATTACK.stateType, true);
         }
+    }
+
         if(!animationManager.getCurrentState().equals("attack"))
         heroMovement.update();
 
@@ -220,8 +192,18 @@ public class Archer extends Player {
     public void updateAnimationState(float deltaTime)
     {
         if (isUsingSkill) {
+            float progress = animationManager.getAnimationProgress();
+
+            if (!skillTriggered && progress >= 0.5f) {
+                skillX = entityX + (facingRight ? +130 : 90);
+                skillY = entityY + 20;
+                archerBeamSkill.activate(skillX, skillY, isFacingRight());
+                skillTriggered = true;
+            }
+
             if (animationManager.isAnimationFinished()) {
                 isUsingSkill = false;
+                skillTriggered = false;
                 if (heroMovement.isMoving()) {
                     animationManager.setState(StateType.STATE_RUN.stateType, true);
                 } else {
@@ -233,7 +215,6 @@ public class Archer extends Player {
 
         if (isAttacking) {
             float progress = animationManager.getAnimationProgress();
-            System.out.println(progress);
             if (!attackTriggered && progress >= 0.5) {
                 float arrowX = entityX + (facingRight ? + 95 : 65);
                 float arrowY = entityY + 5;
