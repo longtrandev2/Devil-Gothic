@@ -178,6 +178,7 @@ public class EnemySpawnController {
             enemy.update(deltaTime);
 
             if (enemy.isDead()) {
+
                 activeBoss.remove(i);
             }
         }
@@ -273,9 +274,6 @@ public class EnemySpawnController {
 
     public void setCurrentWave(int currentWave) {
         this.currentWave = currentWave;
-
-    public boolean isBossWave() {
-        return isBossWave;
-
     }
+
 }

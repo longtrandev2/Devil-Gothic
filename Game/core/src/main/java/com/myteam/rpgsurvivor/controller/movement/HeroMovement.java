@@ -23,7 +23,6 @@ public class HeroMovement extends Movement{
 
     public HeroMovement(Entity entity) {
         this.entity = entity;
-        System.out.println(entity);
         this.direction = new Vector2(0, 0);
         this.isMoving = false;
 

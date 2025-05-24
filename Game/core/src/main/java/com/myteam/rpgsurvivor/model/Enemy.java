@@ -101,7 +101,6 @@ public abstract class Enemy extends Entity {
         this.enemyMovement = new EnemyMovement(x,y,player,enemyType.stat.moveSpeed);
         this.animationManager = animationFactory.createEnemyAnimation(enemyType);
         this.currentState = StateType.STATE_IDLE;
-        shapeRenderer = new ShapeRenderer();
 
 
         this.attackCooldown = 1f / stat.attackSpeed;
@@ -147,7 +146,6 @@ public abstract class Enemy extends Entity {
         this.enemyMovement = new EnemyMovement(x,y,player,bossType.stat.moveSpeed);
         this.animationManager = animationFactory.createBossAnimation(bossType);
         this.currentState = StateType.STATE_IDLE;
-        shapeRenderer = new ShapeRenderer();
 
 
         this.attackCooldown = 1f / stat.attackSpeed;
@@ -308,7 +306,10 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
-        if (isDead || animationManager == null) return;
+        if (isDead || animationManager == null) {
+
+            return;
+        }
 
         update(deltaTime);
 
@@ -383,7 +384,6 @@ public abstract class Enemy extends Entity {
 
         if(currentState == StateType.STATE_ATTACK) {
             targetPlayer.takeDamge(getDamage());
-            System.out.println("takedamge");
             targetPlayer.onHurt();
         }
     }
@@ -410,13 +410,20 @@ public abstract class Enemy extends Entity {
         animationManager.setState(StateType.STATE_HURT.stateType, true);
     }
 
-    public void applyKnockback(Vector2 force) {
-        // Giới hạn lực bật lùi không vượt quá max
-        if (force.len() > maxKnockbackSpeed) {
-            force.setLength(maxKnockbackSpeed);
-        }
-        velocity.add(force);
+    public void onDeath() {
+//        if(is)
     }
 
+    public void applyExternalForce(float dx, float dy) {
+        this.entityX+= dx;
+        this.entityY += dy;
+        System.out.println(dx + " " + dy);
+        enemyMovement.updateEnemyPosition(this.entityX, this.entityY);
+    }
+
+
+    public boolean isBoss(){
+        return  bossName != null;
+    }
 
 }
