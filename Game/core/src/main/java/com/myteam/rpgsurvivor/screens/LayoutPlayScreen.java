@@ -2,12 +2,14 @@ package com.myteam.rpgsurvivor.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -20,6 +22,7 @@ import com.myteam.rpgsurvivor.model.Player;
 public class LayoutPlayScreen implements Screen {
     private Main game;
     private Stage stage;
+    private Stage deathStage;
     private Viewport viewport;
     private SpriteBatch batch;
     private Player chosenHero;
@@ -38,6 +41,18 @@ public class LayoutPlayScreen implements Screen {
     private Texture frameAvatar;
     private Texture frameBlood;
     private Texture bloodTexture;
+
+    private Texture endStage;
+    private Texture yesUnAtive;
+    private Texture yesActive;
+    private Texture noUnActive;
+    private Texture noActive;
+    private ImageButton yesBtn;
+    private ImageButton noBtn;
+
+    private static final float END_STAGE_DURATION = 3f;
+    private float endStageTimer = 0f;
+    private boolean playerDeathHandled = false;
 
     private TextureRegion fullBloodFrame;
 
@@ -74,6 +89,7 @@ public class LayoutPlayScreen implements Screen {
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
+        this.deathStage = new Stage(viewport, batch);
         this.heroType = heroType;
         this.chosenHero = chosenHero;
         maxHealth = chosenHero.getMaxHealth();
@@ -141,12 +157,29 @@ public class LayoutPlayScreen implements Screen {
             frameAvatar = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung ava.png"));
             frameBlood = new Texture(Gdx.files.internal("Menu/IngameIcon/Khung Blood(1)(1)-1.png.png"));
             bloodTexture = new Texture(Gdx.files.internal("Menu/IngameIcon/Blood.png"));
+            endStage = new Texture(Gdx.files.internal("Menu/NoticeStage/YouDied.png"));
+            yesUnAtive = new Texture(Gdx.files.internal("Menu/NoticeStage/YesUnActive.png"));
+            yesActive = new Texture(Gdx.files.internal("Menu/NoticeStage/YesActive.png"));
+            noUnActive = new Texture(Gdx.files.internal("Menu/NoticeStage/NoUnActive.png"));
+            noActive = new Texture(Gdx.files.internal("Menu/NoticeStage/NoActive.png"));
 
             setupBloodFrames();
+            setupDeathScreen();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    public void setupDeathScreen() {
+        deathStage.clear();
+        Image deathImage = new Image(endStage);
+        float centerX = Gdx.graphics.getWidth() / 2f;
+        float centerY = Gdx.graphics.getHeight() / 2f;
+
+        deathImage.setPosition(centerX - deathImage.getWidth() / 2f, centerY - deathImage.getHeight() / 2f);
+        deathStage.addActor(deathImage);
+    }
+
     private void setupBloodFrames()
     {
         fullBloodFrame = new TextureRegion();
@@ -162,6 +195,29 @@ public class LayoutPlayScreen implements Screen {
 
 //        System.out.println(currentHealth + "/" + maxHealth + ": " + healthPercent);
 
+    }
+
+    private void handlePlayerDeath() {
+        if (!playerDeathHandled) {
+            playerDeathHandled = true;
+            endStageTimer = 0f;
+            isPaused = false; // Ensure game is not paused
+
+            // Hide pause screen if it's showing
+            if (pauseScreen != null) {
+                pauseScreen.hide();
+            }
+
+            System.out.println("Player died! Showing death screen...");
+        }
+    }
+
+    private void updateDeathTimer(float deltaTime) {
+        endStageTimer += deltaTime;
+        if (endStageTimer >= END_STAGE_DURATION) {
+            System.out.println("Death screen timer finished. Returning to main menu...");
+            game.setScreen(new MainMenuScreen(game));
+        }
     }
 
     public void createPauseButton() {
@@ -189,6 +245,36 @@ public class LayoutPlayScreen implements Screen {
         });
 
         stage.addActor(pauseButton);
+
+        yesBtn = createButton(yesUnAtive, yesActive);
+        noBtn = createButton(noUnActive, noActive);
+
+
+        yesBtn.setPosition(Gdx.graphics.getWidth() /2 - 200, Gdx.graphics.getHeight()/2 - 300);
+        noBtn.setPosition(Gdx.graphics.getWidth() /2 + 200, Gdx.graphics.getHeight()/2 - 300);
+
+        yesBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        noBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        deathStage.addActor(yesBtn);
+        deathStage.addActor(noBtn);
+    }
+
+    public ImageButton createButton(Texture unactiveBtn, Texture activeBtn) {
+        TextureRegionDrawable unactiveDrawable = new TextureRegionDrawable(unactiveBtn);
+        TextureRegionDrawable activeDrawable = new TextureRegionDrawable(activeBtn);
+        ImageButton button = new ImageButton(unactiveDrawable, activeDrawable);
+        return button;
     }
 
     @Override
@@ -198,6 +284,16 @@ public class LayoutPlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (chosenHero.isDead()) {
+            Gdx.input.setInputProcessor(deathStage);
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            handlePlayerDeath();
+            deathStage.act(delta);
+            deathStage.draw();
+            return;
+        }
+
         Gdx.input.setInputProcessor(stage);
         updateHealth(chosenHero.getCurrentHealth());
         stage.act(Gdx.graphics.getDeltaTime());
@@ -227,7 +323,6 @@ public class LayoutPlayScreen implements Screen {
                 bloodBarHeight);
 
 
-            //Cập nhật lại % máu
             float healthPercent = currentHealth /(float) maxHealth;
             float currentBloodWidth = innerBloodWidth * healthPercent;
 

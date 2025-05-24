@@ -178,21 +178,27 @@ public class MapScreen implements Screen {
 
         batch.begin();
 
-        layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
+        if(chosenHero.isDead())
+        {
+            layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
+        }
+        else
+        {
+            layoutPlayScreen.render(Gdx.graphics.getDeltaTime());
+            if (!isPaused()) {
+                if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
+                    chosenHero.render(batch, Gdx.graphics.getDeltaTime());
+                    boolean isBossWave = enemySpawnController.isBossWave();
+                    //System.out.println(isBossWave);
 
-        if (!isPaused()) {
-            if (enemySpawnController != null && !systemController.isWaitingForNextStage()) {
-                chosenHero.render(batch, Gdx.graphics.getDeltaTime());
-                boolean isBossWave = enemySpawnController.isBossWave();
-                //System.out.println(isBossWave);
-
-                if (isBossWave) {
-                    enemySpawnController.renderBoss(batch, Gdx.graphics.getDeltaTime());
+                    if (isBossWave) {
+                        enemySpawnController.renderBoss(batch, Gdx.graphics.getDeltaTime());
+                    } else {
+                        enemySpawnController.renderCreep(batch, Gdx.graphics.getDeltaTime());
+                    }
                 } else {
-                    enemySpawnController.renderCreep(batch, Gdx.graphics.getDeltaTime());
+                    systemController.render(Gdx.graphics.getDeltaTime());
                 }
-            } else {
-                systemController.render(Gdx.graphics.getDeltaTime());
             }
         }
 

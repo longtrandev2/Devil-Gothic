@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.myteam.rpgsurvivor.model.impl.Hero.Samurai;
 import com.myteam.rpgsurvivor.input.InputHandle;
 
-public class SamuraiSkill {
+public class SamuraiDashing {
     private Samurai samurai;
     private int damage;
     private float range;
@@ -22,7 +22,7 @@ public class SamuraiSkill {
     private float lastDashTime;
     private float gameTime;
 
-    public SamuraiSkill(Samurai samurai) {
+    public SamuraiDashing(Samurai samurai) {
         this.samurai = samurai;
         this.damage = 50;
         this.range = 100;

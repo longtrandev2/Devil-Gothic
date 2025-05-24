@@ -28,11 +28,13 @@ public class SystemController implements Screen {
     private Main game;
     private MapScreen mapScreen;
     private Stage stage;
+    private Stage stage1;
     private Viewport viewport;
     private SpriteBatch batch;
     private UpgradeScreen upgradeScreen;
 
     private Texture frameStage;
+
 
     private int currentStage;
     private float stageTimer;
@@ -64,6 +66,7 @@ public class SystemController implements Screen {
         this.viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         this.batch = new SpriteBatch();
         this.stage = new Stage(viewport, batch);
+        this.stage1 = new Stage(viewport, batch);
         this.upgradeScreen = new UpgradeScreen(camera, game, player);
 
         this.currentStage = enemySpawnController.getCurrentWave();
@@ -78,6 +81,7 @@ public class SystemController implements Screen {
         this.isShowingUpgradeScreen = false;
 
         frameStage = new Texture(Gdx.files.internal("Menu/NoticeStage/Frame.png"));
+
 
         createFont();
         setupLabel(currentStage);
@@ -112,6 +116,7 @@ public class SystemController implements Screen {
             (Gdx.graphics.getWidth() / 2f) - (labelWidth / 2f) - 100,
             (Gdx.graphics.getHeight() / 2f) - (labelHeight / 2f) + 300
         );
+
 
         stage.addActor(stageFrame);
         stage.addActor(stageLabel);
