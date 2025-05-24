@@ -230,7 +230,11 @@ public abstract class Enemy extends Entity {
             attackbox.setPosition(entityX + offsetX - attackRange, entityY + offsetY);
         }
 
-        if (isDead) return;
+        if (isDead)
+        {
+            animationManager.setState(StateType.STATE_DEATH.stateType, true);
+            return;
+        }
 
         if (isHurt) {
             hurtTimer -= deltaTime;
@@ -307,10 +311,9 @@ public abstract class Enemy extends Entity {
     @Override
     public void render(SpriteBatch batch, float deltaTime) {
 
-        if (isDead || animationManager == null) {
-
-            return;
-        }
+//        if (isDead || animationManager == null) {
+//            return;
+//        }
 
 
         update(deltaTime);
@@ -319,13 +322,8 @@ public abstract class Enemy extends Entity {
 
         if (isDead)
         {
-//            if(animationManager == null) return;
-//            else
-//            {
-                animationManager.setState(StateType.STATE_DEATH.stateType, true);
                 batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
                 return;
-//            }
         }
 
 
@@ -435,5 +433,7 @@ public abstract class Enemy extends Entity {
     public boolean isBoss(){
         return  bossName != null;
     }
+
+
 
 }

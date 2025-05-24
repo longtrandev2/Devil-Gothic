@@ -161,4 +161,8 @@ public abstract class Entity {
     public void setAttackbox(Rectangle attackbox) {
         this.attackbox = attackbox;
     }
+
+    public AnimationManager getAnimationManager() {
+        return animationManager;
+    }
 }

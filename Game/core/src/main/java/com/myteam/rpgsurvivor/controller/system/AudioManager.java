@@ -15,8 +15,8 @@ public class AudioManager implements Disposable {
     private Sound btnClicked;
     private Sound atkSound;
 
-    private float musicVolume = 0.7f;
-    private float soundVolume = 0.8f;
+    private float musicVolume = 0.5f;
+    private float soundVolume = 0.5f;
     private boolean musicEnabled = true;
     private boolean soundEnabled = true;
 
