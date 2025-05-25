@@ -24,7 +24,7 @@ public class ArcherBeamSkill implements Skill {
     private Rectangle hitBox;
     private boolean hasDealtDamage = false;
 
-    private int damage = 50;
+    private int damage = 40;
 
     private AnimationManager animationManager;
 
@@ -125,5 +125,17 @@ public class ArcherBeamSkill implements Skill {
 
     public void dispose() {
 
+    }
+
+    public void upSkill(){
+        damage += 10;
+        if(cooldownTime <= 5) return;
+        cooldownTime -= 1;
+    }
+
+    public void downSkill(){
+        damage -= 10;
+        if(cooldownTime <= 5) return;
+        cooldownTime += 1;
     }
 }

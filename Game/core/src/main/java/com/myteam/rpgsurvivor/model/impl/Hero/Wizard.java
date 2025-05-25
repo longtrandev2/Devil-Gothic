@@ -44,7 +44,6 @@ public class Wizard extends Player {
 
     public Wizard(float x, float y) {
         super(x, y, HeroType.WIZARD);
-        this.animationManager = new AnimationManager();
         this.wizardPortalSkill = new WizardPortalSkill();
         setupAnimation();
     }
@@ -197,5 +196,14 @@ public class Wizard extends Player {
         isHurt = true;
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
+    }
+    @Override
+    public void updateSkill() {
+        wizardPortalSkill.upSkill();
+    }
+    @Override
+    public  void decreaseSkill() {
+        wizardPortalSkill.downSkill();
+
     }
 }

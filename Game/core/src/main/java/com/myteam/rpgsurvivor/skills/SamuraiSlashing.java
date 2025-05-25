@@ -19,6 +19,7 @@ public class SamuraiSlashing {
     private static final float SKILL_HITBOX_WIDTH = 100f;
     private static final float SKILL_HITBOX_HEIGHT = 60f;
 
+    private int damgeSlash = 30;
     private ShapeRenderer shapeRenderer;
 
     public SamuraiSlashing(Samurai samurai)
@@ -62,7 +63,7 @@ public class SamuraiSlashing {
         if (!skillDamageTriggered) {
             for (Enemy enemy : samurai.getEnemySpawnController().getActiveEnemies()) {
                 if (skillHitBox.overlaps(enemy.getHitBox())) {
-                    enemy.takeDamge(samurai.getDamage());
+                    enemy.takeDamge(damgeSlash);
                     System.out.println(enemy.getCurrentHealth());
                     skillDamageTriggered = true;
                     break;
@@ -73,23 +74,18 @@ public class SamuraiSlashing {
 
     public void render() {
         if (!showSkillHitBox) return;
-
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//
-//        shapeRenderer.setColor(Color.RED);
-//        shapeRenderer.rect(
-//            skillHitBox.x,
-//            skillHitBox.y,
-//            SKILL_HITBOX_WIDTH,
-//            SKILL_HITBOX_HEIGHT
-//        );
-//
-//        shapeRenderer.end();
-
         DebugRenderer.drawRect(skillHitBox,Color.RED);
     }
 
     public boolean isHitBoxVisible() {
         return showSkillHitBox;
+    }
+    public void upSkill(){
+        damgeSlash += 20f;
+    }
+
+
+    public void downSkill(){
+        damgeSlash -= 20f;
     }
 }

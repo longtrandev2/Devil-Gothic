@@ -345,6 +345,7 @@ public class UpgradeScreen implements Screen {
                 if (availablePoints > 0) {
                     skillMod++;
                     availablePoints--;
+                    player.spendSkillPointOnSKill();
                     updateLabels();
                 }
             }
@@ -408,6 +409,7 @@ public class UpgradeScreen implements Screen {
                 if (skillMod > 0) {
                     skillMod--;
                     availablePoints++;
+                    player.deSpendSkillPointOnSKill();
                     updateLabels();
                 }
             }

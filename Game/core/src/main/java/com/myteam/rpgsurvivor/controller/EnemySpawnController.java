@@ -38,6 +38,8 @@ public class EnemySpawnController {
     private boolean isPaused;
     private boolean isBossWave;
     private boolean bossSpawned;
+    private int difficulty = 0;
+
 
     public EnemySpawnController(Player player, TiledMap map) {
         this.player = player;
@@ -103,6 +105,7 @@ public class EnemySpawnController {
     public void spawnEnemy() {
         Vector2 spawnPos = spawnPointManager.getRandomSpawnPosition();
         Enemy enemy = createRandomEnemy(spawnPos.x, spawnPos.y);
+        enemy.applyDifficulty(difficulty);
         activeEnemy.add(enemy);
     }
 
@@ -147,8 +150,8 @@ public class EnemySpawnController {
                 return new Skeleton(x, y, player, enemyAnimation);
             case RAT:
                 return new Rat(x, y, player, enemyAnimation);
-            case ORC:
-                return new Orc(x, y, player, enemyAnimation);
+//            case ORC:
+//                return new Orc(x, y, player, enemyAnimation);
             case VAMPIRE:
                 return new Vampire(x, y, player, enemyAnimation);
             default:
@@ -280,4 +283,11 @@ public class EnemySpawnController {
         this.currentWave = currentWave;
     }
 
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
 }

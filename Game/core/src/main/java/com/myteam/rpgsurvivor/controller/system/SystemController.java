@@ -148,6 +148,7 @@ public class SystemController implements Screen {
         stageTransitionTimer = 0f;
         enemySpawnController.pauseSpawning();
         showUpgradeScreen();
+        System.out.println(player.getCurrentHealth());
         System.out.println("Stage " + currentStage + " cleared. Preparing for next stage.");
     }
 
@@ -164,25 +165,29 @@ public class SystemController implements Screen {
         isShowingUpgradeScreen = false;
         stageCompleted = false;
         isWaitingForNextStage = false;
-        player.addSkillPoints(10);
+        player.addSkillPoints(1);
+        enemySpawnController.setDifficulty(enemySpawnController.getDifficulty() + 1);
         enemySpawnController.setTotalDeaths(0);
         enemySpawnController.resumeSpawning();
 
         setupLabel(currentStage);
         adjustEnemySpawn();
-
+        player.recover10PercentHealth();
         System.out.println("Starting Stage " + currentStage);
     }
 
     private void adjustEnemySpawn() {
-        int currentMaxEnemies = enemySpawnController.getEnemiesPerWave();
-        enemySpawnController.setEnemiesPerWave(Math.min(currentMaxEnemies + 5, 100));
+        int waveNumber = enemySpawnController.getCurrentWave();
+        enemySpawnController.setEnemiesPerWave(Math.min(waveNumber * 2 + 3, 100));
 
         float currentSpawnInterval = enemySpawnController.getSpawnInterval();
         enemySpawnController.setSpawnInterval(Math.max(currentSpawnInterval * 0.9f, 0.5f));
 
         float currentTimeBetweenWaves = enemySpawnController.getTimeBetweenWaves();
         enemySpawnController.setTimeBetweenWaves(Math.max(currentTimeBetweenWaves * 0.9f, 15f));
+
+        int maxEnemeyperWave = enemySpawnController.getMaxEnemiesOnMap();
+        enemySpawnController.setMaxEnemiesOnMap(Math.min(maxEnemeyperWave + waveNumber * 2 , 100));
     }
 
     private void updateDifficulty() {

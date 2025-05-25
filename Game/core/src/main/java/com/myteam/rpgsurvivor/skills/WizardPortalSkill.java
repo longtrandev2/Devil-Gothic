@@ -19,15 +19,15 @@ public class WizardPortalSkill implements Skill {
     private float cooldownRemaining = 0f;
 
     private boolean isActive = false;
-    private float duration = 6f;
+    private float duration = 5f;
     private float elapsed = 0f;
 
     private float centerX, centerY;
-    private float pullRadius = 40;
-    private float pullStrength = 130f;
+    private float pullRadius = 30;
+    private float pullStrength = 150f;
 
     private float damageAccumulator = 0f;
-    private final float damagePerSecond = 10f;
+    private  float damagePerSecond = 20f;
 
     private static final int   SKILL_EFFECT_FRAME_COLS = 7;
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
@@ -138,5 +138,21 @@ public class WizardPortalSkill implements Skill {
     public void dispose() {
 //        iconTexture.dispose();
 //        skillEffectTexture.dispose();
+    }
+
+   public void upSkill(){
+        damagePerSecond += 10f;
+        duration += 1f;
+        pullRadius += 5f;
+       if(cooldownTime <= 5) return;
+       cooldownTime -= 1;
+   }
+
+    public void downSkill(){
+        damagePerSecond -= 10f;
+        duration -= 1f;
+        pullRadius -= 5f;
+        if(cooldownTime <= 5) return;
+        cooldownTime += 1;
     }
 }

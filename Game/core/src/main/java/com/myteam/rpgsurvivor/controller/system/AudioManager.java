@@ -42,7 +42,7 @@ public class AudioManager implements Disposable {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }   
 
     public void playMenuMusic() {
         if (!musicEnabled || menuMusic == null) return;
