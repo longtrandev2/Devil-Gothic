@@ -46,7 +46,6 @@ public class SystemController implements Screen {
     private boolean isWaitingForNextStage;
     private boolean isShowingUpgradeScreen;
 
-    private float difficulty;
 
     private BitmapFont font;
     private Label.LabelStyle description;
@@ -73,7 +72,6 @@ public class SystemController implements Screen {
         this.stageTimer = 0f;
         this.stageDuration = 30f;
         this.stageCompleted = false;
-        this.difficulty = 1f;
 
         this.stageTransitionTimer = 0f;
         this.stageTransitionDelay = 10f;
@@ -138,7 +136,6 @@ public class SystemController implements Screen {
             prepareForNextStage();
         }
 
-        updateDifficulty();
     }
 
 
@@ -165,8 +162,8 @@ public class SystemController implements Screen {
         isShowingUpgradeScreen = false;
         stageCompleted = false;
         isWaitingForNextStage = false;
-        player.addSkillPoints(1);
-        enemySpawnController.setDifficulty(enemySpawnController.getDifficulty() + 1);
+        player.addSkillPoints(2);
+        enemySpawnController.setDifficulty(currentStage - 1);
         enemySpawnController.setTotalDeaths(0);
         enemySpawnController.resumeSpawning();
 
@@ -190,9 +187,6 @@ public class SystemController implements Screen {
         enemySpawnController.setMaxEnemiesOnMap(Math.min(maxEnemeyperWave + waveNumber * 2 , 100));
     }
 
-    private void updateDifficulty() {
-        difficulty = 1f + (currentStage - 1) * 0.2f;
-    }
 
     @Override
     public void show() {

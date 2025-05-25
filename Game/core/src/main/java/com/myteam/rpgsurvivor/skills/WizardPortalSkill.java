@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.PrimitiveIterator;
 
 public class WizardPortalSkill implements Skill {
-    private float cooldownTime = 10f;
+    private float cooldownTime = 15;
     private float cooldownRemaining = 0f;
 
     private boolean isActive = false;
@@ -23,12 +23,12 @@ public class WizardPortalSkill implements Skill {
     private float elapsed = 0f;
 
     private float centerX, centerY;
-    private float pullRadius = 30;
+    private float pullRadius = 35;
     private float pullStrength = 150f;
 
     private float damageAccumulator = 0f;
     private  float damagePerSecond = 20f;
-
+    private float upSize = 0;
     private static final int   SKILL_EFFECT_FRAME_COLS = 7;
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
     private static final float skillFrameDuration = 0.1f;
@@ -104,10 +104,10 @@ public class WizardPortalSkill implements Skill {
         animationManager.update(deltaTime);
         this.skillEffectTexture =
             animationManager.getCurrentFrame() ;
-        System.out.println(skillEffectTexture);
+
         float width = skillEffectTexture.getRegionWidth();
         float height = skillEffectTexture.getRegionHeight();
-        batch.draw(skillEffectTexture, centerX - width / 2f, centerY - height / 2f);
+        batch.draw(skillEffectTexture, centerX - width / 2f, centerY - height / 2f, width + upSize, height + upSize);
         DebugRenderer.drawCircle(hitboxPortal, Color.WHITE);
     }
 
@@ -141,18 +141,20 @@ public class WizardPortalSkill implements Skill {
     }
 
    public void upSkill(){
-        damagePerSecond += 10f;
-        duration += 1f;
+        damagePerSecond += 5f;
+        duration += 0.5f;
         pullRadius += 5f;
-       if(cooldownTime <= 5) return;
-       cooldownTime -= 1;
+        upSize+=5f;
+       if(cooldownTime <= 8) return;
+       cooldownTime -= 0.5;
    }
 
     public void downSkill(){
-        damagePerSecond -= 10f;
-        duration -= 1f;
+        damagePerSecond -= 5f;
+        duration -= 0.5f;
         pullRadius -= 5f;
-        if(cooldownTime <= 5) return;
-        cooldownTime += 1;
+        upSize -=5f;
+        if(cooldownTime <= 8) return;
+        cooldownTime += 0.5;
     }
 }

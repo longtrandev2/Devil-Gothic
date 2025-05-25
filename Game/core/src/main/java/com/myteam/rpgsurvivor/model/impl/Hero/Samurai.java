@@ -35,6 +35,8 @@ public class Samurai extends Player {
     private float dashAttackStateTime = 0f;
     private boolean dashJustEnded = false;
 
+    private float cooldownTime = 10;
+    private float cooldownRemaining = 0;
 
     private static final int IDLE_FRAME_COLS = 10;
     private static final int IDLE_FRAME_ROWS = 1;
@@ -174,6 +176,9 @@ public class Samurai extends Player {
 
     @Override
     public void update(float deltaTime) {
+        if (cooldownRemaining > 0) {
+            cooldownRemaining -= deltaTime;
+        }
         deltaTime = 1/60f;
         updateWithDelta(deltaTime);
         super.update(deltaTime);
@@ -202,9 +207,9 @@ public class Samurai extends Player {
 
 
         if (inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking && !isUsingSkill
-            && skillHandler.canDash()) {
+            && skillHandler.canDash() && isReady()) {
             isUsingSkill = true;
-
+            cooldownRemaining = cooldownTime;
             showSmoke = true;
             smokeStateTime = 0f;
             smokeX = entityX - 10;
@@ -339,10 +344,17 @@ public class Samurai extends Player {
     @Override
     public void updateSkill() {
         skillSlashing.upSkill();
+        cooldownTime -= 0.5f;
+        cooldownTime = Math.max(cooldownTime, 8f);
     }
     @Override
     public  void decreaseSkill() {
         skillSlashing.downSkill();
     }
+
+    public boolean isReady() {
+        return cooldownRemaining <= 0;
+    }
+
 }
 

@@ -129,8 +129,8 @@ public class Wizard extends Player {
         }
         if (inputHandle.isActionActive(InputHandle.ACTION_SKILL) && !isAttacking && animationManager.getCurrentState().equals("idle")) {
             if (wizardPortalSkill.isReady()) {
-                skillX = entityX + (facingRight ? 150 : -150);
-                skillY = entityY;
+                skillX = entityX + (facingRight ? 150 : -50);
+                skillY = entityY + 30;
                 wizardPortalSkill.activate(skillX, skillY);
             }
         }

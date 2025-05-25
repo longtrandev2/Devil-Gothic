@@ -146,22 +146,6 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        continueBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("MainMenuScreen", "Play button clicked");
-                audioManager.playButtonClickSound();
-                loadSavedMapScreen();
-            }
-        });
-
-        settingButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("MainMenuScreen", "Settings button clicked");
-                audioManager.playButtonClickSound();
-            }
-        });
 
         exitButton.addListener(new ClickListener() {
             @Override
@@ -181,16 +165,16 @@ public class MainMenuScreen implements Screen {
 
 
 
-        playButton.setPosition(150, 280);
+        playButton.setPosition(425, 250);
         stage.addActor(playButton);
 
-        continueBtn.setPosition(150, 120);
-        stage.addActor(continueBtn);
+//        continueBtn.setPosition(150, 120);
+//        stage.addActor(continueBtn);
+//
+//        settingButton.setPosition(900, 280);
+//        stage.addActor(settingButton);
 
-        settingButton.setPosition(900, 280);
-        stage.addActor(settingButton);
-
-        exitButton.setPosition(900, 120);
+        exitButton.setPosition(550, 100);
         stage.addActor(exitButton);
 
 

@@ -11,7 +11,7 @@ import com.myteam.rpgsurvivor.model.enum_type.StateType;
 import java.util.List;
 
 public class ArcherBeamSkill implements Skill {
-    private float cooldownTime = 10f;
+    private float cooldownTime = 13f;
     private float cooldownRemaining = 0f;
 
     private boolean isActive = false;
@@ -129,13 +129,13 @@ public class ArcherBeamSkill implements Skill {
 
     public void upSkill(){
         damage += 10;
-        if(cooldownTime <= 5) return;
+        if(cooldownTime <= 8) return;
         cooldownTime -= 1;
     }
 
     public void downSkill(){
         damage -= 10;
-        if(cooldownTime <= 5) return;
+        if(cooldownTime <= 8) return;
         cooldownTime += 1;
     }
 }

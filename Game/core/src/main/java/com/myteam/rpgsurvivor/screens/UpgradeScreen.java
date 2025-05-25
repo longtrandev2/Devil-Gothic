@@ -240,7 +240,7 @@ public class UpgradeScreen implements Screen {
         damageMod = player.getDamage();
         speedMod = (int)player.getMoveSpeed();
         atkSpeedMod = (int)(player.getAttackSpeed() * 100); // Convert to integer for display
-        skillMod = 0;
+        skillMod = player.getLevelSkillPoints();
 
         availablePointsLabel = new Label("Available Points: " + availablePoints, description);
         availablePointsLabel.setPosition(Gdx.graphics.getWidth() / 2 + 180, Gdx.graphics.getHeight() / 2 - 235);

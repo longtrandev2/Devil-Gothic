@@ -28,7 +28,7 @@ public abstract class Player extends Entity{
     protected int damagePoints;
     protected int speedPoints;
     protected int atkSpeedPoints;
-    protected int damgeSKillPoints;
+    protected int levelSkillPoints;
     protected EnemySpawnController enemySpawnController;
     protected HeroType heroType;
     protected InputHandle inputHandle;
@@ -48,7 +48,6 @@ public abstract class Player extends Entity{
     protected boolean skillTriggered = false;
 
     protected ArrayList<Enemy> enemyList;
-    private boolean enemyTurn = true;
 
     public Player(float x, float y, HeroType heroType) {
         this.entityX = x;
@@ -67,12 +66,12 @@ public abstract class Player extends Entity{
         this.level = 1;
         this.experience = 0;
         this.mana = 100;
-        this.skillPoints = 1;
+        this.skillPoints = 2;
         this.healthPoints = 0;
         this.damagePoints = 0;
         this.speedPoints = 0;
         this.atkSpeedPoints = 0;
-        this.damgeSKillPoints = 0;
+        this.levelSkillPoints = 0;
         this.currentHealth = stat.maxHealth;
         this.isInvisible = false;
         this.isInvulnerable = false;
@@ -92,10 +91,8 @@ public abstract class Player extends Entity{
     public void update(float deltaTime){
         if(enemySpawnController.isBossWave()) {
             enemyList = enemySpawnController.getActiveBoss();
-            enemyTurn = false;
-        } else if(enemyTurn) {
+        } else  {
             enemyList = enemySpawnController.getActiveEnemies();
-            enemyTurn = false;
         }
         this.setCurrentHealth(max(0, this.currentHealth));
         hitbox.setPosition(entityX + offsetX  ,entityY + offsetY);
@@ -218,7 +215,7 @@ public abstract class Player extends Entity{
 
     public void deSpendSkillPointOnSKill() {
         skillPoints++;
-        damgeSKillPoints--;
+        levelSkillPoints--;
         decreaseLevelSkill();
     }
 
@@ -252,7 +249,7 @@ public abstract class Player extends Entity{
 
     public void spendSkillPointOnSKill() {
         skillPoints--;
-        damgeSKillPoints++;
+        levelSkillPoints++;
         increaseLevelSkill();
     }
 
@@ -270,6 +267,9 @@ public abstract class Player extends Entity{
 
     public int getAttackSpeedPoints() {
         return atkSpeedPoints;
+    }
+    public int getLevelSkillPoints() {
+        return levelSkillPoints;
     }
 
     public HeroType getHeroType() {

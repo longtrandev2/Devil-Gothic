@@ -17,7 +17,7 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-        configuration.setTitle("rpgsurvivor");
+        configuration.setTitle("Devil Gothic");
         //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
         //// screen tearing. This setting doesn't always work on Linux, so the line after is a safeguard.
         configuration.useVsync(true);
@@ -31,7 +31,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(1280, 770);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setWindowIcon("logo-128.png", "logo-64.png", "logo-32.png", "logo-16.png");
         return configuration;
     }
 }

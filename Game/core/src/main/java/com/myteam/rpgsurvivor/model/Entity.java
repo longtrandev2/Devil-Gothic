@@ -25,6 +25,7 @@ public abstract class Entity {
     protected boolean isHurt = false;
 
     public abstract void render(SpriteBatch batch, float deltaTime);
+
     public abstract void update(float deltaTime);
 
     // Các getter và setter cần thiết cho Movement
@@ -85,20 +86,20 @@ public abstract class Entity {
         this.stat.moveSpeed = moveSpeed;
     }
 
-    public float getAttackSpeed(){
-        if(this.stat.attackSpeed <= 0.003) return 0.03f;
+    public float getAttackSpeed() {
+        if (this.stat.attackSpeed <= 0.003) return 0.03f;
         return this.stat.attackSpeed;
     }
 
-    public void setAttackSpeed(float attackSpeed){
-       this.stat.attackSpeed = attackSpeed;
+    public void setAttackSpeed(float attackSpeed) {
+        this.stat.attackSpeed = attackSpeed;
     }
 
-    public float getRangeAttack(){
+    public float getRangeAttack() {
         return this.stat.rangeAttack;
     }
 
-    public void setRangeAttack(float rangeAttack){
+    public void setRangeAttack(float rangeAttack) {
         this.stat.rangeAttack = rangeAttack;
     }
 
@@ -113,9 +114,9 @@ public abstract class Entity {
         return currentFrame != null ? currentFrame.getRegionHeight() : 0;
     }
 
-    public void takeDamge(int damage){
+    public void takeDamge(int damage) {
         currentHealth -= damage;
-        if(currentHealth <= 0){
+        if (currentHealth <= 0) {
             die();
         }
     }
@@ -132,8 +133,7 @@ public abstract class Entity {
         isDead = true;
     }
 
-    public boolean isDead()
-    {
+    public boolean isDead() {
         return isDead;
     }
 
@@ -145,14 +145,15 @@ public abstract class Entity {
         this.hitbox = hitbox;
     }
 
-    public void setState(String currentState){
+    public void setState(String currentState) {
         animationManager.setState(currentState, true);
     }
 
-    public void setAttack(){
+    public void setAttack() {
         isAttack = true;
     }
-    public boolean isAttack(){
+
+    public boolean isAttack() {
         return isAttack;
     }
 
@@ -165,19 +166,19 @@ public abstract class Entity {
     }
 
     public void recover10PercentHealth() {
-        this.setCurrentHealth(Math.min(this.getMaxHealth(), this.getCurrentHealth() + (int)(this.getMaxHealth() * 0.1f)));
+        this.setCurrentHealth(Math.min(this.getMaxHealth(), this.getCurrentHealth() + (int) (this.getMaxHealth() * 0.1f)));
         System.out.println("recover10PercentHealth" + this.currentHealth + "/" + this.getMaxHealth());
 
     }
 
-    public void onHurt()
-    {
+    public void onHurt() {
         isHurt = true;
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
 
-
-    public AnimationManager getAnimationManager() {
-        return animationManager;
     }
-}
+        public AnimationManager getAnimationManager() {
+            return animationManager;
+        }
+    }
+

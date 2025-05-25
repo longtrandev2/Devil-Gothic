@@ -440,10 +440,10 @@
         }
 
         public void applyDifficulty(int difficulty) {
-            float scale = 1f + 0.05f * difficulty; // scale +10% mỗi cấp
+            float scale = 1f + 0.15f * difficulty;
             this.stat.maxHealth *= scale;
             this.stat.damage *= scale;
-            this.stat.moveSpeed *= 1f + 0.02f * difficulty; // tốc độ tăng nhẹ
+            this.stat.moveSpeed *= 1f + 0.01f * difficulty;
         }
     }
-}
+

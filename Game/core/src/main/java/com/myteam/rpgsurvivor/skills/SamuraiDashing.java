@@ -143,4 +143,6 @@ public class SamuraiDashing {
     public float getRange() {
         return range;
     }
+
+
 }
