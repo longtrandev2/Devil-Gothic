@@ -166,10 +166,12 @@ public class EnemySpawnController {
             enemy.update(deltaTime);
 
             if (enemy.isDead()) {
-                activeEnemy.remove(i);
-                totalDeath++;
-                if (totalDeath >= enemiesPerWave) {
-                    prepareToNextStage = true;
+                if (enemy.getAnimationManager().isAnimationFinished()) {
+                    activeEnemy.remove(i);
+                    totalDeath++;
+                    if (totalDeath >= enemiesPerWave) {
+                        prepareToNextStage = true;
+                    }
                 }
             }
         }
@@ -182,8 +184,9 @@ public class EnemySpawnController {
             enemy.update(deltaTime);
 
             if (enemy.isDead()) {
-
-                activeBoss.remove(i);
+                if (enemy.getAnimationManager().isAnimationFinished()) {
+                    activeBoss.remove(i);
+                }
             }
         }
 

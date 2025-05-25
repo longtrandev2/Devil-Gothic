@@ -223,6 +223,12 @@
 
             hitbox.setPosition(entityX + offsetX, entityY + offsetY);
 
+        if (isDead)
+        {
+            animationManager.setState(StateType.STATE_DEATH.stateType, true);
+            return;
+        }
+
             // Cập nhật vị trí attackbox
             if(isFacingRight()){
                 attackbox.setPosition(entityX + offsetX , entityY + offsetY);
@@ -307,26 +313,23 @@
         @Override
         public void render(SpriteBatch batch, float deltaTime) {
 
-            if (isDead || animationManager == null) {
 
-                return;
-            }
+//        if (isDead || animationManager == null) {
+//            return;
+//        }
+
 
 
             update(deltaTime);
 
             animationManager.update(deltaTime);
 
-            if (isDead)
-            {
-    //            if(animationManager == null) return;
-    //            else
-    //            {
-                    animationManager.setState(StateType.STATE_DEATH.stateType, true);
-                    batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
-                    return;
-    //            }
-            }
+
+        if (isDead)
+        {
+                batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
+                return;
+        }
 
 
             // Thiết lập hướng di chuyển
@@ -443,3 +446,4 @@
             this.stat.moveSpeed *= 1f + 0.02f * difficulty; // tốc độ tăng nhẹ
         }
     }
+}
