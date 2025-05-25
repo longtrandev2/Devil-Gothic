@@ -1,4 +1,4 @@
-# Mẫu Báo Cáo Kết Quả Bài Tập Code Game
+# Báo Cáo Kết Quả Bài Tập Code Game
 
 ## 1. Thông Tin Nhóm
 
