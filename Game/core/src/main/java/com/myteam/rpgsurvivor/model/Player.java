@@ -28,6 +28,7 @@ public abstract class Player extends Entity{
     protected int damagePoints;
     protected int speedPoints;
     protected int atkSpeedPoints;
+    protected int damgeSKillPoints;
     protected EnemySpawnController enemySpawnController;
     protected HeroType heroType;
     protected InputHandle inputHandle;
@@ -66,11 +67,12 @@ public abstract class Player extends Entity{
         this.level = 1;
         this.experience = 0;
         this.mana = 100;
-        this.skillPoints = 10;
+        this.skillPoints = 1;
         this.healthPoints = 0;
         this.damagePoints = 0;
         this.speedPoints = 0;
         this.atkSpeedPoints = 0;
+        this.damgeSKillPoints = 0;
         this.currentHealth = stat.maxHealth;
         this.isInvisible = false;
         this.isInvulnerable = false;
@@ -83,6 +85,7 @@ public abstract class Player extends Entity{
 
         this.heroMovement = new HeroMovement(this);
         this.inputHandle = new InputHandle(this, heroMovement);
+        this.animationManager = new AnimationManager();
     }
 
     @Override
@@ -161,7 +164,17 @@ public abstract class Player extends Entity{
 
     public void decreaseAttackSpeed()
     {
-        this.setAttackSpeed(getAttackSpeed() - 0.2f);
+        this.setAttackSpeed(getAttackSpeed() + 0.005f);
+    }
+
+    public void increaseLevelSkill()
+    {
+        this.updateSkill();
+    }
+
+    public void decreaseLevelSkill()
+    {
+        this.decreaseSkill();
     }
 
 
@@ -203,6 +216,14 @@ public abstract class Player extends Entity{
             decreaseAttackSpeed();
     }
 
+    public void deSpendSkillPointOnSKill() {
+        skillPoints++;
+        damgeSKillPoints--;
+        decreaseLevelSkill();
+    }
+
+
+
     public void spendSkillPointOnHealth() {
             skillPoints--;
             healthPoints++;
@@ -227,7 +248,12 @@ public abstract class Player extends Entity{
             atkSpeedPoints++;
             increaseAttackSpeed();
             animationManager.changeDurationAtk(this.getAttackSpeed());
+    }
 
+    public void spendSkillPointOnSKill() {
+        skillPoints--;
+        damgeSKillPoints++;
+        increaseLevelSkill();
     }
 
     public int getHealthPoints() {
@@ -277,4 +303,7 @@ public abstract class Player extends Entity{
     public float getOffsetY() {
         return offsetY;
     }
+    public abstract void updateSkill();
+    public abstract void decreaseSkill();
+
 }

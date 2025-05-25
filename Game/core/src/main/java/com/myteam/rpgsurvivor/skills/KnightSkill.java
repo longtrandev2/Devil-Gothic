@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Random;
 
 public class KnightSkill {
-    private static final int NUM_SUMMONS = 3;
-    private static final float COOLDOWN_TIME = 2f;
+    private static  int NUM_SUMMONS = 2;
+    private static  float COOLDOWN_TIME = 12f;
     private AnimationForSummondKnight animation;
 
     private Knight owner;
@@ -133,12 +133,12 @@ public class KnightSkill {
             float xOffset = distance * (float) Math.cos(angleRad) * direction;
             float yOffset = distance * (float) Math.sin(angleRad);
 
-            float spawnX = owner.getEntityX() + xOffset;
-            float spawnY = owner.getEntityY() + yOffset;
+            float spawnX = owner.getEntityX() + xOffset + (float) Math.random() * 30f;
+            float spawnY = owner.getEntityY() + yOffset + (float) Math.random() * 30f;
 
             SummonedKnight summonedKnight = new SummonedKnight(
                 spawnX,
-                spawnY,
+                spawnY ,
                 targetEnemyForKnight,
                 animation
             );
@@ -220,5 +220,12 @@ public class KnightSkill {
 
     public void dismissAllSummons() {
         summonedKnights.clear();
+    }
+
+    public void upSkill(){
+   NUM_SUMMONS += 1;
+    }
+    public void downSkill(){
+        NUM_SUMMONS -= 1;
     }
 }

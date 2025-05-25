@@ -55,7 +55,6 @@ public class Samurai extends Player {
     private static final int HURT_FRAME_ROWS = 1;
     public Samurai(float x, float y) {
         super(x, y, HeroType.SAMURAI);
-        this.animationManager = new AnimationManager();
         this.skillHandler = new SamuraiDashing(this);
         this.skillSlashing = new SamuraiSlashing(this);
 
@@ -337,5 +336,13 @@ public class Samurai extends Player {
 
     }
 
+    @Override
+    public void updateSkill() {
+        skillSlashing.upSkill();
+    }
+    @Override
+    public  void decreaseSkill() {
+        skillSlashing.downSkill();
+    }
 }
 

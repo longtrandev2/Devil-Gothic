@@ -22,9 +22,9 @@ public class AnimationForEnemy {
             case RAT:
                 setUpRatAnimation(animationManager);
                 break;
-            case ORC:
-                setUpOrcAnimation(animationManager);
-                break;
+//            case ORC:
+//                setUpOrcAnimation(animationManager);
+//                break;
             case VAMPIRE:
                 setUpVampireAnimation(animationManager);
                 break;

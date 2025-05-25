@@ -39,7 +39,6 @@ public class Knight extends Player{
     public Knight(float x, float y)
     {
         super(x,y,HeroType.KNIGHT);
-        this.animationManager = new AnimationManager();
         this.knightSkill = new KnightSkill(this);
         setupAnimation();
 
@@ -52,7 +51,7 @@ public class Knight extends Player{
         float attackFrameDuration = this.getAttackSpeed();
         float skillFrameDuration = 0.08f;
         float hurtFrameDuration = 0.1f;
-
+        System.out.println(attackFrameDuration);
 
         animationManager.addAnimation(
             StateType.STATE_IDLE.stateType,
@@ -223,4 +222,13 @@ public class Knight extends Player{
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
     }
+
+    public void updateSkill() {
+        knightSkill.upSkill();
+    }
+
+    public void decreaseSkill() {
+        knightSkill.downSkill();
+    }
+
 }

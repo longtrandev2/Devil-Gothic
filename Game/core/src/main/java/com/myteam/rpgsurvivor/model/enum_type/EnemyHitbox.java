@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public enum EnemyHitbox {
     GOBLIN(17,16,0,-2),
-    RAT(19,12,6,0),
+    RAT(19,15,6,0),
     SKELETON(22,30,3,0),
     ORC(17,16,45,40),
     VAMPIRE(17,16,10,6),

@@ -35,11 +35,10 @@ public class AnimationManager {
         }
     }
     public void changeDurationAtk(float duration) {
-        Animation<TextureRegion> animation = animations.get(StateType.STATE_ATTACK.stateType);
-        System.out.println("change1");
 
-        if (animation == null) {
-            System.out.println("change2");
+        Animation<TextureRegion> animation = animations.get(StateType.STATE_IDLE.stateType);
+        System.out.println(animation);
+        if (animation != null) {
             animation.setFrameDuration(duration);
         }
     }

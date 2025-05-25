@@ -59,7 +59,6 @@ public class Archer extends Player {
     public Archer(float x, float y)
     {
         super(x,y,HeroType.ARCHER);
-        this.animationManager = new AnimationManager();
         this.archerBeamSkill = new ArcherBeamSkill();
         setupAnimation();
     }
@@ -72,7 +71,7 @@ public class Archer extends Player {
         float skillFrameDuration = 0.08f;
         float hurtFrameDuration = 0.1f;
         float skillEffectDuration = 0.1f;
-
+        System.out.println(attackFrameDuration);
         animationManager.addAnimation(
             StateType.STATE_IDLE.stateType,
             "Hero/Achers/spriteSheet/idle_1.png",
@@ -258,5 +257,14 @@ public class Archer extends Player {
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
 
+    }
+    @Override
+    public void updateSkill() {
+      archerBeamSkill.upSkill();
+    }
+
+    @Override
+    public  void decreaseSkill() {
+        archerBeamSkill.downSkill();
     }
 }

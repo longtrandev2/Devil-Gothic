@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.myteam.rpgsurvivor.animation.AnimationManager;
 import com.badlogic.gdx.math.Rectangle;
 import com.myteam.rpgsurvivor.controller.movement.Movement;
+import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 
 public abstract class Entity {
@@ -85,6 +86,7 @@ public abstract class Entity {
     }
 
     public float getAttackSpeed(){
+        if(this.stat.attackSpeed <= 0.003) return 0.03f;
         return this.stat.attackSpeed;
     }
 
@@ -160,5 +162,19 @@ public abstract class Entity {
 
     public void setAttackbox(Rectangle attackbox) {
         this.attackbox = attackbox;
+    }
+
+    public void recover10PercentHealth() {
+        this.setCurrentHealth(Math.min(this.getMaxHealth(), this.getCurrentHealth() + (int)(this.getMaxHealth() * 0.1f)));
+        System.out.println("recover10PercentHealth" + this.currentHealth + "/" + this.getMaxHealth());
+
+    }
+
+    public void onHurt()
+    {
+        isHurt = true;
+        hurtTimer = 0.4f;
+        animationManager.setState(StateType.STATE_HURT.stateType, true);
+
     }
 }
