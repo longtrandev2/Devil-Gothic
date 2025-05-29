@@ -207,7 +207,6 @@
         @Override
         public void update(float deltaTime) {
             updateHealth(getCurrentHealth());
-    //        System.out.println(getCurrentHealth());
             // Cập nhật vị trí hitbox
             if (!velocity.isZero()) {
                 entityX += velocity.x * deltaTime;
@@ -262,28 +261,28 @@
 
             float dx = 0;
             // Tính hiệu dx nhỏ nhất
-            if(hitboxEnemy.getX() + hitboxEnemy.getWidth()/2 < hitboxPlayer.getX())
-                dx = hitboxPlayer.getX() - (hitboxEnemy.getX() + hitboxEnemy.getWidth()/2);
+            if(hitboxEnemy.getX() + hitboxEnemy.getWidth() < hitboxPlayer.getX())
+                dx = hitboxPlayer.getX() - (hitboxEnemy.getX() + hitboxEnemy.getWidth());
             else if(hitboxPlayer.getX() + hitboxPlayer.getWidth() < hitboxEnemy.getX())
-                dx = hitboxEnemy.getX() - (hitboxPlayer.getX() + hitboxPlayer.getWidth()/2);
+                dx = hitboxEnemy.getX() - (hitboxPlayer.getX() + hitboxPlayer.getWidth());
 
             float dy = 0;
             // Tính hiệu dy nhỏ nhất
-            if(hitboxEnemy.getY() + hitboxEnemy.getHeight()/2 < hitboxPlayer.getY())
-                dy = hitboxPlayer.getY() - (hitboxEnemy.getY() + hitboxEnemy.getHeight()/2);
-            else if(hitboxPlayer.getY() + hitboxPlayer.getHeight()/2 < hitboxEnemy.getY())
-                dy = hitboxEnemy.getY() - (hitboxPlayer.getY() + hitboxPlayer.getHeight()/2);
+            if(hitboxEnemy.getY() + hitboxEnemy.getHeight() < hitboxPlayer.getY())
+                dy = hitboxPlayer.getY() - (hitboxEnemy.getY() + hitboxEnemy.getHeight());
+            else if(hitboxPlayer.getY() + hitboxPlayer.getHeight() < hitboxEnemy.getY())
+                dy = hitboxEnemy.getY() - (hitboxPlayer.getY() + hitboxPlayer.getHeight());
 
             float shortestDistanceToPlayer = (float) Math.sqrt(dx * dx + dy * dy);
 
-            if (shortestDistanceToPlayer <= detectionRange && shortestDistanceToPlayer > attackRange) {
+            if (shortestDistanceToPlayer <= detectionRange && shortestDistanceToPlayer > 0) {
                 currentState = StateType.STATE_RUN;
                 // Sử dụng deltaTime được truyền vào
                 Vector2 newDirection = enemyMovement.move(deltaTime);
                 entityX = newDirection.x;
                 entityY = newDirection.y;
             }
-            else if (attackbox.overlaps(hitboxPlayer)) {
+            else if (isPlayerInAttackRange()) {
                 if (isAttack) {
                     currentState = StateType.STATE_ATTACK;
                 } else {
@@ -293,8 +292,7 @@
                 currentState = StateType.STATE_IDLE;
             }
 
-            if (targetPlayer.getHitbox().x > entityX ) {
-                //System.out.println(targetPlayer.getHitbox().x + " " + entityX);
+            if (targetPlayer.getHitbox().x > hitboxEnemy.getX() ) {
                 facingRight = true;
             }
             else {
@@ -440,7 +438,7 @@
         }
 
         public void applyDifficulty(int difficulty) {
-            float scale = 1f + 0.15f * difficulty;
+            float scale = 1f + 0.1f * difficulty;
             this.stat.maxHealth *= scale;
             this.stat.damage *= scale;
             this.stat.moveSpeed *= 1f + 0.01f * difficulty;

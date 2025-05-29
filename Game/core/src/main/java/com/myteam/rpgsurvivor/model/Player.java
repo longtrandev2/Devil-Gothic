@@ -66,7 +66,7 @@ public abstract class Player extends Entity{
         this.level = 1;
         this.experience = 0;
         this.mana = 100;
-        this.skillPoints = 2;
+        this.skillPoints = 3;
         this.healthPoints = 0;
         this.damagePoints = 0;
         this.speedPoints = 0;

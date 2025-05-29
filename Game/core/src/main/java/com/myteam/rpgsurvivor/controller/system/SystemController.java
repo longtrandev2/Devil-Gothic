@@ -162,7 +162,7 @@ public class SystemController implements Screen {
         isShowingUpgradeScreen = false;
         stageCompleted = false;
         isWaitingForNextStage = false;
-        player.addSkillPoints(2);
+        player.addSkillPoints(3);
         enemySpawnController.setDifficulty(currentStage - 1);
         enemySpawnController.setTotalDeaths(0);
         enemySpawnController.resumeSpawning();

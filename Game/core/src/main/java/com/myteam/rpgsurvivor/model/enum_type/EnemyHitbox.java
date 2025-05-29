@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.Rectangle;
 
 public enum EnemyHitbox {
     GOBLIN(17,16,0,-2),
-    RAT(19,15,6,0),
+    RAT(19,18,6,0),
     SKELETON(22,30,3,0),
     ORC(17,16,45,40),
     VAMPIRE(17,16,10,6),
     SLIME_BOSS(200,300,0,0),
-    SKELETON_KING(500,300,10,30);
+    SKELETON_KING(150,180,10,0);
 
     public final float width;
     public final float height;
