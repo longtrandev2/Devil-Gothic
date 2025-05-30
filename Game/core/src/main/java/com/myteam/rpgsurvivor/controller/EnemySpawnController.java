@@ -105,7 +105,7 @@ public class EnemySpawnController {
     public void spawnEnemy() {
         Vector2 spawnPos = spawnPointManager.getRandomSpawnPosition();
         Enemy enemy = createRandomEnemy(spawnPos.x, spawnPos.y);
-        enemy.applyDifficulty(difficulty);
+        enemy.applyDifficulty(getCurrentWave());
         activeEnemy.add(enemy);
     }
 

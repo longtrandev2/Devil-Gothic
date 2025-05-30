@@ -15,7 +15,7 @@ public class SamuraiSlashing {
     private Rectangle skillHitBox;
     private boolean showSkillHitBox = false;
     private float skillHitBoxTimer = 0f;
-    private static final float SKILL_HITBOX_DURATION = 1f;
+    private static final float SKILL_HITBOX_DURATION = 0.5f;
     private static final float SKILL_HITBOX_WIDTH = 100f;
     private static final float SKILL_HITBOX_HEIGHT = 80f;
 
