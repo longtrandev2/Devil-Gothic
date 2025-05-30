@@ -191,7 +191,6 @@ public class LayoutPlayScreen implements Screen {
     {
         currentHealth = Math.max(0, Math.min(health, maxHealth));
 
-//        System.out.println(currentHealth + "/" + maxHealth + ": " + healthPercent);
 
     }
 
@@ -324,7 +323,6 @@ public class LayoutPlayScreen implements Screen {
 
             int newWidth = (int)(bloodTexture.getWidth() * healthPercent);
             int height = bloodTexture.getHeight();
-            System.out.println(newWidth + "/" + bloodTexture.getWidth() );
             currentBloodFrame = new TextureRegion(bloodTexture, 0, 0, newWidth, height);
             batch.draw(
                 currentBloodFrame,

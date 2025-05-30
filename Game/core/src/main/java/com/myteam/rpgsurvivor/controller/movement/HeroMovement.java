@@ -27,10 +27,10 @@ public class HeroMovement extends Movement{
         this.isMoving = false;
 
         // Default map boundaries to screen size
-        this.mapX = 0;
+        this.mapX = -95;
         this.mapY = 0;
         this.mapWidth = Gdx.graphics.getWidth();
-        this.mapHeight = Gdx.graphics.getHeight();
+        this.mapHeight = Gdx.graphics.getHeight() - 50;
     }
 
     /**
@@ -95,9 +95,9 @@ public class HeroMovement extends Movement{
             float newX = entity.getEntityX() + direction.x * speed * deltaTime;
             float newY = entity.getEntityY() + direction.y * speed * deltaTime;
 
-            float entityWidth = entity.getWidth();
-            float entityHeight = entity.getHeight();
-
+            float entityWidth = entity.getHitbox().getWidth();
+            float entityHeight = entity.getHitbox().getHeight();
+            System.out.println(newX + " " + newY + " " + entityWidth + " " + entityHeight);
 
             if (newX < mapX) {
                 newX = mapX;

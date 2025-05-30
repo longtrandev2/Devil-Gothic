@@ -428,7 +428,6 @@
         public void applyExternalForce(float dx, float dy) {
             this.entityX+= dx;
             this.entityY += dy;
-            System.out.println(dx + " " + dy);
             enemyMovement.updateEnemyPosition(this.entityX, this.entityY);
         }
 
@@ -438,7 +437,7 @@
         }
 
         public void applyDifficulty(int difficulty) {
-            float scale = 1f + 0.1f * difficulty;
+            float scale = 1f + 0.05f * difficulty;
             this.stat.maxHealth *= scale;
             this.stat.damage *= scale;
             this.stat.moveSpeed *= 1f + 0.01f * difficulty;

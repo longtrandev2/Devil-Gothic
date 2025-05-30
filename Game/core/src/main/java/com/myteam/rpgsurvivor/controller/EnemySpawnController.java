@@ -60,7 +60,7 @@ public class EnemySpawnController {
 
         this.prepareToNextStage = false;
         this.isPaused = false;
-        this.isBossWave = (currentWave % 5 == 0);
+        this.isBossWave = (currentWave % 5 == 1);
         this.bossSpawned = false;
     }
 
