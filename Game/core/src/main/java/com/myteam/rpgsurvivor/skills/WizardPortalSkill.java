@@ -27,7 +27,7 @@ public class WizardPortalSkill implements Skill {
     private float pullStrength = 150f;
 
     private float damageAccumulator = 0f;
-    private  float damagePerSecond = 20f;
+    private  float damagePerSecond = 10f;
     private float upSize = 0;
     private static final int   SKILL_EFFECT_FRAME_COLS = 7;
     private static final int SKILL_EFFECT_FRAME_ROWS = 1;
@@ -78,7 +78,7 @@ public class WizardPortalSkill implements Skill {
                 float dy = centerY - enemyY;
                 float dist = (float) Math.sqrt(dx * dx + dy * dy);
 
-                if (dist < pullRadius) {
+                if (overlaps(hitboxPortal, e.getHitbox())) {
                     if (!e.isBoss()) {
                         float normX = dx / dist;
                         float normY = dy / dist;
@@ -156,5 +156,15 @@ public class WizardPortalSkill implements Skill {
         upSize -=5f;
         if(cooldownTime <= 8) return;
         cooldownTime += 0.5;
+    }
+
+    public static boolean overlaps(Circle circle, Rectangle rect) {
+        float closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+        float closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
+
+        float dx = circle.x - closestX;
+        float dy = circle.y - closestY;
+
+        return (dx * dx + dy * dy) <= (circle.radius * circle.radius);
     }
 }

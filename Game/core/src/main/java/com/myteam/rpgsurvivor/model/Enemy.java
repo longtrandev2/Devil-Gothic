@@ -53,12 +53,10 @@
         private boolean bossTurn;
 
         private Texture frameHP;
-        private Texture bloodTexture;
+        private Texture fullBloodFrame ;
 
         private Texture bossName;
-
-        private TextureRegion fullBloodFrame;
-        private TextureRegion[] bloodFrames;
+        private TextureRegion currentBloodFrame;
 
         private static final int BLOOD_FRAME_COLS = 6;
         private static final int BLOOD_FRAME_ROWS = 1;
@@ -67,11 +65,11 @@
         private float bloodBarWidth = 840;
         private float bloodBarHeight = 122;
         private float padding = 100;
-        private float bloodBarInnerPaddingX = 10;
-        private float bloodBarInnerPaddingY = 10;
+        private float bloodBarInnerPaddingX = 28;
+        private float bloodBarInnerPaddingY = 50;
 
-        private float innerBloodWidth;
-        private float innerBloodHeight;
+        private float innerBloodWidth = 795;
+        private float innerBloodHeight = 25;
         private float bloodBarX;
         private float bloodBarY;
 
@@ -164,7 +162,7 @@
 
             // Khởi tạo textures cho thanh máu của boss
             frameHP = new Texture(Gdx.files.internal("Enemy/Asset For Boss/FrameHP.png"));
-            bloodTexture = new Texture(Gdx.files.internal("Enemy/Asset For Boss/BloodVer2.png"));
+            fullBloodFrame = new Texture(Gdx.files.internal("Enemy/Asset For Boss/FullBloodFrame.png"));
 
             // Khởi tạo kích thước thanh máu
             innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX) + 30;
@@ -189,13 +187,11 @@
         }
 
         private void setupBloodFrames() {
-            bloodFrames = new TextureRegion[BLOOD_FRAME_COLS];
-            float frameWidth = bloodTexture.getWidth() / BLOOD_FRAME_COLS;
-            float frameHeight = bloodTexture.getHeight() / BLOOD_FRAME_ROWS;
+            currentBloodFrame = new TextureRegion();
+            float frameWidth = fullBloodFrame.getWidth();
+            float frameHeight = fullBloodFrame.getHeight();
 
-            for (int i = 0; i < BLOOD_FRAME_COLS; i++) {
-                bloodFrames[i] = new TextureRegion(bloodTexture, i * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
-            }
+            currentBloodFrame = new TextureRegion(fullBloodFrame, 0 , 0, (int)frameWidth, (int)frameHeight);
         }
 
 
@@ -207,7 +203,6 @@
         @Override
         public void update(float deltaTime) {
             updateHealth(getCurrentHealth());
-    //        System.out.println(getCurrentHealth());
             // Cập nhật vị trí hitbox
             if (!velocity.isZero()) {
                 entityX += velocity.x * deltaTime;
@@ -262,28 +257,28 @@
 
             float dx = 0;
             // Tính hiệu dx nhỏ nhất
-            if(hitboxEnemy.getX() + hitboxEnemy.getWidth()/2 < hitboxPlayer.getX())
-                dx = hitboxPlayer.getX() - (hitboxEnemy.getX() + hitboxEnemy.getWidth()/2);
+            if(hitboxEnemy.getX() + hitboxEnemy.getWidth() < hitboxPlayer.getX())
+                dx = hitboxPlayer.getX() - (hitboxEnemy.getX() + hitboxEnemy.getWidth());
             else if(hitboxPlayer.getX() + hitboxPlayer.getWidth() < hitboxEnemy.getX())
-                dx = hitboxEnemy.getX() - (hitboxPlayer.getX() + hitboxPlayer.getWidth()/2);
+                dx = hitboxEnemy.getX() - (hitboxPlayer.getX() + hitboxPlayer.getWidth());
 
             float dy = 0;
             // Tính hiệu dy nhỏ nhất
-            if(hitboxEnemy.getY() + hitboxEnemy.getHeight()/2 < hitboxPlayer.getY())
-                dy = hitboxPlayer.getY() - (hitboxEnemy.getY() + hitboxEnemy.getHeight()/2);
-            else if(hitboxPlayer.getY() + hitboxPlayer.getHeight()/2 < hitboxEnemy.getY())
-                dy = hitboxEnemy.getY() - (hitboxPlayer.getY() + hitboxPlayer.getHeight()/2);
+            if(hitboxEnemy.getY() + hitboxEnemy.getHeight() < hitboxPlayer.getY())
+                dy = hitboxPlayer.getY() - (hitboxEnemy.getY() + hitboxEnemy.getHeight());
+            else if(hitboxPlayer.getY() + hitboxPlayer.getHeight() < hitboxEnemy.getY())
+                dy = hitboxEnemy.getY() - (hitboxPlayer.getY() + hitboxPlayer.getHeight());
 
             float shortestDistanceToPlayer = (float) Math.sqrt(dx * dx + dy * dy);
 
-            if (shortestDistanceToPlayer <= detectionRange && shortestDistanceToPlayer > attackRange) {
+            if (shortestDistanceToPlayer <= detectionRange && shortestDistanceToPlayer > 0) {
                 currentState = StateType.STATE_RUN;
                 // Sử dụng deltaTime được truyền vào
                 Vector2 newDirection = enemyMovement.move(deltaTime);
                 entityX = newDirection.x;
                 entityY = newDirection.y;
             }
-            else if (attackbox.overlaps(hitboxPlayer)) {
+            else if (isPlayerInAttackRange()) {
                 if (isAttack) {
                     currentState = StateType.STATE_ATTACK;
                 } else {
@@ -293,8 +288,7 @@
                 currentState = StateType.STATE_IDLE;
             }
 
-            if (targetPlayer.getHitbox().x > entityX ) {
-                //System.out.println(targetPlayer.getHitbox().x + " " + entityX);
+            if (targetPlayer.getHitbox().x > hitboxEnemy.getX() ) {
                 facingRight = true;
             }
             else {
@@ -336,36 +330,27 @@
             this.setFacingRight(facingRight);
             animationManager.setFacingRight(facingRight);
 
-
-            // Vẽ nhân vật
+            TextureRegion tr  = animationManager.getCurrentFrame();
+            Rectangle hitboxFrame = new Rectangle(entityX, entityY, tr.getRegionWidth(), tr.getRegionHeight());
+            DebugRenderer.drawRect(hitboxFrame, Color.GREEN);
             batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
 
-            // Vẽ thanh máu nếu là boss
             if (bossTurn) {
+
                 float healthPercent = currentHealth / (float) getMaxHealth();
                 float currentBloodWidth = innerBloodWidth * healthPercent;
                 // Vẽ khung thanh máu
-                int frameIndex;
-                if (healthPercent > 0.85f) {
-                    frameIndex = 0;
-                } else if (healthPercent > 0.70f) {
-                    frameIndex = 1;
-                } else if (healthPercent > 0.55f) {
-                    frameIndex = 2;
-                } else if (healthPercent > 0.40f) {
-                    frameIndex = 3;
-                } else if (healthPercent > 0.25f) {
-                    frameIndex = 4;
-                } else {
-                    frameIndex = 5;
-                }
-
-                // Vẽ frame máu tương ứng
-                batch.draw(bloodFrames[frameIndex],
+                batch.draw(frameHP,
                     bloodBarX,
-                    bloodBarY ,
-                    innerBloodWidth,
-                    innerBloodHeight);
+                    bloodBarY);
+                int newWidth = (int)(fullBloodFrame.getWidth() * healthPercent);
+                int height = fullBloodFrame.getHeight();
+                currentBloodFrame = new TextureRegion(fullBloodFrame, 0, 0, newWidth, height);
+                batch.draw(
+                    currentBloodFrame,
+                    bloodBarX + bloodBarInnerPaddingX,
+                    bloodBarY + bloodBarInnerPaddingY
+                );
 
                 batch.draw(bossName,bloodBarX, bloodBarY + 100);
             }
@@ -418,9 +403,11 @@
         }
 
         public void onHurt() {
-            isHurt = true;
-            hurtTimer = 0.4f;
-            animationManager.setState(StateType.STATE_HURT.stateType, true);
+            if(!bossTurn) {
+                isHurt = true;
+                hurtTimer = 0.4f;
+                animationManager.setState(StateType.STATE_HURT.stateType, true);
+            }
         }
 
         public void onDeath() {
@@ -430,7 +417,6 @@
         public void applyExternalForce(float dx, float dy) {
             this.entityX+= dx;
             this.entityY += dy;
-            System.out.println(dx + " " + dy);
             enemyMovement.updateEnemyPosition(this.entityX, this.entityY);
         }
 
@@ -440,7 +426,7 @@
         }
 
         public void applyDifficulty(int difficulty) {
-            float scale = 1f + 0.15f * difficulty;
+            float scale = 1f + 0.05f * difficulty;
             this.stat.maxHealth *= scale;
             this.stat.damage *= scale;
             this.stat.moveSpeed *= 1f + 0.01f * difficulty;

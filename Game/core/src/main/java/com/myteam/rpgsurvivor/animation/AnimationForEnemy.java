@@ -6,7 +6,7 @@ import com.myteam.rpgsurvivor.model.enum_type.StateType;
 
 public class AnimationForEnemy {
     private static final float DEFAULT_FRAME_DURATION = 0.1f;
-
+    private static final float DEFAULT_DEATH_FRAME_DURATION = 0.08f;
     public AnimationManager createEnemyAnimation(MonsterType monsterType)
     {
         AnimationManager animationManager = new AnimationManager();
@@ -78,7 +78,7 @@ public class AnimationForEnemy {
 
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Creep 1/HobgoblinNoOutline/goblinsmasher_death.png",
-            6, 1, DEFAULT_FRAME_DURATION, true
+            6, 1, DEFAULT_FRAME_DURATION, false
             );
     }
 
@@ -111,7 +111,7 @@ public class AnimationForEnemy {
 
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Skeleton/Skeleton/Sprite Sheets/Skeleton Dead.png",
-            15, 1, DEFAULT_FRAME_DURATION, true
+            15, 1, DEFAULT_DEATH_FRAME_DURATION, false
         );
     }
 
@@ -143,7 +143,7 @@ public class AnimationForEnemy {
 
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Creep 2/NoneOutlinedRat/rat-death.png",
-            6, 1, DEFAULT_FRAME_DURATION, true
+            6, 1, DEFAULT_FRAME_DURATION, false
         );
 
     }
@@ -177,7 +177,7 @@ public class AnimationForEnemy {
 
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Creep 3/Monster_Creatures_Fantasy(Version 1.3)/Orc/Orc-Death.png",
-            4, 1, DEFAULT_FRAME_DURATION, true
+            4, 1, DEFAULT_FRAME_DURATION, false
         );
     }
 
@@ -209,7 +209,7 @@ public class AnimationForEnemy {
 
         animationManager.addAnimation(StateType.STATE_DEATH.stateType,
             "Enemy/Creep 2/Enemy_Animations_Set/enemies-vampire_death.png",
-            14, 1, DEFAULT_FRAME_DURATION, true
+            14, 1, DEFAULT_DEATH_FRAME_DURATION, false
         );
     }
 

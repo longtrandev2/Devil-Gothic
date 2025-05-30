@@ -66,7 +66,7 @@ public abstract class Player extends Entity{
         this.level = 1;
         this.experience = 0;
         this.mana = 100;
-        this.skillPoints = 2;
+        this.skillPoints = 3;
         this.healthPoints = 0;
         this.damagePoints = 0;
         this.speedPoints = 0;
@@ -146,22 +146,22 @@ public abstract class Player extends Entity{
 
     public void increaseMoveSpeed()
     {
-        this.setMoveSpeed(getMoveSpeed() + 2f);
+        this.setMoveSpeed(getMoveSpeed() + 3f);
     }
 
     public void decreaseMoveSpeed()
     {
-        this.setMoveSpeed(getMoveSpeed() - 2f);
+        this.setMoveSpeed(getMoveSpeed() - 3f);
     }
 
     public void increaseAttackSpeed()
     {
-        this.setAttackSpeed(getAttackSpeed() - 0.005f);
+        this.setAttackSpeed(getAttackSpeed() - 0.0031f);
     }
 
     public void decreaseAttackSpeed()
     {
-        this.setAttackSpeed(getAttackSpeed() + 0.005f);
+        this.setAttackSpeed(getAttackSpeed() + 0.0031f);
     }
 
     public void increaseLevelSkill()

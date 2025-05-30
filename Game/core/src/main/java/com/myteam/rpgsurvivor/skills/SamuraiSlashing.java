@@ -17,9 +17,9 @@ public class SamuraiSlashing {
     private float skillHitBoxTimer = 0f;
     private static final float SKILL_HITBOX_DURATION = 1f;
     private static final float SKILL_HITBOX_WIDTH = 100f;
-    private static final float SKILL_HITBOX_HEIGHT = 60f;
+    private static final float SKILL_HITBOX_HEIGHT = 80f;
 
-    private int damgeSlash = 30;
+    private int damgeSlash = 60;
     private ShapeRenderer shapeRenderer;
 
     public SamuraiSlashing(Samurai samurai)

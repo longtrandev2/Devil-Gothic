@@ -36,8 +36,7 @@ public class AnimationManager {
     }
     public void changeDurationAtk(float duration) {
 
-        Animation<TextureRegion> animation = animations.get(StateType.STATE_IDLE.stateType);
-        System.out.println(animation);
+        Animation<TextureRegion> animation = animations.get(StateType.STATE_ATTACK.stateType);
         if (animation != null) {
             animation.setFrameDuration(duration);
         }
@@ -125,7 +124,6 @@ public class AnimationManager {
         for (HashMap.Entry<String, Animation<TextureRegion>> entry : this.animations.entrySet()) {
             Animation<TextureRegion> original = entry.getValue();
 
-            // Clone từng frame thay vì gọi getKeyFrames()
             float frameDuration = original.getFrameDuration();
             int frameCount = (int) (original.getAnimationDuration() / frameDuration);
 
@@ -133,7 +131,7 @@ public class AnimationManager {
 
             for (int i = 0; i < frameCount; i++) {
                 TextureRegion frame = original.getKeyFrame(i * frameDuration);
-                framesArray.add(new TextureRegion(frame)); // clone frame
+                framesArray.add(new TextureRegion(frame));
             }
 
             Animation<TextureRegion> copied = new Animation<>(frameDuration, framesArray);

@@ -43,7 +43,7 @@ public abstract class SumondedPlayer extends Entity{
     private Vector2 velocity = new Vector2();
     private float knockbackDecay = 10f;
     private float maxKnockbackSpeed = 300f;
-
+    private int damge =  10;
     public SumondedPlayer (float x, float y, HeroType heroType, Enemy enemy, AnimationForSummondKnight animation)
     {
         this.entityX = x;
@@ -104,18 +104,7 @@ public abstract class SumondedPlayer extends Entity{
             attackbox.setPosition(entityX + offsetX - attackRange, entityY + offsetY);
         }
 
-        if (isDead) return;
 
-        if (isHurt) {
-            hurtTimer -= deltaTime;
-            if (hurtTimer <= 0) {
-                isHurt = false;
-            } else {
-                currentState = StateType.STATE_HURT;
-                animationManager.setState(StateType.STATE_HURT.stateType, true);
-                return;
-            }
-        }
 
         // Kiểm tra player có trong tầm phát hiện không
         if (isEnemyInDetectionRange()) {
@@ -160,7 +149,6 @@ public abstract class SumondedPlayer extends Entity{
         }
 
         if (targetEnemy.getHitbox().x > entityX ) {
-            //System.out.println(targetPlayer.getHitbox().x + " " + entityX);
             facingRight = true;
         }
         else {
@@ -227,9 +215,9 @@ public abstract class SumondedPlayer extends Entity{
         }
 
         if(currentState == StateType.STATE_ATTACK) {
-//            targetEnemy.takeDamge(getDamage());
-//            //System.out.println("takedamge");
-//            targetEnemy.onHurt();
+            targetEnemy.takeDamge(getDamage());
+            //System.out.println("takedamge");
+            targetEnemy.onHurt();
             attackComponent.tryAttack();
         }
     }
@@ -247,7 +235,6 @@ public abstract class SumondedPlayer extends Entity{
 
     public void setMeleeAttackComponent(){
         this.attackComponent = new MeleeAttackComponent(this, enemySpawnController, this.getAttackSpeed(), this.getRangeAttack(), this.getDamage());
-        System.out.println(this.getDamage());
     }
 
     public void setMovementToEnemy(Enemy enemy)

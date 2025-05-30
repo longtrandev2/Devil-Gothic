@@ -24,7 +24,7 @@ public class ArcherBeamSkill implements Skill {
     private Rectangle hitBox;
     private boolean hasDealtDamage = false;
 
-    private int damage = 40;
+    private int damage = 50;
 
     private AnimationManager animationManager;
 
