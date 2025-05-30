@@ -145,7 +145,6 @@ public class SystemController implements Screen {
         stageTransitionTimer = 0f;
         enemySpawnController.pauseSpawning();
         showUpgradeScreen();
-        System.out.println(player.getCurrentHealth());
         System.out.println("Stage " + currentStage + " cleared. Preparing for next stage.");
     }
 
@@ -162,6 +161,8 @@ public class SystemController implements Screen {
         isShowingUpgradeScreen = false;
         stageCompleted = false;
         isWaitingForNextStage = false;
+        if(enemySpawnController.isBossWave())
+        player.addSkillPoints(3);
         player.addSkillPoints(3);
         enemySpawnController.setDifficulty(currentStage - 1);
         enemySpawnController.setTotalDeaths(0);

@@ -53,12 +53,10 @@
         private boolean bossTurn;
 
         private Texture frameHP;
-        private Texture bloodTexture;
+        private Texture fullBloodFrame ;
 
         private Texture bossName;
-
-        private TextureRegion fullBloodFrame;
-        private TextureRegion[] bloodFrames;
+        private TextureRegion currentBloodFrame;
 
         private static final int BLOOD_FRAME_COLS = 6;
         private static final int BLOOD_FRAME_ROWS = 1;
@@ -67,11 +65,11 @@
         private float bloodBarWidth = 840;
         private float bloodBarHeight = 122;
         private float padding = 100;
-        private float bloodBarInnerPaddingX = 10;
-        private float bloodBarInnerPaddingY = 10;
+        private float bloodBarInnerPaddingX = 28;
+        private float bloodBarInnerPaddingY = 50;
 
-        private float innerBloodWidth;
-        private float innerBloodHeight;
+        private float innerBloodWidth = 795;
+        private float innerBloodHeight = 25;
         private float bloodBarX;
         private float bloodBarY;
 
@@ -164,7 +162,7 @@
 
             // Khởi tạo textures cho thanh máu của boss
             frameHP = new Texture(Gdx.files.internal("Enemy/Asset For Boss/FrameHP.png"));
-            bloodTexture = new Texture(Gdx.files.internal("Enemy/Asset For Boss/BloodVer2.png"));
+            fullBloodFrame = new Texture(Gdx.files.internal("Enemy/Asset For Boss/FullBloodFrame.png"));
 
             // Khởi tạo kích thước thanh máu
             innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX) + 30;
@@ -189,13 +187,11 @@
         }
 
         private void setupBloodFrames() {
-            bloodFrames = new TextureRegion[BLOOD_FRAME_COLS];
-            float frameWidth = bloodTexture.getWidth() / BLOOD_FRAME_COLS;
-            float frameHeight = bloodTexture.getHeight() / BLOOD_FRAME_ROWS;
+            currentBloodFrame = new TextureRegion();
+            float frameWidth = fullBloodFrame.getWidth();
+            float frameHeight = fullBloodFrame.getHeight();
 
-            for (int i = 0; i < BLOOD_FRAME_COLS; i++) {
-                bloodFrames[i] = new TextureRegion(bloodTexture, i * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
-            }
+            currentBloodFrame = new TextureRegion(fullBloodFrame, 0 , 0, (int)frameWidth, (int)frameHeight);
         }
 
 
@@ -343,27 +339,17 @@
                 float healthPercent = currentHealth / (float) getMaxHealth();
                 float currentBloodWidth = innerBloodWidth * healthPercent;
                 // Vẽ khung thanh máu
-                int frameIndex;
-                if (healthPercent > 0.85f) {
-                    frameIndex = 0;
-                } else if (healthPercent > 0.70f) {
-                    frameIndex = 1;
-                } else if (healthPercent > 0.55f) {
-                    frameIndex = 2;
-                } else if (healthPercent > 0.40f) {
-                    frameIndex = 3;
-                } else if (healthPercent > 0.25f) {
-                    frameIndex = 4;
-                } else {
-                    frameIndex = 5;
-                }
-
-                // Vẽ frame máu tương ứng
-                batch.draw(bloodFrames[frameIndex],
+                batch.draw(frameHP,
                     bloodBarX,
-                    bloodBarY ,
-                    innerBloodWidth,
-                    innerBloodHeight);
+                    bloodBarY);
+                int newWidth = (int)(fullBloodFrame.getWidth() * healthPercent);
+                int height = fullBloodFrame.getHeight();
+                currentBloodFrame = new TextureRegion(fullBloodFrame, 0, 0, newWidth, height);
+                batch.draw(
+                    currentBloodFrame,
+                    bloodBarX + bloodBarInnerPaddingX,
+                    bloodBarY + bloodBarInnerPaddingY
+                );
 
                 batch.draw(bossName,bloodBarX, bloodBarY + 100);
             }
