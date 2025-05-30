@@ -54,26 +54,24 @@ public class LayoutPlayScreen implements Screen {
     private float endStageTimer = 0f;
     private boolean playerDeathHandled = false;
 
-    private TextureRegion fullBloodFrame;
+    private TextureRegion currentBloodFrame;
 
     private float avatarFrameSize = 80;
     private float bloodBarWidth = 200;
     private float bloodBarHeight = 40;
     private float padding = 10;
-    private float bloodBarInnerPaddingX = 10;
-    private float bloodBarInnerPaddingY = 10;
+    private float bloodBarInnerPaddingX = 12;
+    private float bloodBarInnerPaddingY = 12;
 
     private float maxHealth ;
     private float currentHealth ;
 
-    private static final int BLOOD_FRAME_COLS = 6;
-    private static final int BLOOD_FRAME_ROWS = 1;
 
     private boolean isPaused = false;
 
 
     //Kích thước thanh máu và frame máu
-    float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX)  + 15 ;
+    float innerBloodWidth = bloodBarWidth - (2 * bloodBarInnerPaddingX)  + 5 ;
     float innerBloodHeight = bloodBarHeight - (2 * bloodBarInnerPaddingY);
 
     float topY = Gdx.graphics.getHeight() - padding - avatarFrameSize;
@@ -182,11 +180,11 @@ public class LayoutPlayScreen implements Screen {
 
     private void setupBloodFrames()
     {
-        fullBloodFrame = new TextureRegion();
-        float frameWidth = bloodTexture.getWidth() / BLOOD_FRAME_COLS;
-        float frameHeight = bloodTexture.getHeight() / BLOOD_FRAME_ROWS;
+        currentBloodFrame = new TextureRegion();
+        float frameWidth = bloodTexture.getWidth();
+        float frameHeight = bloodTexture.getHeight();
 
-            fullBloodFrame = new TextureRegion(bloodTexture, 0 * (int)frameWidth, 0, (int)frameWidth, (int)frameHeight);
+        currentBloodFrame = new TextureRegion(bloodTexture, 0 , 0, (int)frameWidth, (int)frameHeight);
     }
 
     private void updateHealth(float health)
@@ -293,7 +291,6 @@ public class LayoutPlayScreen implements Screen {
             deathStage.draw();
             return;
         }
-
         Gdx.input.setInputProcessor(stage);
         updateHealth(chosenHero.getCurrentHealth());
         stage.act(Gdx.graphics.getDeltaTime());
@@ -323,14 +320,18 @@ public class LayoutPlayScreen implements Screen {
                 bloodBarHeight);
 
 
-            float healthPercent = currentHealth /(float) maxHealth;
-            float currentBloodWidth = innerBloodWidth * healthPercent;
+            float healthPercent = currentHealth / (float) maxHealth;
 
-            batch.draw(fullBloodFrame,
-                bloodBarX + bloodBarInnerPaddingX ,
-                bloodBarY + bloodBarInnerPaddingY  ,
-                currentBloodWidth,
-                innerBloodHeight );
+            int newWidth = (int)(bloodTexture.getWidth() * healthPercent);
+            int height = bloodTexture.getHeight();
+            System.out.println(newWidth + "/" + bloodTexture.getWidth() );
+            currentBloodFrame = new TextureRegion(bloodTexture, 0, 0, newWidth, height);
+            batch.draw(
+                currentBloodFrame,
+                bloodBarX + bloodBarInnerPaddingX,
+                bloodBarY + bloodBarInnerPaddingY
+            );
+
         }
 
         batch.end();
