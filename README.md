@@ -30,7 +30,7 @@ Team hoạt động theo Gitflow để quản lý code. Mỗi thành viên sẽ 
   - `develop`: Chứa code mới nhất, đã qua review và test
   - `feature/`: Các nhánh chứa code đang phát triển, short-live, sau khi hoàn thành sẽ merge vào `develop`. 
 
-![alt text](Readme\image.png)
+![alt text](Readme/image.png)
 
 Sau mỗi tuần, team sẽ merge `develop` vào `master` để release phiên bản mới.
 
@@ -159,11 +159,11 @@ Diễn giải:
 
 **Ảnh Demo:**
 ![alt text](Readme/AnyConv.com__pic1.jpg))
-![AnyConv.com__pic1.jpg](Readme\AnyConv.com__pic2.jpg)
-![Alt text](Readme\AnyConv.com__pic3.jpg)
-![Alt text](Readme\AnyConv.com__pic4.jpg)
-![Alt text](Readme\AnyConv.com__pic5.jpg)
-![Alt text](Readme\AnyConv.com__pic6.jpg)
+![AnyConv.com__pic1.jpg](Readme/AnyConv.com__pic2.jpg)
+![Alt text](Readme/AnyConv.com__pic3.jpg)
+![Alt text](Readme/AnyConv.com__pic4.jpg)
+![Alt text](Readme/AnyConv.com__pic5.jpg)
+![Alt text](Readme/AnyConv.com__pic6.jpg)
 **Video Demo:**
 [Video Link](https://youtu.be/Q3M4Zyn8CQM)
 

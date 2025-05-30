@@ -172,6 +172,7 @@ public abstract class Entity {
     }
 
     public void onHurt() {
+
         isHurt = true;
         hurtTimer = 0.4f;
         animationManager.setState(StateType.STATE_HURT.stateType, true);
