@@ -24,7 +24,7 @@ public class KnightSkill {
     private boolean isOnCooldown = false;
     private EnemySpawnController enemySpawnController;
     Random rand = new Random();
-
+    private int attackDamge = 10;
     public KnightSkill(Knight owner) {
         this.owner = owner;
         this.summonedKnights = new ArrayList<>();
@@ -142,7 +142,7 @@ public class KnightSkill {
                 targetEnemyForKnight,
                 animation
             );
-
+            summonedKnight.setDamage(attackDamge);
             summonedKnight.setFacingRight(owner.isFacingRight());
             summonedKnight.setEnemySpawnController(owner.getEnemySpawnController());
             summonedKnights.add(summonedKnight);
@@ -223,9 +223,11 @@ public class KnightSkill {
     }
 
     public void upSkill(){
-   NUM_SUMMONS += 1;
+        NUM_SUMMONS += 1;
+        attackDamge += 10;
     }
     public void downSkill(){
         NUM_SUMMONS -= 1;
+        attackDamge -= 10;
     }
 }

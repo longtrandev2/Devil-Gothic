@@ -8,8 +8,8 @@ public enum EnemyHitbox {
     SKELETON(22,30,3,0),
     ORC(17,16,45,40),
     VAMPIRE(17,16,10,6),
-    SLIME_BOSS(230,300,0,0),
-    SKELETON_KING(180,180,10,0);
+    SLIME_BOSS(250,300,0,0),
+    SKELETON_KING(220,180,10,0);
 
     public final float width;
     public final float height;

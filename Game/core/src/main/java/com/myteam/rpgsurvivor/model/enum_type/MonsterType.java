@@ -7,8 +7,6 @@ public enum MonsterType {
     SKELETON(new EntityStat(45, 25, 20, 1.9f, 8f), EnemyHitbox.SKELETON),
     RAT(new EntityStat(30, 15, 22, 2.2f, 12f), EnemyHitbox.RAT),
     VAMPIRE(new EntityStat(60, 10, 20,1.9f, 10f), EnemyHitbox.VAMPIRE);
-//    STONE_GOLEM(new EntityStat(250, 35, 40, 1.5f, 10f));
-
     public final EntityStat stat;
     public final EnemyHitbox hitbox;
 
@@ -18,3 +16,4 @@ public enum MonsterType {
         this.hitbox = hitbox;
     }
 }
+

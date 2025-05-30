@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\Ln\Desktop\RPG-Game\Game\lwjgl3\build\libs\rpgsurvivor-1.0.0.jar</jar>
-  <outfile>C:\Users\Ln\Desktop\RPG-Game\DevilGothic.exe</outfile>
+  <jar>C:\Users\Ln\Desktop\Devil-Gothic\Game\lwjgl3\build\libs\rpgsurvivor-1.0.0.jar</jar>
+  <outfile>C:\Users\Ln\Desktop\Devil-Gothic\Game\DevilGothic.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\Ln\Desktop\RPG-Game\Game\lwjgl3\icons\logo.ico</icon>
+  <icon>C:\Users\Ln\Desktop\Devil-Gothic\Game\lwjgl3\icons\logo.ico</icon>
   <jre>
     <path>%JAVA_HOME%;%PATH%</path>
     <requiresJdk>false</requiresJdk>

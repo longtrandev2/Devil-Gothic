@@ -330,12 +330,13 @@
             this.setFacingRight(facingRight);
             animationManager.setFacingRight(facingRight);
 
-
-            // Vẽ nhân vật
+            TextureRegion tr  = animationManager.getCurrentFrame();
+            Rectangle hitboxFrame = new Rectangle(entityX, entityY, tr.getRegionWidth(), tr.getRegionHeight());
+            DebugRenderer.drawRect(hitboxFrame, Color.GREEN);
             batch.draw(animationManager.getCurrentFrame(), entityX, entityY);
 
-            // Vẽ thanh máu nếu là boss
             if (bossTurn) {
+
                 float healthPercent = currentHealth / (float) getMaxHealth();
                 float currentBloodWidth = innerBloodWidth * healthPercent;
                 // Vẽ khung thanh máu
@@ -402,9 +403,11 @@
         }
 
         public void onHurt() {
-            isHurt = true;
-            hurtTimer = 0.4f;
-            animationManager.setState(StateType.STATE_HURT.stateType, true);
+            if(!bossTurn) {
+                isHurt = true;
+                hurtTimer = 0.4f;
+                animationManager.setState(StateType.STATE_HURT.stateType, true);
+            }
         }
 
         public void onDeath() {

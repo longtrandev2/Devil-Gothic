@@ -126,12 +126,12 @@ public abstract class Player extends Entity{
 
     public void increaseHealth()
     {
-        this.setMaxHealth(getMaxHealth() + 20);
+        this.setMaxHealth(getMaxHealth() + 10);
     }
 
     public void decreaseHealth()
     {
-        this.setMaxHealth(getMaxHealth() - 20);
+        this.setMaxHealth(getMaxHealth() - 10);
     }
 
     public void increaseDamage()
@@ -146,22 +146,22 @@ public abstract class Player extends Entity{
 
     public void increaseMoveSpeed()
     {
-        this.setMoveSpeed(getMoveSpeed() + 2f);
+        this.setMoveSpeed(getMoveSpeed() + 3f);
     }
 
     public void decreaseMoveSpeed()
     {
-        this.setMoveSpeed(getMoveSpeed() - 2f);
+        this.setMoveSpeed(getMoveSpeed() - 3f);
     }
 
     public void increaseAttackSpeed()
     {
-        this.setAttackSpeed(getAttackSpeed() - 0.0051f);
+        this.setAttackSpeed(getAttackSpeed() - 0.0031f);
     }
 
     public void decreaseAttackSpeed()
     {
-        this.setAttackSpeed(getAttackSpeed() + 0.0051f);
+        this.setAttackSpeed(getAttackSpeed() + 0.0031f);
     }
 
     public void increaseLevelSkill()
