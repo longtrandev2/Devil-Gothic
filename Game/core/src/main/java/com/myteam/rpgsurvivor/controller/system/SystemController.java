@@ -176,7 +176,7 @@ public class SystemController implements Screen {
 
     private void adjustEnemySpawn() {
         int waveNumber = enemySpawnController.getCurrentWave();
-        enemySpawnController.setEnemiesPerWave(Math.min(waveNumber * 2 + 3, 100));
+        enemySpawnController.setEnemiesPerWave(Math.min((waveNumber - 1) * 2 + enemySpawnController.getEnemiesPerWave(), 100));
 
         float currentSpawnInterval = enemySpawnController.getSpawnInterval();
         enemySpawnController.setSpawnInterval(Math.max(currentSpawnInterval * 0.9f, 0.5f));

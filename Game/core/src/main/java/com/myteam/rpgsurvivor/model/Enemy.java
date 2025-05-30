@@ -426,10 +426,10 @@
         }
 
         public void applyDifficulty(int difficulty) {
-            float scale = 1f + 0.05f * difficulty;
+            System.out.println(difficulty);
+            float scale = 1f + 0.025f * difficulty;
             this.stat.maxHealth *= scale;
             this.stat.damage *= scale;
-            this.stat.moveSpeed *= 1f + 0.01f * difficulty;
         }
     }
 

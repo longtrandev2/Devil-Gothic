@@ -52,7 +52,7 @@ public class EnemySpawnController {
         this.spawnInterval = 2.0f;
         this.spawnTimer = 0;
         this.maxEnemiesOnMap = 100;
-        this.enemiesPerWave = 5;
+        this.enemiesPerWave = 3;
 
         this.currentWave = 1;
         this.waveTimer = 0;
