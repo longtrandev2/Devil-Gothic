@@ -11,7 +11,7 @@
   <downloadUrl></downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
-  <restartOnCrash>true</restartOnCrash>
+  <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon>C:\Users\Ln\Desktop\Devil-Gothic\Game\lwjgl3\icons\logo.ico</icon>
   <jre>
